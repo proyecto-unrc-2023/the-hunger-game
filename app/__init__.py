@@ -8,4 +8,3 @@ def create_app(config_name='development'):
     config[config_name].init_app(app)
 
     return app
-  
