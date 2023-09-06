@@ -1,6 +1,6 @@
 # language: es
 
-Caracteristica: Inicio de juego
+Característica: Inicio de juego
 
   Escenario: El usuario entra a jugar
     Dado que ingresó a jugar
