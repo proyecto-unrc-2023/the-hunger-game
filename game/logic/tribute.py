@@ -7,11 +7,11 @@ from abc import ABC, abstractmethod
 
 class Tribute:
 
-    def __init__(self, life, force, alliance, district):
-        self.life = life
-        self.force = force
-        self.alliance = alliance
-        self.district = district
+    def __init__(self):
+        self.life = None
+        self.force = None
+        self.alliance = None
+        self.district = None
 
 
     @staticmethod
@@ -31,8 +31,7 @@ class Tribute:
 class DeadTribute(Tribute):
 
     def __str__(self):
-        if self.life == 0:
-            return ' '
+        return ' '
 
     def __eq__(self, other):
         return isinstance(other, DeadTribute)
@@ -40,13 +39,12 @@ class DeadTribute(Tribute):
 
 class LiveTribute(Tribute):
 
-    def __init__(self, actualPosition):
-        self.actualPosition = actualPosition
+    def __init__(self):
+        self.actualPosition = None
 
     def __str__(self):
-        if self.life != 0:
-            res = 't' #+ self.district
-            return res
+        res = 't' #+ self.district
+        return res
 
     def __eq__(self, other):
         return isinstance(other, LiveTribute)
