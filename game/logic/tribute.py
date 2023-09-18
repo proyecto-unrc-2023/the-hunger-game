@@ -31,8 +31,7 @@ class Tribute:
 class DeadTribute(Tribute):
 
     def __str__(self):
-        if self.life == 0:
-            return ' '
+        return ' '
 
     def __eq__(self, other):
         return isinstance(other, DeadTribute)
@@ -40,13 +39,13 @@ class DeadTribute(Tribute):
 
 class LiveTribute(Tribute):
 
-    def __init__(self, actualPosition):
-        self.actualPosition = actualPosition
+    def __init__(self, current_pos):
+        self.current_pos = current_pos
 
     def __str__(self):
-        if self.life != 0:
-            res = 't' #+ self.district
-            return res
+        if self.life > 0:
+            return 't'
+
 
     def __eq__(self, other):
         return isinstance(other, LiveTribute)

@@ -4,7 +4,7 @@
 #  - to string
 #  - create from string
 #  - put live tribute
-from tribute import DeadTribute, LiveTribute, Tribute
+from game.logic.tribute import DeadTribute, LiveTribute, Tribute
 
 
 class Board:
