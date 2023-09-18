@@ -53,13 +53,11 @@ def test_board_with_two_tributes_to_string(board):
                ' |t'
     assert expected == res
 
-
-# def test_empty_board_to_string():
-#     board = Board(2, 2)
-#     res = board.__str__()
-#     expected = ' | \n' \
-#                ' | '
-#     assert expected == res
+def test_empty_board_to_string(board):
+    res = board.__str__()
+    expected = ' | \n' \
+               ' | '
+    assert expected == res
 
 
 # def test_4x4_board_with_two_tribute_to_string():
