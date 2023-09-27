@@ -6,11 +6,9 @@ from abc import ABC, abstractmethod
 
 class Item:
 
-    def __init__(self, name):
-        self.name == name
-        self.value == None
+    def __init__(self):
+        self.pos = None
 
-    
     @staticmethod
     def from_string(object_str):
         if object_str == Potion().__str__():
@@ -22,22 +20,35 @@ class Item:
 
     def __str__(self):
         raise NotImplementedError
+      
+    def set_pos(self, pos):
+        self.pos = pos
 
+    def get_pos(self):
+        return self.pos
+      
+    def applies_efects(tribute):
+        raise NotImplementedError
 
-
-class Potion(object):
+class Potion(Item):
 
     def __str__(self):
         return 'p'
 
     def __eq__(self, other):
         return isinstance(other, Potion)
-
-
-class Weapon(object):
+      
+    def applies_efects(tribute):
+      tribute.life += 5
+      
+      
+class Weapon(Item):
 
     def __str__(self):
         return 'w'
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
+      
+    def applies_efects(tribute):
+      tribute.force += 1
