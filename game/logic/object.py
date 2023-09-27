@@ -4,7 +4,7 @@
 
 from abc import ABC, abstractmethod
 
-class Object:
+class Item:
 
     def __init__(self, name):
         self.name == name
