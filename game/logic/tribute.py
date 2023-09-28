@@ -12,6 +12,7 @@ class Tribute:
         self.force = None
         self.alliance = None
         self.district = None
+        self.pos = None
 
 
     @staticmethod
@@ -24,7 +25,7 @@ class Tribute:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
     def __str__(self):
-        raise NotImplementedError
+        return 't'
 
 
 
@@ -40,7 +41,7 @@ class DeadTribute(Tribute):
 class LiveTribute(Tribute):
 
     def __init__(self):
-        self.current_pos = None
+        self.pos = None
 
     def __str__(self):
         return 't'
