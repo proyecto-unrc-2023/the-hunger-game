@@ -1,12 +1,9 @@
-#Board:
-#  - rows
-#  - columns
-#  - to string
-#  - create from string
-from game.logic.tribute import Tribute
-from game.logic.item import Item, Weapon, Potion
-from game.logic.cell import Cell, State
 import random
+
+from game.logic.cell import Cell, State
+from game.logic.item import Weapon, Potion
+from game.logic.tribute import Tribute
+
 
 class Board:
 
@@ -26,19 +23,16 @@ class Board:
             for col in range(n_cols):
                 char = matrix[row][col].strip()
                 if char == 't':
-                    cell = Cell()
                     tribute = Tribute()
-                    new_board.get_element(row,col).put_tribute(tribute)
+                    new_board.get_element(row, col).put_tribute(tribute)
                 elif char == ' ':
                     pass
                 elif char == 'w':
-                    cell = Cell()
                     weapon = Weapon()
-                    new_board.get_element(row,col).put_item(weapon)
+                    new_board.get_element(row, col).put_item(weapon)
                 elif char == 'p':
-                    cell = Cell()
                     potion = Potion()
-                    new_board.get_element(row,col).put_item(potion)
+                    new_board.get_element(row, col).put_item(potion)
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
@@ -53,7 +47,7 @@ class Board:
                 new_board.put_tribute(row, col, Tribute.from_string(curr_tribute))
         return new_board
 
-    #listo
+    # listo
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
@@ -64,13 +58,12 @@ class Board:
                 curr_row.append(Cell())
             self.board.append(curr_row)
 
-#devuelve la cell
+    # devuelve la cell
     def get_element(self, row, column):
         return self.board[row][column]
 
-
     def put_tribute(self, row, column, tribute):
-        tribute.pos = (row,column)
+        tribute.pos = (row, column)
         self.board[row][column].put_tribute(tribute)
 
     def remove_tribute(self, tribute):
@@ -79,19 +72,18 @@ class Board:
         self.board[x][y].remove_tribute()
 
     def put_item(self, row, column, item):
-        item.pos = (row,column)
+        item.pos = (row, column)
         self.board[row][column].put_item(item)
-        
+
     def remove_item(self, item):
-        x = item.pos[0]  
-        y = item.pos[1]  
+        x = item.pos[0]
+        y = item.pos[1]
         self.board[x][y].remove_item()
-        
+
     def distribute_tributes(self, district):
         for i in range(district.cant_tributes):
             pos = self.random_pos()
             self.put_tribute(pos[0], pos[1], district.tributes[i])
-
 
     def random_pos(self):
         while True:
@@ -99,8 +91,7 @@ class Board:
             y = random.randint(0, self.columns - 1)
             element = self.get_element(x, y)
             if element.state != State.TRIBUTE and element.state != State.ITEM:
-                return (x, y)
-
+                return x, y
 
     @staticmethod
     def _row_to_string(row):
