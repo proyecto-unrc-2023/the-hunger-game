@@ -3,9 +3,9 @@
 #  - columns
 #  - to string
 #  - create from string
-#  - put live tribute
-from game.logic.tribute import DeadTribute, LiveTribute, Tribute
-from game.logic.object import Item, Weapon, Potion
+from game.logic.tribute import Tribute
+from game.logic.item import Item, Weapon, Potion
+from game.logic.cell import Cell, State
 import random
 
 class Board:
@@ -26,13 +26,19 @@ class Board:
             for col in range(n_cols):
                 char = matrix[row][col].strip()
                 if char == 't':
-                    new_board.put_tribute(row, col, LiveTribute())
+                    cell = Cell()
+                    tribute = Tribute()
+                    new_board.get_element(row,col).put_tribute(tribute)
                 elif char == ' ':
-                    new_board.put_tribute(row, col, DeadTribute())
+                    pass
                 elif char == 'w':
-                    new_board.put_item(row, col, Weapon())
+                    cell = Cell()
+                    weapon = Weapon()
+                    new_board.get_element(row,col).put_item(weapon)
                 elif char == 'p':
-                    new_board.put_item(row, col, Potion())
+                    cell = Cell()
+                    potion = Potion()
+                    new_board.get_element(row,col).put_item(potion)
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
@@ -47,6 +53,7 @@ class Board:
                 new_board.put_tribute(row, col, Tribute.from_string(curr_tribute))
         return new_board
 
+    #listo
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
@@ -54,60 +61,31 @@ class Board:
         for row in range(self.rows):
             curr_row = []
             for col in range(self.columns):
-                curr_row.append(DeadTribute())
+                curr_row.append(Cell())
             self.board.append(curr_row)
 
+#devuelve la cell
     def get_element(self, row, column):
         return self.board[row][column]
 
-    def put_live_tribute(self, row, column):
-        if self.get_element(row, column).__eq__(LiveTribute()):
-            raise ValueError
-
-        tribute = Tribute()
-        tribute.pos = (row,column)
-        self.board[row][column] = tribute
-
-    def put_dead_tribute(self, row, column):
-        element = self.get_element(row, column)
-        if isinstance(element, DeadTribute):
-            raise ValueError
-
-        self.board[row][column] = DeadTribute()
 
     def put_tribute(self, row, column, tribute):
-        element = self.get_element(row, column)
-        if isinstance(element, LiveTribute) or isinstance(element, Item):
-            raise ValueError
-
         tribute.pos = (row,column)
-        self.board[row][column] = tribute
+        self.board[row][column].put_tribute(tribute)
 
     def remove_tribute(self, tribute):
         x = tribute.pos[0]
         y = tribute.pos[1]
-        element = self.get_element(x, y)
-        if element.__eq__(Item) or element.__eq__(DeadTribute):
-            raise ValueError
-
-        self.put_dead_tribute(x, y)
+        self.board[x][y].remove_tribute()
 
     def put_item(self, row, column, item):
-        if row > self.rows or column > self.columns:
-            raise ValueError(f'Row or Columns out of range')
-        element = self.get_element(row, column)
-        if element.__eq__(LiveTribute):
-            raise ValueError
-
-        self.board[row][column] = item
+        self.board[row][column].put_item(item)
         
-    def remove_item(self, Item):
-        element = self.get_element(Item.pos[0],Item.pos[1])
-        if isinstance(element, LiveTribute) or isinstance(element, DeadTribute):
-            raise ValueError(f'Trying to remove a Tribute')
+    def remove_item(self, item):
+        x = item.pos[0]  
+        y = item.pos[1]  
+        self[x][y].remove_item()
         
-        self.put_dead_tribute(Item.pos[0],Item.pos[1])
-
     def distribute_tributes(self, district):
         for i in range(district.cant_tributes):
             self.put_tribute(self.random_pos(), district.tributes[i])
@@ -115,11 +93,11 @@ class Board:
 
     def random_pos(self):
         while True:
-            x = random.randint(0, self.rows-1)
-            y = random.randint(0, self.columns-1)
+            x = random.randint(0, self.rows - 1)
+            y = random.randint(0, self.columns - 1)
             element = self.get_element(x, y)
-            if not isinstance(element, (LiveTribute, Item)):
-                return (x,y)
+            if element.state != State.TRIBUTE and element.state != State.ITEM:
+                return (x, y)
 
 
     @staticmethod

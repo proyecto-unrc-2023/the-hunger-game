@@ -25,7 +25,7 @@ class Tribute:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
     def __str__(self):
-        raise NotImplementedError
+        return 't'
 
 
 

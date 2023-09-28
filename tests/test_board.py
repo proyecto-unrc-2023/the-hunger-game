@@ -1,16 +1,9 @@
 import pytest
 
 from game.logic.board import Board
-from game.logic.object import Weapon, Potion
-from game.logic.tribute import DeadTribute, LiveTribute
-
-
-#@pytest.fixture(scope='module')
-#def complex_object():
-#    # Create an object that is costly to initialize
-#    return ComplexObject(...)
-
-
+from game.logic.item import Weapon, Potion
+from game.logic.cell import Cell, State
+from game.logic.tribute import Tribute
 
 @pytest.fixture
 def board():
@@ -20,25 +13,25 @@ def board():
 def test_initial_board(board):
     assert board.rows == 2
     assert board.columns == 2
-    assert board.get_element(0, 0).__eq__(DeadTribute())
-    assert board.get_element(0, 1).__eq__(DeadTribute())
-    assert board.get_element(1, 0).__eq__(DeadTribute())
-    assert board.get_element(1, 1).__eq__(DeadTribute())
+    assert board.get_element(0, 0).__eq__(Cell())
+    assert board.get_element(0, 1).__eq__(Cell())
+    assert board.get_element(1, 0).__eq__(Cell())
+    assert board.get_element(1, 1).__eq__(Cell())
 
 
 def test_put_one_live_tribute(board):
-    board.put_live_tribute(1, 0)
-    assert board.get_element(0, 0).__eq__(DeadTribute())
-    assert board.get_element(0, 1).__eq__(DeadTribute())
-    assert board.get_element(1, 0).__eq__(LiveTribute())
-    assert board.get_element(1, 1).__eq__(DeadTribute())
+    tribute = Tribute()
+    board.put_tribute(1, 0, tribute)
+    assert board.get_element(0, 0).get_state() == State.FREE
+    assert board.get_element(0, 1).get_state() == State.FREE
+    assert board.get_element(1, 0).get_state() == State.TRIBUTE
+    assert board.get_element(1, 1).get_state() == State.FREE
 
-
-def test_put_live_tribute_fails(board):
-    board.put_live_tribute(1, 0)
+def test_put_tribute_fails(board):
+    tribute = Tribute()
+    board.put_tribute(1, 0, tribute)
     with pytest.raises(ValueError):
-        board.put_live_tribute(1, 0)
-
+        board.put_tribute(1, 0, tribute)
 
 def test_empty_board_to_string(board):
     res = board.__str__()
@@ -46,18 +39,14 @@ def test_empty_board_to_string(board):
                ' | '
     assert expected == res
 
-#def test_board_with_two_tributes_to_string(board):
-#    board.put_live_tribute(0, 1)
-#    board.put_live_tribute(1, 1)
-#    res = board.__str__()
-#    expected = ' |t\n' \
-#               ' |t'
-#    assert expected == res
-
-def test_empty_board_to_string(board):
+def test_board_with_two_tributes_to_string(board):
+    tribute1 = Tribute()
+    tribute2 = Tribute()
+    board.put_tribute(0, 1,tribute1)
+    board.put_tribute(1, 1,tribute2)
     res = board.__str__()
-    expected = ' | \n' \
-               ' | '
+    expected = ' |t\n' \
+               ' |t'
     assert expected == res
     
 def test_4x4_board_with_two_tribute_to_string():
@@ -92,47 +81,41 @@ def test_2x2_board_get_pos():
     board_str = ' | \n' \
                 ' | '
     board = Board.from_string(board_str)
-    tribute1 = LiveTribute()
-    board.put_tribute(0,1,tribute1)
-    assert board.get_pos(tribute1) == (0,1)
+    tribute1 = Tribute()
+    board.put_tribute(0, 1, tribute1)
+    assert board.get_pos(tribute1) == (0, 1)
 
 def test_2x2_board_put_tribute():
     board_str = ' | \n' \
                 ' | '
     board = Board.from_string(board_str)
-    tribute1 = LiveTribute()
-    board.put_tribute(0,1,tribute1)
-    assert (board.get_element(0,1)).__str__() == 't'
+    tribute1 = Tribute()
+    board.put_tribute(0, 1, tribute1)
+    assert board.get_element(0, 1).get_state() == State.TRIBUTE
+    tribute2 = board.get_element(0, 1).get_tribute()
+    assert tribute2.__str__() == 't'
     
 def test_2x2_board_put_tribute_and_remove_tribute():
     board_str = ' | \n' \
                 ' | '
     board = Board.from_string(board_str)
-    tribute1 = LiveTribute()
-    board.put_tribute(0,1,tribute1)
-    assert (board.get_element(0,1)).__str__() == 't'
+    tribute1 = Tribute()
+    board.put_tribute(0, 1, tribute1)
+    assert board.get_element(0, 1).get_state() == State.TRIBUTE
     board.remove_tribute(tribute1)
-    assert (board.get_element(0,1)).__str__() == ' '
+    assert board.get_element(0, 1).get_state() == State.FREE
     
 
 def test_2x2_board_remove_tribute():
     board_str = ' | \n' \
                 ' | '
     board = Board.from_string(board_str)
-    tribute1 = LiveTribute()
+    tribute1 = Tribute()
     board.put_tribute(0,1,tribute1)
     assert (board.get_element(0,1)).__str__() == 't'
     board.remove_tribute(tribute1)
     assert (board.get_element(0,1)).__str__() == ' '
 
-def test_2x2_board_remove_tribute():
-    board_str = ' | \n' \
-                ' | '
-    board = Board.from_string(board_str)
-    tribute1 = LiveTribute()
-    board.put_tribute(0,1,tribute1)
-    board.remove_tribute(tribute1) 
-    assert (board.get_element(0,1)).__str__() == ' '
     
 #completar este cuando este distric y tributes
 #necesito district y tributes... completar
@@ -146,20 +129,21 @@ def test_2x2_board_remove_tribute():
 
 
 def test_2x2_board_put_item_weapon():
-    board_str = 'w|\n' \
+    board_str = 'w| \n' \
                 ' | '
     board = Board.from_string(board_str)
-    weapon1 = Weapon()
-    board.put_item(0,1,weapon1)
-    assert (board.get_element(0,0)).__str__() == 'w'
+    assert board.get_element(0, 0).get_state() == State.ITEM
+    weapon = board.get_element(0, 0).get_item()
+    assert weapon.__str__() == 'w'
 
 def test_2x2_board_put_item_potion():
     board_str = ' |p\n' \
                 ' | '
     board = Board.from_string(board_str)
-    potion1 = Potion()
-    board.put_item(0,1, potion1)
-    assert (board.get_element(0,1)).__str__() == 'p'
+    assert board.get_element(0, 1).get_state() == State.ITEM
+    weapon = board.get_element(0, 1).get_item()
+    assert weapon.__str__() == 'p'
+
  
 #necesito item.pos    
 #def test_2x2_board_put_item_and_remove_item(board):
@@ -174,12 +158,13 @@ def test_2x2_board_random_pos():
                 ' |t'
     board = Board.from_string(board_str)
     pos = board.random_pos()
-    assert (1,0) == pos
+    assert pos == (1, 0) 
 
-def test_2x2_board_get_pos_tribute_and_put_tribute():
+    
+def test_2x2_board_get_pos_tribute():
     board_str = ' | \n' \
                 ' | '
     board = Board.from_string(board_str)
-    tribute1 = LiveTribute()
-    board.put_tribute(0,1,tribute1)
-    assert (0,1) == board.get_pos(tribute1)
+    tribute1 = Tribute()
+    board.put_tribute(0, 1, tribute1)
+    assert board.get_pos(tribute1) == (0, 1)
