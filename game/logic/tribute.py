@@ -26,4 +26,11 @@ class Tribute:
         if (self.district == None):
             return 't'
         else:
-            return 't' + self.district.get_number_district()
+            # return 't' + str(self.district)
+            return 't' + str(self.district.get_number_district())
+
+    def set_cofing(self, life, force, alliance, district):
+        self.life = life
+        self.force = force
+        self.alliance = alliance
+        self.district = district
