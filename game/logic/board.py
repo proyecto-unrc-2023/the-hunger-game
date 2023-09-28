@@ -79,16 +79,18 @@ class Board:
         self.board[x][y].remove_tribute()
 
     def put_item(self, row, column, item):
+        item.pos = (row,column)
         self.board[row][column].put_item(item)
         
     def remove_item(self, item):
         x = item.pos[0]  
         y = item.pos[1]  
-        self[x][y].remove_item()
+        self.board[x][y].remove_item()
         
     def distribute_tributes(self, district):
         for i in range(district.cant_tributes):
-            self.put_tribute(self.random_pos(), district.tributes[i])
+            pos = self.random_pos()
+            self.put_tribute(pos[0], pos[1], district.tributes[i])
 
 
     def random_pos(self):

@@ -1,6 +1,6 @@
 import pytest
 
-from game.logic.tribute import LiveTribute
+from game.logic.tribute import Tribute
 from game.logic.item import Item, Potion, Weapon
 
 def test_create_potion_from_str():
@@ -14,7 +14,7 @@ def test_create_weapon_from_str():
     assert res.__eq__(Weapon())
     
 def test_potion_applies_efect():
-    tribute = LiveTribute()
+    tribute = Tribute()
     tribute.life = 75
     
     Potion.applies_efects(tribute)
@@ -22,7 +22,7 @@ def test_potion_applies_efect():
     assert tribute.life.__eq__(80)
     
 def test_weapon_applies_efect():
-    tribute = LiveTribute()
+    tribute = Tribute()
     tribute.force = 6
     
     Weapon.applies_efects(tribute)

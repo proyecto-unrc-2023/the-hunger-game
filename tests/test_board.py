@@ -4,6 +4,7 @@ from game.logic.board import Board
 from game.logic.item import Weapon, Potion
 from game.logic.cell import Cell, State
 from game.logic.tribute import Tribute
+from game.logic.district import District
 
 @pytest.fixture
 def board():
@@ -116,19 +117,16 @@ def test_2x2_board_remove_tribute():
     board.remove_tribute(tribute1)
     assert (board.get_element(0,1)).__str__() == ' '
 
-    
-#completar este cuando este distric y tributes
-#necesito district y tributes... completar
-#def test_3_3_board_distribute_tribute():
-#    board_str = ' |w| \n' \
-#                ' | | '
-#    board = Board.from_string(board_str)
-#    distrito1 = District()
-#    for i in range(district1)
-#        board.put_tribute(district.tibute[i])
+def test_3_3_board_distribute_tribute():
+    board_str = ' | | \n' \
+                ' | | '
+    board = Board.from_string(board_str)
+    distrito1 = District()
+    distrito1.set_config(50,5,1,1,4)
+    pos = board.random_pos()
+    board.distribute_tributes(distrito1)
 
-
-def test_2x2_board_put_item_weapon():
+def test_2x2_board_put_item_weapon_from_string():
     board_str = 'w| \n' \
                 ' | '
     board = Board.from_string(board_str)
@@ -136,7 +134,7 @@ def test_2x2_board_put_item_weapon():
     weapon = board.get_element(0, 0).get_item()
     assert weapon.__str__() == 'w'
 
-def test_2x2_board_put_item_potion():
+def test_2x2_board_put_item_potion_from_string():
     board_str = ' |p\n' \
                 ' | '
     board = Board.from_string(board_str)
@@ -146,12 +144,12 @@ def test_2x2_board_put_item_potion():
 
  
 #necesito item.pos    
-#def test_2x2_board_put_item_and_remove_item(board):
-#    weapon1 = Weapon()
-#    board.put_item(0,1, weapon1)
-#    assert board.get_element(0,1).__str__() == 'w'
-#    board.remove_item(weapon1)
-#    assert board.get_element(0,1).__str__() == ' '
+def test_2x2_board_put_item_and_remove_item(board):
+    weapon1 = Weapon()
+    board.put_item(0,1, weapon1)
+    assert board.get_element(0,1).__str__() == 'w'
+    board.remove_item(weapon1)
+    assert board.get_element(0,1).__str__() == ' '
 
 def test_2x2_board_random_pos():
     board_str = 't|t\n' \
