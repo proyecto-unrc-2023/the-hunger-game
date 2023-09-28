@@ -3,13 +3,13 @@
 #  - columns
 #  - to string
 #  - create from string
-#  - put live tribute
-from game.logic.tribute import DeadTribute, LiveTribute, Tribute
-
+from game.logic.tribute import Tribute
+from game.logic.item import Item, Weapon, Potion
+from game.logic.cell import Cell, State
+import random
 
 class Board:
 
-    @staticmethod
     def from_string(board_str):
         rows = board_str.split('\n')
         n_rows = len(rows)
@@ -19,12 +19,30 @@ class Board:
         n_cols = len(matrix[0])
         if n_cols < 1:
             raise ValueError(f'Invalid number of columns: {n_cols}')
-        for row in range(n_rows):
-            row_len = len(matrix[row])
-            if row_len != n_cols:
-                raise ValueError(f'Invalid number of columns: {row_len}')
 
-        return Board._from_string_matrix(n_rows, n_cols, matrix)
+        new_board = Board(n_rows, n_cols)  # Crear un nuevo tablero
+
+        for row in range(n_rows):
+            for col in range(n_cols):
+                char = matrix[row][col].strip()
+                if char == 't':
+                    cell = Cell()
+                    tribute = Tribute()
+                    new_board.get_element(row,col).put_tribute(tribute)
+                elif char == ' ':
+                    pass
+                elif char == 'w':
+                    cell = Cell()
+                    weapon = Weapon()
+                    new_board.get_element(row,col).put_item(weapon)
+                elif char == 'p':
+                    cell = Cell()
+                    potion = Potion()
+                    new_board.get_element(row,col).put_item(potion)
+                elif char != '':
+                    raise ValueError(f'Invalid character in board string: {char}')
+
+        return new_board
 
     @staticmethod
     def _from_string_matrix(rows, cols, matrix):
@@ -35,6 +53,7 @@ class Board:
                 new_board.put_tribute(row, col, Tribute.from_string(curr_tribute))
         return new_board
 
+    #listo
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
@@ -42,20 +61,44 @@ class Board:
         for row in range(self.rows):
             curr_row = []
             for col in range(self.columns):
-                curr_row.append(DeadTribute())
+                curr_row.append(Cell())
             self.board.append(curr_row)
 
-    def get_tribute(self, row, column):
+#devuelve la cell
+    def get_element(self, row, column):
         return self.board[row][column]
 
-    def put_live_tribute(self, row, column):
-        if self.get_tribute(row, column).__eq__(LiveTribute()):
-            raise ValueError
-
-        self.board[row][column] = LiveTribute()
 
     def put_tribute(self, row, column, tribute):
-        self.board[row][column] = tribute
+        tribute.pos = (row,column)
+        self.board[row][column].put_tribute(tribute)
+
+    def remove_tribute(self, tribute):
+        x = tribute.pos[0]
+        y = tribute.pos[1]
+        self.board[x][y].remove_tribute()
+
+    def put_item(self, row, column, item):
+        self.board[row][column].put_item(item)
+        
+    def remove_item(self, item):
+        x = item.pos[0]  
+        y = item.pos[1]  
+        self[x][y].remove_item()
+        
+    def distribute_tributes(self, district):
+        for i in range(district.cant_tributes):
+            self.put_tribute(self.random_pos(), district.tributes[i])
+
+
+    def random_pos(self):
+        while True:
+            x = random.randint(0, self.rows - 1)
+            y = random.randint(0, self.columns - 1)
+            element = self.get_element(x, y)
+            if element.state != State.TRIBUTE and element.state != State.ITEM:
+                return (x, y)
+
 
     @staticmethod
     def _row_to_string(row):
@@ -74,3 +117,6 @@ class Board:
             if row_num < self.rows - 1:
                 res += '\n'
         return res
+
+    def get_pos(self, tribute):
+        return tribute.pos
