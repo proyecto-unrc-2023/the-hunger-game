@@ -23,4 +23,7 @@ class Tribute:
             return True
 
     def __str__(self):
-        return 't'
+        if (self.district == None):
+            return 't'
+        else:
+            return 't' + self.district.get_number_district()
