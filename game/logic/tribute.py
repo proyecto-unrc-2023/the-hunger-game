@@ -17,35 +17,10 @@ class Tribute:
 
     @staticmethod
     def from_string(tribute_str):
-        if tribute_str == DeadTribute().__str__():
-            return DeadTribute()
-        elif tribute_str == LiveTribute().__str__():
-            return LiveTribute()
+        if tribute_str == Tribute().__str__():
+            return 't'
         else:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
     def __str__(self):
         return 't'
-
-
-
-class DeadTribute(Tribute):
-
-    def __str__(self):
-        return ' '
-
-    def __eq__(self, other):
-        return isinstance(other, DeadTribute)
-
-
-class LiveTribute(Tribute):
-
-    def __init__(self):
-        self.pos = None
-
-    def __str__(self):
-        return 't'
-
-
-    def __eq__(self, other):
-        return isinstance(other, LiveTribute)

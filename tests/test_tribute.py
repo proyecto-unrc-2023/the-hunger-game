@@ -1,16 +1,11 @@
 import pytest
 
-from game.logic.tribute import Tribute, LiveTribute, DeadTribute
-
-
-def test_create_dead_tribute_from_str():
-    res = Tribute.from_string(' ')
-    assert res.__eq__(DeadTribute())
+from game.logic.tribute import Tribute
 
 
 def test_create_live_tribute_from_str():
     res = Tribute.from_string('t')
-    assert res.__eq__(LiveTribute())
+    assert res.__eq__(Tribute())
 
 
 # Negative test
