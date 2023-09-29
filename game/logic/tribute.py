@@ -1,10 +1,3 @@
-#Tribute
-#  - to string
-#  - from string
-
-from abc import ABC, abstractmethod
-
-
 class Tribute:
 
     def __init__(self):
@@ -14,38 +7,30 @@ class Tribute:
         self.district = None
         self.pos = None
 
-
     @staticmethod
     def from_string(tribute_str):
-        if tribute_str == DeadTribute().__str__():
-            return DeadTribute()
-        elif tribute_str == LiveTribute().__str__():
-            return LiveTribute()
+        if tribute_str == Tribute().__str__():
+            return 't'
         else:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
-    def __str__(self):
-        return 't'
+    def is_alive(self):
+        if self.life > 0:
+            return True
 
-
-
-class DeadTribute(Tribute):
-
-    def __str__(self):
-        return ' '
-
-    def __eq__(self, other):
-        return isinstance(other, DeadTribute)
-
-
-class LiveTribute(Tribute):
-
-    def __init__(self):
-        self.pos = None
+    def is_dead(self):
+        if self.life == 0:
+            return True
 
     def __str__(self):
-        return 't'
+        if (self.district == None):
+            return 't'
+        else:
+            # return 't' + str(self.district)
+            return 't' + str(self.district.get_number_district())
 
-
-    def __eq__(self, other):
-        return isinstance(other, LiveTribute)
+    def set_cofing(self, life, force, alliance, district):
+        self.life = life
+        self.force = force
+        self.alliance = alliance
+        self.district = district

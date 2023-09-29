@@ -1,4 +1,4 @@
-#GameLogic:
+# GameLogic:
 #  - start new game
 #  - current mode
 #  - get board
@@ -14,6 +14,7 @@ class GameMode(Enum):
     TRIBUTES_PLACEMENT = 2
     SIMULATION = 3
 
+
 class GameLogic:
 
     def __init__(self):
@@ -27,4 +28,3 @@ class GameLogic:
         self.columns = columns
         self.board = Board(rows, columns)
         self.mode = GameMode.TRIBUTES_PLACEMENT
-

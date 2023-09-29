@@ -1,8 +1,7 @@
-#Object
+# Object
 #  - to string
 #  - from string
 
-from abc import ABC, abstractmethod
 
 class Item:
 
@@ -20,15 +19,16 @@ class Item:
 
     def __str__(self):
         raise NotImplementedError
-      
+
     def set_pos(self, pos):
         self.pos = pos
 
     def get_pos(self):
         return self.pos
-      
+
     def applies_efects(tribute):
         raise NotImplementedError
+
 
 class Potion(Item):
 
@@ -37,11 +37,11 @@ class Potion(Item):
 
     def __eq__(self, other):
         return isinstance(other, Potion)
-      
+
     def applies_efects(tribute):
-      tribute.life += 5
-      
-      
+        tribute.life += 5
+
+
 class Weapon(Item):
 
     def __str__(self):
@@ -49,6 +49,6 @@ class Weapon(Item):
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
-      
+
     def applies_efects(tribute):
-      tribute.force += 1
+        tribute.force += 1
