@@ -39,6 +39,7 @@ def test_set_config_tribute():
     assert tribute.force == 2
     assert tribute.alliance == 3
     assert tribute.district == 5
+    
 def test_atack_to():
     board = Board(3,3)
     t1 = Tribute()
