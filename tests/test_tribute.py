@@ -1,6 +1,7 @@
 import pytest
 
 from game.logic.district import District
+from game.logic.board import Board
 from game.logic.tribute import Tribute
 
 
@@ -38,3 +39,22 @@ def test_set_config_tribute():
     assert tribute.force == 2
     assert tribute.alliance == 3
     assert tribute.district == 5
+def test_atack_to():
+    board = Board(3,3)
+    t1 = Tribute()
+    t2 = Tribute()
+    t3 = Tribute()
+    t1.life = 100
+    t2.life = 100
+    t1.force = 10
+    t2.force = 10
+    board.put_tribute(2,2,t3)
+    board.put_tribute(0, 0, t1)
+    board.put_tribute(1, 0, t2)
+    beforelife = t2.life
+    t1.atack_to(t2, board)
+
+    assert t2.life == (beforelife - t1.force)
+
+    with pytest.raises(ValueError):
+        t1.atack_to(t3,board)

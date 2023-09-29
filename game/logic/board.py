@@ -113,3 +113,17 @@ class Board:
 
     def get_pos(self, tribute):
         return tribute.pos
+
+    def get_adjacent_positions(self, row, column):
+        adjacent_positions = []
+
+        # Verificar las celdas adyacentes arriba, abajo, izquierda y derecha
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            new_row, new_column = row + dr, column + dc
+
+            # Verificar si la posición es válida
+            if 0 <= new_row < self.rows and 0 <= new_column < self.columns:
+                adjacent_positions.append((new_row, new_column))
+
+        return adjacent_positions
+
