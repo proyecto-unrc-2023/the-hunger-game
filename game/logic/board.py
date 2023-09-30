@@ -60,7 +60,10 @@ class Board:
 
     # devuelve la cell
     def get_element(self, row, column):
-        return self.board[row][column]
+        if 0 <= row < self.rows and 0 <= column < self.columns:
+            return self.board[row][column]
+        else:
+            raise ValueError(f'Invalid row or column index: ({row}, {column})')
 
     def put_tribute(self, row, column, tribute):
         tribute.pos = (row, column)
@@ -98,7 +101,11 @@ class Board:
         res = ''
         columns = len(row)
         for col in range(columns):
-            res += row[col].__str__()
+            cell = row[col]
+            if cell.get_state() == State.FREE:
+                res += ' '
+            else:
+                res += cell.__str__()  # Use the __str__ method of the cell
             if col < columns - 1:
                 res += '|'
         return res
@@ -117,8 +124,8 @@ class Board:
     def get_adjacent_positions(self, row, column):
         adjacent_positions = []
 
-        # Verificar las celdas adyacentes arriba, abajo, izquierda y derecha
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        # Verificar las celdas adyacentes arriba, abajo, izquierda, derecha y en las esquinas diagonales
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
             new_row, new_column = row + dr, column + dc
 
             # Verificar si la posición es válida
@@ -127,3 +134,85 @@ class Board:
 
         return adjacent_positions
 
+    def valid_pos(self, pos):
+        x = pos[0]
+        y = pos[1]
+        if x < 0 or x >= self.rows:
+            return False
+        if y < 0 or y >= self.columns:
+            return False
+        if self.get_element(x, y).get_state() != State.FREE:
+            return False
+
+        return True
+
+    def get_adjacents_cells(self, x, y):
+        if not (0 <= x < self.rows) or not (0 <= y < self.columns):
+            raise ValueError(f"Coordinates ({x}, {y}) are out of bounds")
+
+        list_pos = self.get_adjacent_positions(x, y)
+        adjacent_cells = []
+
+        for pos in list_pos:
+            x, y = pos
+            if 0 <= x < self.rows and 0 <= y < self.columns:
+                adjacent_cells.append(self.get_element(x, y))
+
+        return adjacent_cells
+
+    def get_free_adjacents_cells(self, x, y):
+        if x < 0 or x >= self.rows or y < 0 or y >= self.columns:
+            raise ValueError(f"Invalid position: x={x}, y={y} is out of range.")
+
+        adjacents_cells = self.get_adjacents_cells(x, y)
+        free_adjacents = []
+        for cell in adjacents_cells:
+            if cell.get_state() == State.FREE:
+                free_adjacents.append(cell)
+        return free_adjacents
+
+    def get_free_adjacents_positions(self, x, y):
+        if x < 0 or x >= self.rows or y < 0 or y >= self.columns:
+            raise ValueError(f"Invalid position: x={x}, y={y} is out of range.")
+
+        free_positions = []
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+            new_row, new_column = x + dr, y + dc
+
+            # Verificar si la posición es válida
+            if 0 <= new_row < self.rows and 0 <= new_column < self.columns:
+                element = self.get_element(new_row, new_column)
+                if element.get_state() == State.FREE:
+                    free_positions.append((new_row, new_column))
+
+        return free_positions
+
+    def random_choice(self, tribute):
+        x = tribute.pos[0]
+        y = tribute.pos[1]
+        free_adjacents_pos = self.get_free_adjacents_positions(x, y)
+
+        if not free_adjacents_pos:
+            raise ValueError(f"No available free adjacent positions for Tribute {tribute}")
+
+        random_position = random.choice(free_adjacents_pos)
+        return random_position
+
+    def move_to_random(self, tribute):
+        self.remove_tribute(tribute)
+        pos = self.random_choice(tribute)
+        self.put_tribute(pos[0], pos[1], tribute)
+
+    def move_to(self, x, y, tribute):
+        self.remove_tribute(tribute)
+        self.put_tribute(x, y, tribute)
+
+    def valid_pos(self, pos):
+        x = pos[0]
+        y = pos[1]
+        if x < 0 or x >= self.rows:
+            raise ValueError(f'Invalid position')
+        if y < 0 or y >= self.columns:
+            raise ValueError(f'Invalid position')
+
+        return True

@@ -30,7 +30,10 @@ class Tribute:
             return True
 
     def __str__(self):
-        return 't'
+        if (self.district == None):
+            return 't'
+        else:
+            return 't' + str(self.district.get_number_district())
     
     def atack_to(self, tribute, board):
         listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])
