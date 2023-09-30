@@ -53,3 +53,17 @@ class Tribute:
         self.force = force
         self.alliance = alliance
         self.district = district
+
+    def move_to(self, position):
+        # Verifico si existe current_pos
+        if not self.current_pos:
+            raise ValueError("Current position is not set for LiveTribute.")
+        
+        # Obtengo todos los movimientos disponibles
+        available_moves = self.movements_available
+
+        # Verifico si el movimiento es válido
+        if position in available_moves:
+            self.current_pos = position
+        else:
+            raise ValueError("Position is not an available movement for LiveTribute")
