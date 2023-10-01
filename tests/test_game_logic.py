@@ -114,12 +114,12 @@ def test_get_tribute_vision_cells_ocupped_order_by_closeness():
     w1 = Weapon()
     p1 = Potion()
     p2 = Potion()
-    game.board.put_tribute(3, 3, t1)
-    game.board.put_tribute(1, 3, t2)
-    game.board.put_item(5, 3, w1)
-    game.board.put_item(3, 5, p1)
-    game.board.put_item(6, 6, p2)
-    pass
+    game.board.put_tribute(2, 2, t1)
+    game.board.put_tribute(1, 1, t2)
+    game.board.put_item(5, 6, w1)
+    game.board.put_item(6, 6, p1)
+    game.board.put_item(5, 5, p2)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1) == (1,1)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t2) == (2,2)
 
     
-

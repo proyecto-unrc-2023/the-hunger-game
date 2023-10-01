@@ -62,23 +62,30 @@ class GameLogic:
 
         return tribute_visionCells
 
-    def tribute_vision_cells_ocupped_order_by_closeness(self, tribute):      
+    
+    def tribute_vision_cells_ocupped_order_by_closeness(self, tribute):
         def calculate_distance(position):
-            return ((position.pos[0] - tribute.get_pos()[0]) ** 2 + (position.pos[1] - tribute.get_pos()[1]) ** 2) ** 0.5
-        
-        vision_cells = self.tribute_vision_cells(tribute)  
-       
-        occupped_vision_cells = []
-        for cell in vision_cells:
-            if cell.get_state() != State.FREE:
-                occupped_vision_cells.append(cell)
+            return ((position[0] - tribute.pos[0]) ** 2 + (position[1] - tribute.pos[1]) ** 2) ** 0.5
 
-        occupped_vision_cells.sort(key=calculate_distance)
-
-        if not  occupped_vision_cells:
-            raise ValueError(f'No FREE positions')
+        vision_cells = self.tribute_vision_cells(tribute)
         
-        return occupped_vision_cells[0]
+        occupied_positions = [
+            (cell.get_pos()[0], cell.get_pos()[1])  # Extraer las coordenadas de la celda
+            for cell in vision_cells
+            if cell.get_state() != State.FREE 
+            # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
+            # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
+        ]
+
+        occupied_positions.sort(key=calculate_distance)
+
+        if not occupied_positions:
+            raise ValueError(f'No occupied positions in the tribute\'s vision')
+
+        return occupied_positions[0]
+
+
+
 
     def heuristic_tribute_first_attempt(self, tribute):
         vision_cells = self.tribute_vision_cells(tribute)
