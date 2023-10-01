@@ -12,7 +12,7 @@ def board():
     return Board(2, 2)
 
 
-def test_initial_board(board):
+def test_initial_board(board: Board):
     assert board.rows == 2
     assert board.columns == 2
     assert board.get_element(0, 0).__eq__(Cell())
@@ -21,7 +21,7 @@ def test_initial_board(board):
     assert board.get_element(1, 1).__eq__(Cell())
 
 
-def test_put_one_live_tribute(board):
+def test_put_one_live_tribute(board: Board):
     tribute = Tribute()
     board.put_tribute(1, 0, tribute)
     assert board.get_element(0, 0).get_state() == State.FREE
@@ -30,14 +30,14 @@ def test_put_one_live_tribute(board):
     assert board.get_element(1, 1).get_state() == State.FREE
 
 
-def test_put_tribute_fails(board):
+def test_put_tribute_fails(board: Board):
     tribute = Tribute()
     board.put_tribute(1, 0, tribute)
     with pytest.raises(ValueError):
         board.put_tribute(1, 0, tribute)
 
 
-def test_empty_board_to_string(board):
+def test_empty_board_to_string(board: Board):
     tribute = Tribute()
     board.put_tribute(0, 1, tribute)
     res = board.__str__()
@@ -46,7 +46,7 @@ def test_empty_board_to_string(board):
     assert expected == res
 
 
-def test_board_with_two_tributes_to_string(board):
+def test_board_with_two_tributes_to_string(board: Board):
     tribute1 = Tribute()
     tribute2 = Tribute()
     board.put_tribute(0, 1, tribute1)
@@ -149,6 +149,12 @@ def test_3_3_board_distribute_tribute():
     distrito1 = District()
     distrito1.set_config(50, 5, 1, 1, 4)
     board.distribute_tributes(distrito1)
+    tributes_count = 0
+    for row in board.board:
+        for cell in row:
+            if cell.state == State.TRIBUTE:
+                tributes_count += 1
+    assert tributes_count == 4
 
 
 def test_2x2_board_put_item_weapon_from_string():
@@ -169,7 +175,7 @@ def test_2x2_board_put_item_potion_from_string():
     assert weapon.__str__() == 'p'
 
 
-def test_2x2_board_put_item_and_remove_item(board):
+def test_2x2_board_put_item_and_remove_item(board: Board):
     weapon1 = Weapon()
     board.put_item(0, 1, weapon1)
     assert board.get_element(0, 1).__str__() == 'w'
@@ -194,23 +200,16 @@ def test_2x2_board_get_pos_tribute():
     assert board.get_pos(tribute1) == (0, 1)
 
 
-def test_2x2_board_valid_pos(board):
+def test_2x2_board_valid_pos(board: Board):
     t1 = Tribute()
     board.put_tribute(0, 1, t1)
     board.put_tribute(1, 1, Tribute())
     board.put_tribute(1, 0, Tribute())
 
     assert board.valid_pos((0, 0)) is True
-    assert board.valid_pos((0, 1)) is True
-    assert board.valid_pos((1, 0)) is True
-    assert board.valid_pos((1, 1)) is True
-
-    # fuera de rango, consultar porq los negativos no tiran excepcion
-    with pytest.raises(ValueError):
-        board.valid_pos((0, 2))
-
-    with pytest.raises(ValueError):
-        board.valid_pos((2, 0))
+    assert board.valid_pos((0, 1)) is False
+    assert board.valid_pos((1, 0)) is False
+    assert board.valid_pos((1, 1)) is False
 
 
 def test_get_adjacents_cells_with_adjacent_cells():
@@ -256,7 +255,7 @@ def test_get_adjacents_cells_with_cells_state_tribute():
     assert board.get_element(2, 2) in adjacent_cells
 
 
-def test_get_adjacents_cells_with_invalid_coordinates(board):
+def test_get_adjacents_cells_with_invalid_coordinates(board: Board):
     board = Board(3, 3)
     x, y = -1, -1
     with pytest.raises(ValueError):
@@ -269,7 +268,7 @@ def test_get_adjacents_cells_with_invalid_coordinates(board):
 
 
 # --------------------------
-def test_get_free_adjacents_empty_board(board):
+def test_get_free_adjacents_empty_board(board: Board):
     x, y = 0, 0
     free_adjacents = board.get_free_adjacents_cells(x, y)
     assert len(free_adjacents) == 3
@@ -295,7 +294,7 @@ def test_3x3_board_get_free_adjacents_some_adjacent_cells_occupied():
         assert cell.get_state() == State.FREE
 
 
-def test_get_free_adjacents_out_of_range(board):
+def test_get_free_adjacents_out_of_range(board: Board):
     x, y = -1, 0
     with pytest.raises(ValueError):
         board.get_free_adjacents_cells(x, y)
@@ -330,7 +329,7 @@ def test_get_free_adjacents_positions_boundary_positions():
     assert len(free_positions) == 3
 
 
-def test_fill_board_with_tributes(board):
+def test_fill_board_with_tributes(board: Board):
     tribute1 = Tribute()
     tribute2 = Tribute()
     tribute3 = Tribute()
@@ -378,7 +377,6 @@ def test_move_to_random():
     new_pos = board.get_pos(tribute)
     assert board.get_element(initial_pos[0], initial_pos[1]).get_state() == State.FREE
     assert initial_pos != new_pos
-    assert board.valid_pos(new_pos)
     assert board.get_element(new_pos[0], new_pos[1]).get_state() == State.TRIBUTE
     assert tribute.pos == new_pos
     assert initial_pos != new_pos
@@ -395,6 +393,20 @@ def test_move_to():
     assert board.get_element(initial_pos[0], initial_pos[1]).get_state() == State.FREE
     assert initial_pos != new_pos
     assert (new_pos[0], new_pos[1]) == (x, y)
-    assert board.valid_pos(new_pos)
     assert board.get_element(x, y).get_state() == State.TRIBUTE
     assert tribute.pos == new_pos
+
+def test_move_closer_to():
+    board = Board(5, 5)
+    tribute = Tribute()
+    board.put_tribute(1, 1, tribute)
+    (x, y) = board.move_closer_to(1, 2, tribute)
+    board.move_to(x, y, tribute)
+    assert tribute.pos == (1,2)
+    (x, y) = board.move_closer_to(4, 4, tribute)
+    board.move_to(x, y, tribute)
+    (x, y) = board.move_closer_to(4, 4, tribute)
+    board.move_to(x, y, tribute)
+    (x, y) = board.move_closer_to(4, 4, tribute)
+    board.move_to(x, y, tribute)
+    assert tribute.pos == (4,4)

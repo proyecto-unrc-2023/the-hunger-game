@@ -18,7 +18,11 @@ class Cell:
         self.state = FREE
         self.item = None
         self.tribute = None
-
+        self.pos = None
+        
+    def get_pos(self):
+        return self.pos    
+    
     def get_state(self):
         return self.state
 
@@ -51,7 +55,7 @@ class Cell:
 
     def remove_tribute(self):
         if self.state == ITEM or self.state == FREE:
-            raise ValueError(f"Trying to place one Item on top of another or over a Tribute.")
+            raise ValueError(f"Trying to remove one Item  or the cell is FREE.")
 
         self.state = FREE
         self.tribute = None
