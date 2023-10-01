@@ -32,11 +32,11 @@ def test_tribute_to_string():
     assert (tribute1.__str__()).__eq__('t1')
 
 
-def test_set_config_tribute():
+def test_set_config_parameters_tribute():
     tribute = Tribute()
-    tribute.set_cofing(50, 2, 3, 5)
+    tribute.set_config_parameters(50, 5, 3, 5)
     assert tribute.life == 50
-    assert tribute.force == 2
+    assert tribute.force == 5
     assert tribute.alliance == 3
     assert tribute.district == 5
     
@@ -49,13 +49,13 @@ def test_atack_to():
     t2.life = 100
     t1.force = 10
     t2.force = 10
-    board.put_tribute(2,2,t3)
+    board.put_tribute(2, 2, t3)
     board.put_tribute(0, 0, t1)
     board.put_tribute(1, 0, t2)
-    beforelife = t2.life
+    before_life = t2.life
     t1.atack_to(t2, board)
 
-    assert t2.life == (beforelife - t1.force)
+    assert t2.life == (before_life - t1.force)
 
     with pytest.raises(ValueError):
-        t1.atack_to(t3,board)
+        t1.atack_to(t3, board)

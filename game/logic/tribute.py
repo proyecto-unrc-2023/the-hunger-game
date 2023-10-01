@@ -17,7 +17,7 @@ class Tribute:
     @staticmethod
     def from_string(tribute_str):
         if tribute_str == Tribute().__str__():
-            return 't'
+            return Tribute() # from_string toma 't' y retorna Tribute()
         else:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
@@ -35,6 +35,9 @@ class Tribute:
         else:
             return 't' + str(self.district.get_number_district())
     
+    def __eq__(self, other):
+        return isinstance(other, Tribute)
+
     def atack_to(self, tribute, board):
         listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])
         if (tribute.pos[0], tribute.pos[1]) in listadj:
@@ -45,10 +48,9 @@ class Tribute:
         if (self.district == None):
             return 't'
         else:
-            # return 't' + str(self.district)
             return 't' + str(self.district.get_number_district())
 
-    def set_cofing(self, life, force, alliance, district):
+    def set_config_parameters(self, life, force, alliance, district):
         self.life = life
         self.force = force
         self.alliance = alliance

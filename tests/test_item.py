@@ -50,9 +50,9 @@ def test_potion_set_pos():
     res = potion.pos
     assert res.__eq__((1,2))
     
-def test_weapon_get_pos():
+def test_weapon_set_pos():
     weapon = Weapon()
-    weapon.set_pos = (2,2)
+    weapon.set_pos((2,2))
     
     res = weapon.pos
     assert res.__eq__((2,2))
