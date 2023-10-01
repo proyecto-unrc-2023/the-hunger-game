@@ -9,6 +9,7 @@ class Tribute:
         self.alliance = None
         self.district = None
         self.pos = None
+        self.past_pos = None
 
     @staticmethod
     def from_string(tribute_str):
@@ -44,7 +45,7 @@ class Tribute:
         if self.district is None:
             return 't'
         else:
-            return 't' + str(self.district.get_number_district())
+            return 't' + str(self.district)
 
     def set_config_parameters(self, life, force, alliance, district):
         self.life = life

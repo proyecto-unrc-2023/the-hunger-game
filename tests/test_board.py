@@ -207,13 +207,12 @@ def test_2x2_board_get_pos_tribute():
 def test_2x2_board_valid_pos(board: Board):
     t1 = Tribute()
     board.put_tribute(0, 1, t1)
-    board.put_tribute(1, 1, Tribute())
-    board.put_tribute(1, 0, Tribute())
+    board.put_item(1, 0, Weapon())
 
     assert board.valid_pos((0, 0)) is True
     assert board.valid_pos((0, 1)) is False
-    assert board.valid_pos((1, 0)) is False
-    assert board.valid_pos((1, 1)) is False
+    assert board.valid_pos((1, 0)) is True
+    assert board.valid_pos((1, 1)) is True
 
 
 def test_get_adjacents_cells_with_adjacent_cells():
@@ -281,21 +280,42 @@ def test_get_free_adjacents_empty_board(board: Board):
 def test_3x3_board_get_free_adjacents_empty_board():
     board = Board(3, 3)
     x, y = 1, 1
-    free_adjacents = board.get_free_adjacents_cells(x, y)
-    assert len(free_adjacents) == 8
-    for cell in free_adjacents:
-        assert cell.get_state() == State.FREE
+    free_adjacents = board.get_free_adjacents_positions(x, y)
+    expected_positions = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1), (2, 2)]
+    
+    assert len(free_adjacents) == len(expected_positions)
+    for pos in expected_positions:
+        assert pos in free_adjacents
+
 
 
 def test_3x3_board_get_free_adjacents_some_adjacent_cells_occupied():
-    board = Board(3, 3)
-    x, y = 1, 1
-    board.get_element(0, 1).put_tribute(Tribute())
-    board.get_element(1, 0).put_tribute(Tribute())
+    board = Board(7, 7)
+    x, y = 3, 3
+    board.get_element(2, 3).put_tribute(Tribute())
+    board.get_element(2, 2).put_tribute(Tribute())
+    board.get_element(2, 0).put_item(Weapon())
     free_adjacents = board.get_free_adjacents_cells(x, y)
     assert len(free_adjacents) == 6
     for cell in free_adjacents:
-        assert cell.get_state() == State.FREE
+        assert (cell.get_state() == State.FREE or cell.get_state() == State.ITEM)
+
+def test_3x3_board_get_free_adjacents_cells_expected():
+    board = Board(7, 7)
+    x, y = 3, 3
+    board.get_element(0, 1).put_tribute(Tribute())
+    board.get_element(2, 3).put_tribute(Tribute())
+    board.get_element(2, 2).put_item(Weapon())
+    free_adjacents = board.get_free_adjacents_cells(x, y)
+    
+    expected_positions = [(2, 2), (2, 4), (3, 2), (3, 4), (4, 2), (4, 3), (4, 4)]
+    
+    assert len(free_adjacents) == len(expected_positions)
+    
+    for pos in expected_positions:
+        cell = board.get_element(pos[0], pos[1])
+        assert (cell.get_state() == State.FREE or cell.get_state() == State.ITEM)
+
 
 
 def test_get_free_adjacents_out_of_range(board: Board):
@@ -307,6 +327,7 @@ def test_get_free_adjacents_out_of_range(board: Board):
 def test_get_free_adjacents_positions_valid_position():
     board = Board(3, 3)
     x, y = 1, 1
+    board.put_item(2,2,Weapon())
     free_positions = board.get_free_adjacents_positions(x, y)
     assert len(free_positions) == 8
     assert (0, 1) in free_positions
@@ -399,6 +420,10 @@ def test_move_to():
     assert (new_pos[0], new_pos[1]) == (x, y)
     assert board.get_element(x, y).get_state() == State.TRIBUTE
     assert tribute.pos == new_pos
+    tribute2 = Tribute()
+    board.put_tribute(1,1, tribute2)
+    board.put_item(2,2, Weapon())
+    board.move_to(2,2, tribute2)
 
 def test_move_closer_to():
     board = Board(5, 5)
