@@ -39,9 +39,10 @@ def test_set_config_parameters_tribute():
     assert tribute.force == 5
     assert tribute.alliance == 3
     assert tribute.district == 5
-    
-def test_atack_to():
-    board = Board(3,3)
+
+
+def test_attack_to():
+    board = Board(3, 3)
     t1 = Tribute()
     t2 = Tribute()
     t3 = Tribute()
@@ -53,9 +54,28 @@ def test_atack_to():
     board.put_tribute(0, 0, t1)
     board.put_tribute(1, 0, t2)
     before_life = t2.life
-    t1.atack_to(t2, board)
+    t1.attack_to(t2, board)
 
     assert t2.life == (before_life - t1.force)
 
     with pytest.raises(ValueError):
-        t1.atack_to(t3, board)
+        t1.attack_to(t3, board)
+
+
+def test_of_alliance_to():
+    tribute1 = Tribute()
+    tribute_neutral = Tribute()
+    tribute1.district = 1
+    tribute_neutral.district = 2  # Stop being neutral
+    with pytest.raises(ValueError):
+        tribute1.alliance_to(tribute_neutral)
+
+
+def test_generates_alliance_value():
+    tribute1 = Tribute()
+    tribute1.alliance = 10
+    neutral_value = 5
+    assert tribute1.generates_alliance_value(tribute1.alliance, neutral_value) is True
+    tribute1.alliance = 10
+    neutral_value = 1
+    assert (tribute1.generates_alliance_value(tribute1.alliance, neutral_value)) is False
