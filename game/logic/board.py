@@ -137,8 +137,10 @@ class Board:
     def get_adjacent_positions(self, row, column):
         adjacent_positions = []
 
-        # Verificar las celdas adyacentes arriba, abajo, izquierda, derecha y en las esquinas diagonales
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+        # Definir las direcciones para las celdas adyacentes, incluyendo las esquinas
+        directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+
+        for dr, dc in directions:
             new_row, new_column = row + dr, column + dc
 
             # Verificar si la posición es válida

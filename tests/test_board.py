@@ -410,3 +410,36 @@ def test_move_closer_to():
     (x, y) = board.move_closer_to(4, 4, tribute)
     board.move_to(x, y, tribute)
     assert tribute.pos == (4,4)
+def test_get_adjacent_positions():
+    board = Board(4, 4)
+
+    # Prueba una posición en el centro del tablero (2, 2)
+    adjacent_positions = board.get_adjacent_positions(2, 2)
+    expected_positions = [(1, 1), (1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2), (3, 3)]
+    assert adjacent_positions == expected_positions
+
+    # Prueba una posición en la esquina superior izquierda (0, 0)
+    adjacent_positions = board.get_adjacent_positions(0, 0)
+    expected_positions = [(0, 1), (1, 0), (1, 1)]
+    assert adjacent_positions == expected_positions
+
+    # Prueba una posición en la esquina inferior derecha (3, 3)
+    adjacent_positions = board.get_adjacent_positions(3, 3)
+    expected_positions = [(2, 2), (2, 3), (3, 2)]
+    assert adjacent_positions == expected_positions
+
+    # Prueba una posición en el borde derecho (1, 3)
+    adjacent_positions = board.get_adjacent_positions(1, 3)
+    expected_positions = [(0, 2), (0, 3), (1, 2), (2, 2), (2, 3)]
+    assert adjacent_positions == expected_positions
+
+    # Prueba una posición en el borde izquierdo (2, 0)
+    adjacent_positions = board.get_adjacent_positions(2, 0)
+    expected_positions = [(1, 0), (1, 1), (2, 1), (3, 0), (3, 1)]
+    assert adjacent_positions == expected_positions
+
+    # Prueba una posición en el borde inferior (3, 1)
+    adjacent_positions = board.get_adjacent_positions(3, 1)
+    expected_positions = [(2, 0), (2, 1), (2, 2), (3, 0), (3, 2)]
+    assert adjacent_positions == expected_positions
+
