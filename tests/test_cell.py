@@ -80,16 +80,11 @@ def test_item_and_tribute_interaction():
     assert cell.get_item() == item
     assert cell.get_tribute() == tribute
     assert cell.state == State.TRIBUTE
-    # Elimina el ítem y verifica que la celda vuelva a estar libre
+    # Elimina el ítem y verifica que la celda aun tiene tribute 
     cell.remove_item()
-    assert cell.get_state() == State.FREE
+    assert cell.get_state() == State.TRIBUTE
     with pytest.raises(ValueError):
         cell.get_item()
-
-    # Coloca un tributo y verifica que esté en la celda
-    cell.put_tribute(tribute)
-    assert cell.get_state() == State.TRIBUTE
-    assert cell.get_tribute() == tribute
 
     # Intenta colocar un ítem y verifica que se lance una excepción
     with pytest.raises(ValueError):

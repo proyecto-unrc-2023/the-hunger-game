@@ -59,9 +59,10 @@ class Cell:
         self.tribute = tribute
 
     def remove_tribute(self):
-        if self.state == ITEM or self.state == FREE:
+        if self.get_state() == ITEM or self.get_state() == FREE:
             raise ValueError(f"Trying to remove one Item  or the cell is FREE.")
-
+        
+        self.tribute.past_pos = self.tribute.pos
         self.state = FREE
         self.tribute = None
 
@@ -75,6 +76,7 @@ class Cell:
     def remove_item(self):
         if self.item == None:
             raise ValueError(f"Trying to remove a Item where there isn't one.")
+        if self.tribute == None:
+            self.state = FREE
 
-        self.state = FREE
         self.item = None
