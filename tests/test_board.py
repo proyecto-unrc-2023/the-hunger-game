@@ -59,15 +59,19 @@ def test_board_with_two_tributes_to_string(board: Board):
 
 def test_4x4_board_with_two_tribute_to_string():
     board = Board(4, 4)
+    tribute1 = Tribute()
+    tribute2 = Tribute()
+    board.put_tribute(2, 1, tribute1)
+    board.put_tribute(3, 3, tribute2)
     res = board.__str__()
     expected = ' | | | \n' \
                ' | | | \n' \
-               ' | | | \n' \
-               ' | | | '
+               ' |t| | \n' \
+               ' | | |t'
     assert expected == res
 
 
-def test_2x4_board__to_string():
+def test_2x4_board_to_string():
     board = Board(2, 4)
     res = board.__str__()
     expected = ' | | | \n' \
@@ -75,7 +79,7 @@ def test_2x4_board__to_string():
     assert expected == res
 
 
-def test_2x2_board__to_string_with_tribute_weapon_potion():
+def test_2x2_board_to_string_with_tribute_weapon_potion():
     board = Board(2, 2)
     board.put_tribute(0, 1, Tribute())
     board.put_item(0, 0, Potion())
@@ -142,7 +146,7 @@ def test_2x2_board_remove_tribute():
     assert (board.get_element(0, 1)).__str__() == ' '
 
 
-def test_3_3_board_distribute_tribute():
+def test_3x3_board_distribute_tribute():
     board_str = ' | | \n' \
                 ' | | '
     board = Board.from_string(board_str)
@@ -267,14 +271,14 @@ def test_get_adjacents_cells_with_invalid_coordinates(board: Board):
         board.get_adjacents_cells(x, y)
 
 
-# --------------------------
+
 def test_get_free_adjacents_empty_board(board: Board):
     x, y = 0, 0
     free_adjacents = board.get_free_adjacents_cells(x, y)
     assert len(free_adjacents) == 3
 
 
-def test_3x3_boardget_free_adjacents_empty_board():
+def test_3x3_board_get_free_adjacents_empty_board():
     board = Board(3, 3)
     x, y = 1, 1
     free_adjacents = board.get_free_adjacents_cells(x, y)

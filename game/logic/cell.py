@@ -46,6 +46,11 @@ class Cell:
         if self.state == TRIBUTE:
             return self.tribute.__str__()
 
+    
+    def __eq__(self, other):
+        return isinstance(other, Cell)
+
+
     def put_tribute(self, tribute):
         if self.state == TRIBUTE:
             raise ValueError(f"Trying to place one Tribute on top of another.")

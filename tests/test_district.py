@@ -17,10 +17,15 @@ def test_set_config_invalid_alliance():
         district.set_config(50, 10, 11, 3, 4)  # aliance 11
 
 
-def test_set_config_add_tribute_in_list_tributes():
+def test_set_config_tributes():
     district = District()
-    district.set_config(50, 10, 10, 1, 5)
-    assert len(district.tributes) == 5
+    district.set_config(50, 10, 6, 1, 5)
+    list_tributes = district.tributes
+    for i in range(len(list_tributes)):
+        assert list_tributes[i].life == 50
+        assert list_tributes[i].force == 10
+        assert list_tributes[i].alliance == 6
+        assert list_tributes[i].district == 1
 
 
 # tests para metodo add_tribute(..)
