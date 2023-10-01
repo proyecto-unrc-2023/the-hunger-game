@@ -237,7 +237,7 @@ class Board:
         
         self.put_tribute(x, y, tribute)
 
-    # Mueve un tributo hacia una posición más cercana a las coordenadas (x, y).
+    # Devuelve la posición más cercana a las coordenadas (x, y) a las que se puede mover un tributo.
     def move_closer_to(self, x, y, tribute):
         def calculate_distance(position):
             return ((position[0] - x) ** 2 + (position[1] - y) ** 2) ** 0.5
