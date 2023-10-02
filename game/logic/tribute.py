@@ -23,7 +23,7 @@ class Tribute:
             return True
 
     def is_dead(self):
-        if self.life == 0:
+        if self.life <= 0:
             return True
 
     def __str__(self):
@@ -38,7 +38,8 @@ class Tribute:
     def attack_to(self, tribute, board):
         listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])
         if (tribute.pos[0], tribute.pos[1]) in listadj:
-            tribute.life -= self.force
+            if tribute.district != self.district:
+                tribute.life -= self.force
         else:
             raise ValueError(f"Not possible attack")
 

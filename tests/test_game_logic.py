@@ -1,5 +1,6 @@
 import pytest
 
+from game.logic.cell import State
 from game.logic.game_logic import GameLogic
 from game.logic.board import Board
 from game.logic.item import Potion, Weapon
@@ -183,6 +184,23 @@ def test_tribute_vision_cells_ocupped_order_by_closeness_multiple_items(game):
     game.board.put_item(2, 1, Weapon())
     result = game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos
     assert result == (2, 1)  # Closest item (Weapon) is at (2, 1)
+    
+def test_fight_2_tributes_and_one_died():
+    game = GameLogic()
+    game.new_game(2,2)
+    t1 = Tribute()
+    t2 = Tribute()
+    t1.set_config_parameters(40,25,1,1)
+    t2.set_config_parameters(40,25,1,2)
+    game.board.put_tribute(0,0,t1)
+    game.board.put_tribute(0,1,t2)
+    game.figth(t1,t2)
+    assert t2.life == 15
+    game.figth(t2,t1)
+    assert t1.life == 15
+    game.figth(t1, t2)
+    assert t2.is_dead()
+    assert game.board.get_element(0,1).get_state() == State.FREE
     
 def test_heuristic_tribute_move_towards_item():
     game = GameLogic()

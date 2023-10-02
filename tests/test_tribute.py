@@ -48,6 +48,8 @@ def test_attack_to():
     t1 = Tribute()
     t2 = Tribute()
     t3 = Tribute()
+    t1.district = 1
+    t2.district = 2
     t1.life = 100
     t2.life = 100
     t1.force = 10
