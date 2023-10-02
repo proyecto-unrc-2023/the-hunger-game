@@ -471,4 +471,3 @@ def test_get_adjacent_positions():
     adjacent_positions = board.get_adjacent_positions(3, 1)
     expected_positions = [(2, 0), (2, 1), (2, 2), (3, 0), (3, 2)]
     assert adjacent_positions == expected_positions
-

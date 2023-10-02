@@ -87,6 +87,21 @@ class GameLogic:
             return False
 
         return occupied_cells[0]
+    
+    def figth(self, tribute, tribute2):
+        x = tribute2.pos[0]
+        y = tribute2.pos[1]
+        pos = tribute.move_closer_to(x, y, self.board)
+        if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+            tribute.move_to(pos[0], pos[1], self.board)
+        else:
+            cell_with_tribute = self.board.get_element(x, y)
+            t2 = cell_with_tribute.get_tribute()
+            tribute.attack_to(t2, self.board)
+            if tribute2.is_dead():
+                self.board.remove_tribute(tribute2)
+
+
 
     # Implements a heuristic move for a character referred to as "tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
