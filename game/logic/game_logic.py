@@ -95,7 +95,7 @@ class GameLogic:
 
         # If there are no occupied cells nearby, move the tribute to a random cell on the game board.
         if cell == False:
-            self.board.move_to_random(tribute)
+            tribute.move_to_random(self.board)
         else:
             # Get the position of the occupied cell in the vision.
             x = cell.pos[0]
@@ -104,13 +104,13 @@ class GameLogic:
             # Check the state of the cell (ITEM or TRIBUTE).
             if cell.get_state() == State.ITEM:
                 # If it's an item, go to retrieve it.
-                pos = self.board.move_closer_to(x, y, tribute)
-                self.board.move_to(pos[0], pos[1], tribute)
+                pos = tribute.move_closer_to(x, y, self.board)
+                tribute.move_to(pos[0], pos[1], self.board)
             elif cell.get_state() == State.TRIBUTE:
                 # If it's a tribute, move to an adjacent position to it, and if already adjacent, attack.
-                pos = self.board.move_closer_to(x, y, tribute)
+                pos = tribute.move_closer_to(x, y, self.board)
                 if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
-                    self.board.move_to(pos[0], pos[1], tribute)
+                    tribute.move_to(pos[0], pos[1], self.board)
                 else:
                     cell_with_tribute = self.board.get_element(x, y)
                     t2 = cell_with_tribute.get_tribute()

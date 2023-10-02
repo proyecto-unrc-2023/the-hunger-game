@@ -3,6 +3,8 @@ import pytest
 from game.logic.district import District
 from game.logic.board import Board
 from game.logic.tribute import Tribute
+from game.logic.item import Weapon
+from game.logic.cell import State
 
 
 def test_create_live_tribute_from_str():
@@ -79,3 +81,51 @@ def test_generates_alliance_value():
     tribute1.alliance = 10
     neutral_value = 1
     assert (tribute1.generates_alliance_value(tribute1.alliance, neutral_value)) is False
+
+def test_move_to_random():
+    board = Board(3, 3)
+    tribute = Tribute()
+    board.put_tribute(1, 1, tribute)
+    initial_pos = board.get_pos(tribute)
+    board.move_to_random(tribute)
+    new_pos = board.get_pos(tribute)
+    assert board.get_element(initial_pos[0], initial_pos[1]).get_state() == State.FREE
+    assert initial_pos != new_pos
+    assert board.get_element(new_pos[0], new_pos[1]).get_state() == State.TRIBUTE
+    assert tribute.pos == new_pos
+    assert initial_pos != new_pos
+
+
+def test_move_to():
+    board = Board(3, 3)
+    tribute = Tribute()
+    board.put_tribute(1, 1, tribute)
+    initial_pos = board.get_pos(tribute)
+    x, y = 0, 2
+    board.move_to(x, y, tribute)
+    new_pos = board.get_pos(tribute)
+    assert board.get_element(initial_pos[0], initial_pos[1]).get_state() == State.FREE
+    assert initial_pos != new_pos
+    assert (new_pos[0], new_pos[1]) == (x, y)
+    assert board.get_element(x, y).get_state() == State.TRIBUTE
+    assert tribute.pos == new_pos
+    tribute2 = Tribute()
+    board.put_tribute(1,1, tribute2)
+    board.put_item(2,2, Weapon())
+    board.move_to(2,2, tribute2)
+
+
+def test_move_closer_to():
+    board = Board(5, 5)
+    tribute = Tribute()
+    board.put_tribute(1, 1, tribute)
+    (x, y) = board.move_closer_to(1, 2, tribute)
+    board.move_to(x, y, tribute)
+    assert tribute.pos == (1,2)
+    (x, y) = board.move_closer_to(4, 4, tribute)
+    board.move_to(x, y, tribute)
+    (x, y) = board.move_closer_to(4, 4, tribute)
+    board.move_to(x, y, tribute)
+    (x, y) = board.move_closer_to(4, 4, tribute)
+    board.move_to(x, y, tribute)
+    assert tribute.pos == (4,4)

@@ -1,5 +1,5 @@
 import random
-
+from game.logic.cell import State
 
 class Tribute:
 
@@ -53,20 +53,6 @@ class Tribute:
         self.alliance = alliance
         self.district = district
 
-    def move_to(self, position):
-        # I check if current_pos exists
-        if not self.pos:
-            raise ValueError("Current position is not set for LiveTribute.")
-
-        # I get all available moves
-        available_moves = self.movements_available
-
-        # I check if the movement is valid
-        if position in available_moves:
-            self.pos = position
-        else:
-            raise ValueError("Position is not an available movement for LiveTribute")
-
     # First proposal of the alliance system
     # The neutral tribute alliance is fictitious, it does not take said value
     # after the decision.
@@ -89,3 +75,34 @@ class Tribute:
             return True
         else:
             return False
+
+    # Moves a tribute to a randomly selected free adjacent position.
+    def move_to_random(self, board):
+        board.remove_tribute(self)
+        pos = board.random_choice(self)
+        board.put_tribute(pos[0], pos[1], self)
+
+    # Moves a tribute to a specific position on the board.
+    def move_to(self, x, y, board):
+        board.remove_tribute(self)
+        if not (board.valid_pos(self.pos)):
+            raise ValueError(f'Position no valid')
+        if board.board[x][y].get_state() == State.TRIBUTE:
+            raise ValueError(f'Position have a Tribute')
+        adjacent_pos = board.get_free_adjacents_positions(self.pos[0], self.pos[1])
+        if not ((x,y) in adjacent_pos):
+              raise ValueError(f'Position ({x}, {y}) is not free Adjacent')
+        
+        board.put_tribute(x, y, self)
+
+    # Returns the closest position to coordinates (x, y) that a tribute can move to.
+    def move_closer_to(self, x, y, board):
+        def calculate_distance(position):
+            return ((position[0] - x) ** 2 + (position[1] - y) ** 2) ** 0.5
+
+        possible_moves = board.get_free_adjacents_positions(self.pos[0], self.pos[1])
+        possible_moves.sort(key=calculate_distance)
+        if not  possible_moves:
+            raise ValueError(f'No FREE positions')
+
+        return possible_moves[0]
