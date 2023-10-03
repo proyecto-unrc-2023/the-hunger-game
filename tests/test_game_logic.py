@@ -5,6 +5,7 @@ from game.logic.game_logic import GameLogic
 from game.logic.board import Board
 from game.logic.item import Potion, Weapon
 from game.logic.tribute import Tribute
+from game.logic.district import District
 
 @pytest.fixture
 def game():
@@ -314,3 +315,37 @@ def test_heuristic_tribute_first_attempt_complex():
     assert tribute.pos == p.pos
     game.heuristic_tribute_first_attempt(tribute)
     #assert neutro.district == tribute.district
+
+
+# Test for configuration_districts(...)
+
+def test_config_districts_length_district():
+    district = District()
+    game_logic = GameLogic()
+    game_logic.configuration_districts(district, 25, 5, 10, 1, 4)
+    assert len(game_logic.districts) == 6
+
+
+def test_config_districts_add_district():
+    district = District()
+    game_logic = GameLogic()
+    game_logic.configuration_districts(district, 50, 7, 3, 2, 4)
+    assert district in game_logic.districts
+
+
+def test_config_districts_my_number_district():
+    district = District()
+    game_logic = GameLogic()
+    game_logic.configuration_districts(district, 30, 10, 10, 2, 6)
+    my_district = game_logic.districts[0]
+    my_number_district = my_district.get_number_district()
+    assert my_number_district == 2
+
+
+def test_config_district_my_cant_tributes():
+    district = District()
+    game_logic = GameLogic()
+    game_logic.configuration_districts(district, 50, 5, 5, 1, 5)
+    my_district = game_logic.districts[0]
+    my_cant_tributes = my_district.get_cant_tribute()
+    assert my_cant_tributes == 5
