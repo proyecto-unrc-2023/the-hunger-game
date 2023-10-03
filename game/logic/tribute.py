@@ -57,14 +57,13 @@ class Tribute:
     # First proposal of the alliance system
     # The neutral tribute alliance is fictitious, it does not take said value
     # after the decision.
+    # True if the alliance is successful, false otherwise
     def alliance_to(self, tribute):
         if tribute.district is not None:
             raise ValueError("The tribute is not Neutral")
         if self.generates_alliance_value(self.alliance, random.randint(1, 10)) is True:
-            # Here, we need copy the District properties to neutral Tribute
             return True
         else:
-            # Should be attack each other (IdK if that action be here or in other class )
             return False
 
     @staticmethod

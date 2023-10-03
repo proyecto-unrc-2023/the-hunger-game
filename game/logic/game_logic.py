@@ -41,7 +41,6 @@ class GameLogic:
             district.set_config_random(list_district[i])
             self.districts.append(district)
 
-
     def applies_effects(self, item, tribute):
         return 0
 
@@ -127,6 +126,14 @@ class GameLogic:
             tribute.attack_to(t2, self.board)
             if tribute2.is_dead():
                 self.board.remove_tribute(tribute2)
+
+    # Method to use after the alliance is True
+    # "Tribute" is the neutral tribute who accept the alliance
+    @staticmethod
+    def alliance_neutral(tribute, district):
+        tribute.district = district.get_number_district()
+        district.tributes.append(tribute)
+        district.cant_tributes = district.cant_tributes + 1
 
     # Implements a heuristic move for a character referred to as "tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
