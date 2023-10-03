@@ -66,9 +66,13 @@ class GameLogic:
             distance = ((cell.get_pos()[0] - tribute.pos[0]) ** 2 + (cell.get_pos()[1] - tribute.pos[1]) ** 2) ** 0.5
             if cell.get_state() == State.ITEM:
                 if cell.get_item() == Weapon():
-                    distance -= 0.2
+                    distance -= 0.9
                 else:
-                    distance -= 0.1
+                    distance -= 0.8
+            elif cell.get_state() == State.TRIBUTE:
+                if cell.get_tribute().district == None:
+                     distance -= 0.001
+
             return distance
 
         vision_cells = self.tribute_vision_cells(tribute)
@@ -76,7 +80,8 @@ class GameLogic:
         occupied_cells = [
             cell
             for cell in vision_cells
-            if cell.get_state() != State.FREE
+            if cell.get_state() != State.FREE or (cell.get_state() == State.TRIBUTE and 
+                                                   cell.get_tribute().district != tribute.district)
             # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
             # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
@@ -88,7 +93,9 @@ class GameLogic:
 
         return occupied_cells[0]
     
-    def figth(self, tribute, tribute2):
+    # Simulates combat between two tributes, moving 'tribute' towards 'tribute2' 
+    # and removing 'tribute2' if defeated.
+    def fight(self, tribute, tribute2):
         x = tribute2.pos[0]
         y = tribute2.pos[1]
         pos = tribute.move_closer_to(x, y, self.board)
@@ -115,18 +122,33 @@ class GameLogic:
             # Get the position of the occupied cell in the vision.
             x = cell.pos[0]
             y = cell.pos[1]
-
+            Tx = tribute.pos[0]
+            Ty = tribute.pos[1]
             # Check the state of the cell (ITEM or TRIBUTE).
             if cell.get_state() == State.ITEM:
                 # If it's an item, go to retrieve it.
-                pos = tribute.move_closer_to(x, y, self.board)
-                tribute.move_to(pos[0], pos[1], self.board)
-            elif cell.get_state() == State.TRIBUTE:
-                # If it's a tribute, move to an adjacent position to it, and if already adjacent, attack.
-                pos = tribute.move_closer_to(x, y, self.board)
-                if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
-                    tribute.move_to(pos[0], pos[1], self.board)
+                if cell.get_item().pos in self.board.get_adjacent_positions(Tx,Ty):
+                    tribute.move_to(x, y, self.board)
+                    item = cell.get_item()
+                    item.applies_efects(tribute)
                 else:
-                    cell_with_tribute = self.board.get_element(x, y)
-                    t2 = cell_with_tribute.get_tribute()
-                    tribute.attack_to(t2, self.board)
+                    pos = tribute.move_closer_to(x, y, self.board)
+                    tribute.move_to(pos[0], pos[1], self.board)
+                    
+            elif cell.get_state() == State.TRIBUTE:
+                # If it's a tribute,check if its a neutral or not
+                if cell.get_tribute().district == None:
+                    if cell.get_tribute().pos in self.board.get_adjacent_positions(Tx,Ty):
+                        tribute.alliance_to(cell.get_tribute())
+                    else:
+                        pos = tribute.move_closer_to(x, y, self.board)
+                        tribute.move_to(pos[0], pos[1], self.board) 
+                else:
+                    pos = cell.get_tribute().pos
+                    #move to an adjacent position to it, and if already adjacent, attack.
+                    if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+                        tribute.move_to(pos[0], pos[1], self.board)
+                    else:
+                        cell_with_tribute = self.board.get_element(x, y)
+                        t2 = cell_with_tribute.get_tribute()
+                        self.fight(tribute,t2)
