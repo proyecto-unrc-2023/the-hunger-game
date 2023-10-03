@@ -38,7 +38,7 @@ class Potion(Item):
     def __eq__(self, other):
         return isinstance(other, Potion)
 
-    def applies_efects(tribute):
+    def applies_efects(self, tribute):
         tribute.life += 5
 
 
@@ -50,5 +50,5 @@ class Weapon(Item):
     def __eq__(self, other):
         return isinstance(other, Weapon)
 
-    def applies_efects(tribute):
+    def applies_efects(self, tribute):
         tribute.force += 1

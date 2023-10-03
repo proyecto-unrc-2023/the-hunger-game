@@ -124,34 +124,42 @@ def test_get_adjacents_cells_with_invalid_coordinates():
     with pytest.raises(ValueError):
         board.get_adjacents_cells(x, y)
 
-def test_get_tribute_vision_cells_ocupped_order_by_closeness():
+def test_get_tribute_closenes_with_neutral_weapon_potion_tribute():
+    game = GameLogic()
+    game.new_game(3,3)
+    t1 =  Tribute()
+    t2 =  Tribute()
+    neutro =  Tribute()
+    w = Weapon()
+    p = Potion()
+    t1.set_config_parameters(50,5,1,1)
+    t2.set_config_parameters(50,5,1,2)
+    game.board.put_tribute(1,1,t1)
+    game.board.put_tribute(0,1,t2) #//arriba
+    game.board.put_item(2,1,w)#ABAJO
+    game.board.put_item(1,0,p)#izquierda
+    game.board.put_tribute(1,2,neutro)#derecha
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (2,1)
+    game.board.remove_item(w)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (1,0)
+    game.board.remove_item(p)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (1,2)
+    game.board.remove_tribute(neutro)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (0,1)
+    
+    
+def test_get_tribute_closeness_with_same_district():
     game = GameLogic()
     game.new_game(7, 7)
     t1 = Tribute()
-    game.board.put_tribute(3, 3, t1)
-    
     t2 = Tribute()
-    w1 = Weapon()
-    p1 = Potion()
-    game.board.put_tribute(2, 3, t2)
-    game.board.put_item(4, 3, w1)
-    game.board.put_item(3, 4, p1)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (4,3)
-    game.board.move_to(4,3,t1)
-    game.board.remove_item(w1)
-    assert t1.pos == (4,3)
-    
+    t1.set_config_parameters(50,5,1,1)
+    t2.set_config_parameters(50,5,1,1)
+    game.board.put_tribute(3, 3, t1)
+    game.board.put_tribute(3, 4, t2)
+    p = Potion()
+    game.board.put_item(5,5,p)
     assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (3,4)
-    game.board.move_to(3,4,t1)
-    game.board.remove_item(p1)
-    assert t1.pos == (3,4)
-    
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (2,3)
-    pos = game.board.move_closer_to(2,3,t1)
-    game.board.put_tribute(pos[0], pos[1], t1)
-    adjacents = game.board.get_adjacent_positions(t1.pos[0], t1.pos[1])
-    assert (2,3) in adjacents
-    
 
 def test_tribute_vision_cells_ocupped_order_by_closeness_empty_board():
     game = GameLogic()
@@ -194,11 +202,11 @@ def test_fight_2_tributes_and_one_died():
     t2.set_config_parameters(40,25,1,2)
     game.board.put_tribute(0,0,t1)
     game.board.put_tribute(0,1,t2)
-    game.figth(t1,t2)
+    game.fight(t1,t2)
     assert t2.life == 15
-    game.figth(t2,t1)
+    game.fight(t2,t1)
     assert t1.life == 15
-    game.figth(t1, t2)
+    game.fight(t1, t2)
     assert t2.is_dead()
     assert game.board.get_element(0,1).get_state() == State.FREE
     
@@ -206,6 +214,7 @@ def test_heuristic_tribute_move_towards_item():
     game = GameLogic()
     game.new_game(7, 7)
     tribute = Tribute()
+    tribute.force = 2
     game.board.put_tribute(3, 3, tribute)
     
     weapon = Weapon()
@@ -242,3 +251,66 @@ def test_heuristic_tribute_first_attempt_move_randomly():
     assert tribute.pos != (3, 3)
     free_adjacents = game.board.random_choice(tribute)
     assert not (tribute.past_pos in free_adjacents)    
+
+
+def test_heuristic_tribute_first_attempt_neutral_potion():
+    game = GameLogic()
+    game.new_game(2, 2)
+    
+    # Configuración del tributo principal
+    tribute = Tribute()
+    tribute.set_config_parameters(50, 5, 25, 1)
+    game.board.put_tribute(1, 1, tribute)
+    
+    # Configuración de tributo neutral (neutro)
+    neutro = Tribute()
+    game.board.put_tribute(0, 0, neutro)  
+
+    # Configuración de poción
+    p = Potion()
+    game.board.put_item(1, 0, p)
+    game.heuristic_tribute_first_attempt(tribute)
+    assert tribute.pos == p.pos
+
+
+def test_heuristic_tribute_first_attempt_complex():
+    game = GameLogic()
+    game.new_game(5, 4)
+    
+    # Configuración del tributo principal
+    tribute = Tribute()
+    tribute.set_config_parameters(50, 5, 25, 1)
+    game.board.put_tribute(1, 1, tribute)
+
+    # Configuración de tributo oponente (t1)
+    t1 = Tribute()
+    t1.set_config_parameters(10, 5, 1, 2)
+    game.board.put_tribute(1, 3, t1)  
+    
+    # Configuración de tributo neutral (neutro)
+    neutro = Tribute()
+    game.board.put_tribute(4, 3, neutro)  
+
+    # Configuración de arma y poción
+    w = Weapon()
+    p = Potion()
+    game.board.put_item(2, 3, w)
+    game.board.put_item(4, 2, p)
+
+    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute_first_attempt(tribute)
+    assert tribute.pos == w.pos
+    assert tribute.force == 6
+    game.board.remove_item(w)
+    game.heuristic_tribute_first_attempt(tribute)
+    t1.attack_to(tribute, game.board)
+    game.heuristic_tribute_first_attempt(tribute)
+    assert tribute.life == 45
+    assert t1.is_dead()
+    assert game.board.get_element(1,3).get_state() == State.FREE
+    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute_first_attempt(tribute)
+    assert tribute.life == 50
+    assert tribute.pos == p.pos
+    game.heuristic_tribute_first_attempt(tribute)
+    #assert neutro.district == tribute.district
