@@ -329,6 +329,7 @@ def test_heuristic_tribute_first_attempt_complex():
     assert tribute.pos == p.pos
     game.heuristic_tribute_first_attempt(tribute)
 
+
 def test_end_game():
     district1 = District()
     district2 = District()
@@ -342,7 +343,7 @@ def test_end_game():
     game2 = GameLogic()
     with pytest.raises(ValueError):
         game2.end_game()
-    #assert neutro.district == tribute.district
+    # assert neutro.district == tribute.district
 
 
 # Test for configuration_districts(...)
@@ -377,3 +378,15 @@ def test_config_district_my_cant_tributes():
     my_district = game_logic.districts[0]
     my_cant_tributes = my_district.get_cant_tribute()
     assert my_cant_tributes == 5
+
+
+def test_alliance_neutral_tribute():
+    tribute = Tribute()
+    district = District()
+    district.set_config(50, 5, 5, 1, 2)
+    old_number_of_tributes = district.get_cant_tribute()
+    game = GameLogic()
+    game.alliance_neutral(tribute, district)
+    assert tribute.district is district.get_number_district()
+    assert old_number_of_tributes + 1 == district.get_cant_tribute()
+    assert district.tributes.__contains__(tribute)
