@@ -1,9 +1,12 @@
 from enum import Enum
 
 from game.logic.board import Board
+from game.logic.tribute import Tribute
 from game.logic.cell import State
-from game.logic.item import Weapon
+from game.logic.item import Item, Weapon, Potion
+from game.logic.district import District
 
+import random
 
 class GameMode(Enum):
     NOT_STARTED = 1
@@ -24,7 +27,26 @@ class GameLogic:
     def new_game(self, rows, columns):
         self.board = Board(rows, columns)
         self.mode = GameMode.TRIBUTES_PLACEMENT
+
+    
+    # Configure the own district with all stats that we need and configure five random districts 
+    def configuration_districts(self, district, life, force, alliance, num_district, cant_tributes):
         
+        district.set_config(life, force, alliance, num_district, cant_tributes)
+        self.districts.append(district)
+        my_num_district = district.get_number_district()
+        list_district = [1, 2, 3, 4, 5, 6]
+        list_district.remove(my_num_district)
+
+        for i in range(5):
+            district.set_config_random(list_district[i])
+            self.districts.append(district)
+
+
+    def applies_effects(self, item, tribute):
+        return 0
+
+
     # Returns the positions visible to a tribute within a certain range.
     def tribute_vision_pos(self, tribute):
       visible_positions = []
