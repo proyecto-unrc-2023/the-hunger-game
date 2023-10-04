@@ -247,4 +247,9 @@ class GameLogic:
         for i in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[i])
 
-            
+
+    def test_init_game():
+        game = GameLogic()
+        game.init_simulation(7, 7)
+        assert game.mode == GameMode.SIMULATION
+        assert not (game.districts is None)

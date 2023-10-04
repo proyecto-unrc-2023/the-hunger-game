@@ -623,3 +623,12 @@ def test_init_game():
     assert not (game.districts is None)
 
 
+def init_simulation(self, rows, columns):
+    self.new_game(rows, columns)
+    self.mode = GameMode.SIMULATION
+    for i in range(5):
+        district = District()
+        self.districts.append(district)
+        self.districts[i].set_config_random(i)
+    for i in range(len(self.districts)):
+        self.board.distribute_tributes(self.districts[i])
