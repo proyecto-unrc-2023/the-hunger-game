@@ -28,8 +28,8 @@ class District:
             raise ValueError(f'Force must be between 5 and 10 points: {force}')
         if alliance < 1 or alliance > 10:
             raise ValueError(f'Alliance must be between 1 and 10 points: {alliance}')
-        if number_district < 0:
-            raise ValueError(f'Number of district can not be negative: {number_district}')
+        if number_district < 1:
+            raise ValueError(f'Number of district can not be less than 1: {number_district}')
 
         self.number_district = number_district # setea el numero del distrito
         self.cant_tributes = cant_tributes # setea la cantidad de tributos en el distrito
@@ -43,9 +43,12 @@ class District:
             self.tributes.append(trib) # se agrega el tributo configurado 
 
     
-    # Configure tributes with random parameters.
+    # Configure tributes of an district with random stats.
     def set_config_random(self, num_district):
 
+        if num_district < 1:
+            raise ValueError(f'Number of district can not be less than 1: {num_district}') 
+     
         for i in range(4):
             trib = Tribute()
             trib.life = 50

@@ -4,31 +4,44 @@ from game.logic.tribute import Tribute
 from game.logic.item import Item, Potion, Weapon
 
 def test_create_potion_from_str():
-    res = Item.from_string('p')
-    
+    res = Item.from_string('p')    
     assert res.__eq__(Potion())
 
 def test_create_weapon_from_str():
     res = Item.from_string('w')
-    
     assert res.__eq__(Weapon())
     
-def test_potion_applies_efect():
+def test_potion_apply_effect():
     tribute = Tribute()
     tribute.life = 75
-    p = Potion()
-    p.applies_efects(tribute)
-    
+    potion = Potion()
+    potion.apply_effect(tribute)
     assert tribute.life.__eq__(80)
     
-def test_weapon_applies_efect():
+def test_weapon_apply_effect():
     tribute = Tribute()
     tribute.force = 6
-    w = Weapon()
-    w.applies_efects(tribute)
-    
+    weapon = Weapon()
+    weapon.apply_effect(tribute)
     assert tribute.force.__eq__(7)
-    
+
+
+def test_potion_apply_effect_life_tribute_100_or_less_than_100():
+    t1 = Tribute()
+    t2 = Tribute()
+    t3 = Tribute()
+    t1.life = 97
+    t2.life = 99
+    t3.life = 100
+    potion = Potion()
+    potion.apply_effect(t1)
+    potion.apply_effect(t2)
+    potion.apply_effect(t3)
+    assert t1.life.__eq__(100)
+    assert t2.life.__eq__(100)
+    assert t3.life.__eq__(100)
+
+
 def test_potion_get_pos():
     potion = Potion()
     potion.pos = (1,1)

@@ -58,10 +58,16 @@ class GameLogic:
             district.set_config_random(list_district[i])
             self.districts.append(district)
 
-    def applies_effects(self, item, tribute):
-        return 0
+    
+    def applies_effects(self, item, cell, tribute):            
+        if isinstance(item, Potion): # if item is an Potion
+            item.apply_effect(tribute) # + 5 life
+        elif isinstance(item, Weapon): # if item is an Weapon
+            item.apply_effect(tribute) # + 1 force
+        
+        cell.remove_item()
 
-    # Returns the positions visible to a tribute within a certain range.
+    # Returns the positions visible to an tribute within an certain range.
     def tribute_vision_pos(self, tribute):
         visible_positions = []
         row = tribute.pos[0]
@@ -171,7 +177,7 @@ class GameLogic:
                 if cell.get_item().pos in self.board.get_adjacent_positions(Tx, Ty):
                     tribute.move_to(x, y, self.board)
                     item = cell.get_item()
-                    item.applies_efects(tribute)
+                    item.apply_effect(tribute)
                 else:
                     pos = tribute.move_closer_to(x, y, self.board)
                     tribute.move_to(pos[0], pos[1], self.board)

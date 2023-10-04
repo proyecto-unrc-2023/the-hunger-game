@@ -26,7 +26,7 @@ class Item:
     def get_pos(self):
         return self.pos
 
-    def applies_efects(tribute):
+    def apply_effect(tribute):
         raise NotImplementedError
 
 
@@ -38,8 +38,11 @@ class Potion(Item):
     def __eq__(self, other):
         return isinstance(other, Potion)
 
-    def applies_efects(self, tribute):
-        tribute.life += 5
+    def apply_effect(self, tribute):
+        if tribute.life < 100:
+            tribute.life += 5
+            if tribute.life > 100:
+                tribute.life = 100 
 
 
 class Weapon(Item):
@@ -50,5 +53,5 @@ class Weapon(Item):
     def __eq__(self, other):
         return isinstance(other, Weapon)
 
-    def applies_efects(self, tribute):
+    def apply_effect(self, tribute):
         tribute.force += 1
