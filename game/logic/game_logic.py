@@ -27,7 +27,24 @@ class GameLogic:
     def new_game(self, rows, columns):
         self.board = Board(rows, columns)
         self.mode = GameMode.TRIBUTES_PLACEMENT
-    
+        
+    # Places a Neutral at a specific position on the board and in Neutrals.
+    def put_neutral(self, x, y):
+        neutral = Tribute()
+        neutral.life = 50
+        neutral.force = 10
+        self.board.put_tribute(x,y,neutral)
+        self.neutrals.append(neutral)
+        
+    # Remove a Tribute of the board and of its district
+    def remove_tribute(self, tribute):
+        if tribute.district == -99: 
+            self.neutrals.remove(tribute)
+        else: 
+            self.districts[tribute.district].remove_tribute(tribute)
+        
+        self.board.remove_tribute(tribute)
+        
     # Configure the own district with all stats that we need and configure five random districts 
     def configuration_districts(self, district, life, force, alliance, num_district, cant_tributes):
         
@@ -125,10 +142,7 @@ class GameLogic:
             t2 = cell_with_tribute.get_tribute()
             tribute.attack_to(t2, self.board)
             if tribute2.is_dead():
-                district = self.districts[tribute2.district]
-                district.remove_tribute(tribute2)
-                district.cant_tributes = district.get_cant_tribute() -1 
-                self.board.remove_tribute(tribute2)
+                self.remove_tribute(tribute2)
 
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
@@ -170,7 +184,7 @@ class GameLogic:
                             district = self.districts[tribute.district]
                             self.alliance_neutral(cell.get_tribute(), district)
                         else:
-                            return 0
+                            cell.get_tribute().district = -99
                     else:
                         pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)
@@ -178,6 +192,7 @@ class GameLogic:
                     pos = cell.get_tribute().pos
                     # move to an adjacent position to it, and if already adjacent, attack.
                     if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+                        pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)
                     else:
                         cell_with_tribute = self.board.get_element(x, y)
@@ -212,4 +227,7 @@ class GameLogic:
             for district in self.districts:
                 for tribute in district.tributes:
                     self.heuristic_tribute_first_attempt(tribute)
-        
+            if not(self.neutrals is None):
+                for neutral in self.neutrals:
+                    self.heuristic_tribute_first_attempt(neutral)
+            

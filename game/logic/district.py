@@ -67,3 +67,5 @@ class District:
         if not (tribute in self.tributes):
             raise ValueError(f'tribute is not of this district')
         self.tributes.remove(tribute)
+        self.cant_tributes = self.cant_tributes - 1
+         

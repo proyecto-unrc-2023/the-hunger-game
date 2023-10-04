@@ -46,6 +46,20 @@ def game2x2():
     district1.add_tribute(t1)
     return game2x2
 
+def test_put_neutral(game2x2):
+    game2x2.put_neutral(1,0)
+    neutral = game2x2.board.get_element(1,0).get_tribute()
+    assert neutral.life == 50
+    assert neutral.force == 10
+    assert neutral.pos == (1,0)
+    assert neutral.district is None
+    assert len(game2x2.neutrals) == 1
+    
+def test_remove_tribute(game2x2):
+    t1 = game2x2.board.get_element(0,0).get_tribute()
+    game2x2.remove_tribute(t1)
+    assert game2x2.board.get_element(0,0).get_state() == State.FREE
+    assert not(t1 in game2x2.districts[t1.district].tributes)
 
 def test_tribute_vision_pos():
     game = GameLogic()
@@ -112,13 +126,16 @@ def test_tribute_vision_cells_with_a_cells():
 
 def test_tribute_vision_cells_with_boundary():
     game = GameLogic()
-    game.new_game(3, 3)
+    game.new_game(8, 8)
     x, y = 0, 0
     adjacent_cells = game.board.get_adjacents_cells(x, y)
     assert len(adjacent_cells) == 3
     assert game.board.get_element(0, 1) in adjacent_cells
     assert game.board.get_element(1, 0) in adjacent_cells
     assert game.board.get_element(1, 1) in adjacent_cells
+    # Modifica el cuarto assert
+    assert len([cell for cell in adjacent_cells if cell.get_pos() == (7, 7)]) == 0
+
 
 
 def test_tribute_vision_cells_with_cells_state_tribute():
@@ -492,3 +509,28 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     assert  t2.is_dead()
     assert len(game2x2.districts[0].tributes) == 1 
     assert len(game2x2.districts[1].tributes) == 0
+    
+def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
+    game = GameLogic()
+    game.new_game(8,8)
+    game.mode = GameMode.SIMULATION
+    district0 = District()
+    district1 = District()
+    t0 = Tribute()
+    t1 = Tribute()
+    district0.number_district = 0
+    district1.number_district = 1
+    game.districts.append(district0)
+    game.districts.append(district1)
+    t0.set_config_parameters(41,20,1,0)
+    t0.alliance = -25
+    t1.set_config_parameters(40,20,1,1)
+    game.board.put_tribute(0,0,t0)
+    game.board.put_tribute(7,7,t1)
+    district0.add_tribute(t0)
+    district1.add_tribute(t1)
+    game.put_neutral(0,1)
+    game.heuristic_of_game()
+    assert len(game.districts[0].tributes) == 0
+    assert len(game.neutrals) == 0
+    assert len(game.districts[1].tributes) == 1
