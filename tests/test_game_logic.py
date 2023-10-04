@@ -372,6 +372,7 @@ def test_heuristic_tribute_first_attempt_complex():
     game.board.put_tribute(4, 3, neutro)
     neutro.life = 20
     neutro.force = 10
+    game.neutrals.append(neutro)
 
     # Configuración de arma y poción
     w = Weapon()
@@ -383,7 +384,6 @@ def test_heuristic_tribute_first_attempt_complex():
     game.heuristic_tribute_first_attempt(tribute0)
     assert tribute0.pos == w.pos
     assert tribute0.force == 6
-    game.board.remove_item(w)
     game.heuristic_tribute_first_attempt(tribute0)
     t1.attack_to(tribute0, game.board)
     game.heuristic_tribute_first_attempt(tribute0)
@@ -496,6 +496,7 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     neutro = Tribute()
     neutro.life = 25
     neutro.force = 5
+    
     t1 = game2x2.board.get_element(0,0).get_tribute()
     t1.life=39
     
@@ -503,6 +504,7 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     t1.alliance = 25
     game2x2.board.put_tribute(1,0,neutro)
     game2x2.mode = GameMode.SIMULATION
+    game2x2.neutrals.append(neutro)
     game2x2.heuristic_of_game()
     assert t1.is_dead()
     assert neutro.life == 5
@@ -623,12 +625,3 @@ def test_init_game():
     assert not (game.districts is None)
 
 
-def init_simulation(self, rows, columns):
-    self.new_game(rows, columns)
-    self.mode = GameMode.SIMULATION
-    for i in range(5):
-        district = District()
-        self.districts.append(district)
-        self.districts[i].set_config_random(i)
-    for i in range(len(self.districts)):
-        self.board.distribute_tributes(self.districts[i])

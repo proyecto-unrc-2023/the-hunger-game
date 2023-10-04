@@ -1,302 +1,351 @@
-from flask import url_for
-from behave import given, when, then
+from behave import given, when, then, step
 
+from game.logic.district import District
 from game.logic.game_logic import GameLogic
+from game.logic.tribute import Tribute
 
-def game(self):
-    game = GameLogic()
-    game.new_game(8,8)
 
 @given('que el juego ya está inicializado')
 def step_impl(context):
     pass
 
-@given('la vida de t1 es de 30')
+
+@given(u'la vida de t1 es de 30')
 def step_impl(context):
     pass
 
 
-@given('la poción cura 10 de vida')
-def step_impl(context):
-    pass
-
-@given('la fuerza de t2 es de 5')
-def step_impl(context):
-    pass
-
-@given('t1 mueve antes que t2')
-def step_impl(context):
-    pass
-
-@given('el estado del tablero es el siguiente')
-def step_impl(context):
-    pass
-
-@when('se ejecute un movimiento')
+@given(u'la poción cura 10 de vida')
 def step_impl(context):
     pass
 
 
-@then('el estado del tablero será el siguiente')
+@given(u'la fuerza de t2 es de 5')
 def step_impl(context):
     pass
 
 
-@then('la vida de t1 se reducirá a 35')
+@given(u't1 mueve antes que t2')
 def step_impl(context):
     pass
 
 
-@then('la vida de t2 se mantiene igual')
+@given(u'el estado del tablero es el siguiente')
 def step_impl(context):
     pass
 
 
-@given('que empezo la simulacion')
+@when(u'se ejecute un movimiento')
 def step_impl(context):
     pass
 
 
-@given('dos tributos enemigos son adyacentes')
+@then(u'el estado del tablero será el siguiente')
 def step_impl(context):
     pass
 
 
-@given('estan luchando')
+@then(u'la vida de t1 se reducirá a 35')
 def step_impl(context):
     pass
 
 
-@when('otro tributo visualize a los tributos luchando mediante su rango de vision')
+@then(u'la vida de t2 se mantiene igual')
 def step_impl(context):
     pass
 
 
-@when('sea adyacente a ambos')
+@given(u'que empezo la simulacion')
 def step_impl(context):
     pass
 
 
-@then('le pegara al tributo que tenga mas vida')
+@given(u'dos tributos enemigos son adyacentes')
 def step_impl(context):
     pass
 
 
-@given('dos tributos de distinto distritos son adyacentes')
+@given(u'estan luchando')
 def step_impl(context):
     pass
 
 
-@when('llegue un tributo aliado de algunos de los dos tributos que estan luchando')
+@when(u'otro tributo visualize a los tributos luchando mediante su rango de vision')
 def step_impl(context):
     pass
 
 
-@when('ambos tributos entran en el rango de vision del aliado')
+@when(u'sea adyacente a ambos')
 def step_impl(context):
     pass
 
 
-@then('el aliado atacara al tributo enemigo')
+@then(u'le pegara al tributo que tenga mas vida')
 def step_impl(context):
     pass
 
 
-@given('t1 en la posición (0,2)')
+@given(u'dos tributos de distinto distritos son adyacentes')
 def step_impl(context):
     pass
 
 
-@given('t2 en la posición (1,2)')
+@when(u'llegue un tributo aliado de algunos de los dos tributos que estan luchando')
 def step_impl(context):
     pass
 
 
-@given('ambos son de distinto distrito')
+@when(u'ambos tributos entran en el rango de vision del aliado')
 def step_impl(context):
     pass
 
 
-@given('t2 tiene 5 de vida')
+@then(u'el aliado atacara al tributo enemigo')
 def step_impl(context):
     pass
 
 
-@given('t1 tiene 7 de fuerza')
+@given(u'que dos tributos son de distintos distritos')
 def step_impl(context):
     pass
 
 
-@when('t1 le pega a t2')
+@given(u'tienen la mismas caracteristicas')
 def step_impl(context):
     pass
 
 
-@then('la vida de t2 se reduce en 7 puntos')
+@given(u'tienen la misma cantidad de vida')
 def step_impl(context):
     pass
 
 
-@then('la vida de t2 es de 0 o menos')
+@when(u'se encuentran y enfrentan en el mapa')
 def step_impl(context):
     pass
 
 
-@then('t2 muere')
+@then(u'ambos tributos mueren')
 def step_impl(context):
     pass
 
 
-@given('que dos tributos son de distintos distritos')
+# ------------------------------------------------------------------- Inicio del escenario
+
+@step("que existe un t1 y un t")
+@given('que existe un t1 y un t')
+def step_impl(context):
+    context.game = GameLogic()
+    context.game.new_game(3, 3)
+    context.district0 = District()
+    context.district0.number_district = 0
+    context.tribute1 = Tribute()
+    context.tribute1.set_config_parameters(50, 5, 25, 0)
+    context.district0.add_tribute(context.tribute1)
+    context.neutral_tribute = Tribute()
+    context.game.neutrals.append(context.neutral_tribute)
+    context.district0.add_tribute(context.tribute1)
+    context.old_number_of_tributes = context.district0.get_cant_tribute()
+    context.game.board.put_tribute(1, 0, context.tribute1)
+    context.game.board.put_tribute(1, 1, context.neutral_tribute)
+    context.game.districts.append(context.district0)
+
+
+@given('t1 pertenece al distrito 0')
+def step_impl(context):
+    assert context.tribute1.district == 0
+
+
+@given('t1 tiene un valor de alianza 25')
+def step_impl(context):
+    assert context.tribute1.alliance == 25
+
+
+@given('t es un tribruto neutro')
+def step_impl(context):
+    assert context.game.neutrals.__contains__(context.neutral_tribute)
+
+
+@when('t acepte la alianza de t1')
+def step_impl(context):
+    context.game.heuristic_tribute_first_attempt(context.tribute1)
+
+
+@then('el tributo t forma parte del distrito 0')
+def step_impl(context):
+    # context.game.alliance_neutral(context.neutral_tribute, context.district0)
+    # assert context.tribute1.alliance_to(context.neutral_tribute) is True
+    assert context.neutral_tribute.district == 0
+
+
+@then('el distrito 0 tiene un tributo más en su cantidad total')
+def step_impl(context):
+    assert context.district0.get_cant_tribute() > context.old_number_of_tributes
+
+
+@then('el tributo neutro pertenece al districto 0')
+def step_impl(context):
+    # assert context.district0.get_cant_tribute() > context.old_number_of_tributes
+    # assert context.game.districts[0].tributes.__contains__(context.neutral_tribute)
+    assert context.district0.tributes.__contains__(context.neutral_tribute)
+
+
+@then(u'el tributo neutro no pertenece más al grupo de los neutros')
+def step_impl(context):
+    assert context.game.neutrals.__contains__(context.neutral_tribute) is False
+
+# ------------------------------------------------------------------- Fin del escenario
+
+
+@given('t1 tiene un valor de alianza 1')
 def step_impl(context):
     pass
 
 
-@given('tienen la mismas caracteristicas')
+@when('t rechaze la alianza de t1')
 def step_impl(context):
     pass
 
 
-@given('tienen la misma cantidad de vida')
+@then('el tributo t empieza a pelear con t1')
 def step_impl(context):
     pass
 
 
-@when('se encuentran y enfrentan en el mapa')
+""""
+@given(u'un tributo que pertenece a un distrito y otro neutro')
 def step_impl(context):
     pass
 
 
-@then('ambos tributos mueren')
+@when(u'ambos tributos se encuentran en el mapa')
 def step_impl(context):
     pass
 
 
-@given('que un tributo pertenece a un distrito y otro es neutro')
+@when(u'el tributo del distrito NO es capaz de aliarse')
 def step_impl(context):
     pass
 
 
-@when('se encuentran en el mapa')
+@then(u'el tributo del distrito lucha con el tributo neutro')
+def step_impl(context):
+    pass
+
+"""
+
+
+@given(u'dos tributos')
 def step_impl(context):
     pass
 
 
-@when('el tributo perteneciente al distrito es capaz de aliarse')
+@when(u'se encuentran en el mapa')
 def step_impl(context):
     pass
 
 
-@then('el tributo neutro se convierte en un miembro del tributo que se encontro')
+@when(u'ambos pertenecen al mismo distrito')
 def step_impl(context):
     pass
 
 
-@then('adquiere las caracteristicas del distrito al cual corresponde')
+@then(u'se ignoran')
 def step_impl(context):
     pass
 
 
-@given('un tributo que pertenece a un distrito y otro neutro')
+@given(u't1 en la posición (0,2)')
 def step_impl(context):
     pass
 
 
-@when('ambos tributos se encuentran en el mapa')
+@given(u't2 en la posición (1,2)')
 def step_impl(context):
     pass
 
 
-@when('el tributo del distrito NO es capaz de aliarse')
+@given(u'ambos son de distinto distrito')
 def step_impl(context):
     pass
 
 
-@then('el tributo del distrito lucha con el tributo neutro')
+@given(u't2 tiene 5 de vida')
 def step_impl(context):
     pass
 
 
-@given('dos tributos')
+@given(u't1 tiene 7 de fuerza')
 def step_impl(context):
     pass
 
 
-@when('ambos pertenecen al mismo distrito')
+@when(u't1 le pega a t2')
 def step_impl(context):
     pass
 
 
-@then('se ignoran')
+@then(u'la vida de t2 se reduce en 7 puntos')
 def step_impl(context):
     pass
 
 
-@given('que dos tributos son de distinto distrito')
+@then(u'la vida de t2 es de 0 o menos')
 def step_impl(context):
     pass
 
 
-@given('tienen distintas estadisticas')
+@then(u't2 muere')
 def step_impl(context):
     pass
 
 
-@when('luchan')
+@given(u'que dos tributos son neutros')
 def step_impl(context):
     pass
 
 
-@then('uno de ellos muere')
+@given(u'que un tributo encuentra un item de curacion en el mapa')
 def step_impl(context):
     pass
 
 
-@given('que dos tributos son neutros')
+@given(u'no tenga la vida al maximo')
 def step_impl(context):
     pass
 
 
-@given('que un tributo encuentra un item de curacion en el mapa')
+@when(u'el tributo se encuentra sobre el item')
 def step_impl(context):
     pass
 
 
-@given('no tenga la vida al maximo')
+@then(u'su vida incrementa')
 def step_impl(context):
     pass
 
 
-@when('el tributo se encuentra sobre el item')
+@then(u'el item desaparece del mapa')
 def step_impl(context):
     pass
 
 
-@then('su vida incrementa')
+@given(u'un t1 con el 100 porciento de vida')
 def step_impl(context):
     pass
 
 
-@then('el item desaparece del mapa')
+@given(u'el siguiente estado del tablero')
 def step_impl(context):
     pass
 
 
-@given('un t1 con el 100 porciento de vida')
-def step_impl(context):
-    pass
-
-@given('el siguiente estado del tablero')
+@when(u't1 se mueve hacia la celda (2,2)')
 def step_impl(context):
     pass
 
 
-@when('t1 se mueve hacia la celda (2,2)')
-def step_impl(context):
-    pass
-
-
-@then('el estado del tablero es el siguiente')
+@then(u'el estado del tablero es el siguiente')
 def step_impl(context):
     pass
 
@@ -311,56 +360,61 @@ def step_impl(context):
     pass
 
 
-@given('que un tributo encuentra una espada en el mapa')
+@given(u'que un tributo encuentra una espada en el mapa')
 def step_impl(context):
     pass
 
 
-@when('el tributo no tenga una espada')
+@when(u'el tributo no tenga una espada')
 def step_impl(context):
     pass
 
 
-@when('se escuentre sobre la espada')
+@when(u'se escuentre sobre la espada')
 def step_impl(context):
     pass
 
 
-@then('su daño se incrementa')
+@then(u'su daño se incrementa')
 def step_impl(context):
     pass
 
 
-@then('la espada desaparece del mapa')
+@then(u'la espada desaparece del mapa')
 def step_impl(context):
     pass
 
 
-@when('el tributo tenga una espada')
+@when(u'el tributo tenga una espada')
 def step_impl(context):
     pass
 
 
-@when('se encuentre sobre la espada')
+@when(u'se encuentre sobre la espada')
 def step_impl(context):
     pass
 
 
-@then('no la recoge')
+@then(u'no la recoge')
 def step_impl(context):
     pass
 
 
-@when('se cruzan en el mapa')
+@given(u'que dos tributos son de distinto distrito')
 def step_impl(context):
     pass
 
 
-@then('el tributo con más fuerza inflige más daño')
+@when(u'se cruzan en el mapa')
 def step_impl(context):
     pass
 
 
-@then('el tributo con menos fuerza inflige menos daño')
+@then(u'el tributo con más fuerza inflige más daño')
+def step_impl(context):
+    pass
+
+
+@then(u'el tributo con menos fuerza inflige menos daño')
 def step_impl(context):
     pass
