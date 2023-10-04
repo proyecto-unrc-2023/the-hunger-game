@@ -6,7 +6,7 @@ class District:
     # Constructor of District class where initializes all atributes
     def __init__(self):
         self.number_district = None
-        self.cant_tributes = None
+        self.cant_tributes = 0
         self.tributes = []
     
     # Return number_district atribute
@@ -60,5 +60,10 @@ class District:
         if not isinstance(tribute, Tribute):
             raise ValueError(f'Is not an instance of Tribute: {tribute}')
          
-        self.tributes.append(tribute) # agrega un tributo a la lista de tributos
+        self.tributes.append(tribute)
+        self.cant_tributes = self.cant_tributes + 1
     
+    def remove_tribute(self, tribute):
+        if not (tribute in self.tributes):
+            raise ValueError(f'tribute is not of this district')
+        self.tributes.remove(tribute)

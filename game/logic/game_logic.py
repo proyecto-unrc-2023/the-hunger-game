@@ -99,7 +99,7 @@ class GameLogic:
         occupied_cells = [
             cell
             for cell in vision_cells
-            if cell.get_state() != State.FREE or (cell.get_state() == State.TRIBUTE and
+            if cell.get_state() == State.ITEM or (cell.get_state() == State.TRIBUTE and
                                                   cell.get_tribute().district != tribute.district)
             # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
             # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
@@ -125,12 +125,14 @@ class GameLogic:
             t2 = cell_with_tribute.get_tribute()
             tribute.attack_to(t2, self.board)
             if tribute2.is_dead():
+                district = self.districts[tribute2.district]
+                district.remove_tribute(tribute2)
+                district.cant_tributes = district.get_cant_tribute() -1 
                 self.board.remove_tribute(tribute2)
 
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
-    @staticmethod
-    def alliance_neutral(tribute, district):
+    def alliance_neutral(self, tribute, district):
         tribute.district = district.get_number_district()
         district.tributes.append(tribute)
         district.cant_tributes = district.cant_tributes + 1
@@ -164,7 +166,11 @@ class GameLogic:
                 # If it's a tribute,check if its a neutral or not
                 if cell.get_tribute().district == None:
                     if cell.get_tribute().pos in self.board.get_adjacent_positions(Tx, Ty):
-                        tribute.alliance_to(cell.get_tribute())
+                        if tribute.alliance_to(cell.get_tribute()) == True:
+                            district = self.districts[tribute.district]
+                            self.alliance_neutral(cell.get_tribute(), district)
+                        else:
+                            return 0
                     else:
                         pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)
@@ -197,3 +203,13 @@ class GameLogic:
                     district_alive = aux_district
             if cant_of_districts_alive == 1:
                 return district_alive
+
+                    
+    def heuristic_of_game(self):
+        if self.mode != GameMode.SIMULATION:
+            raise ValueError(f'The state of the game is not SIMULATION')
+        while self.end_game() == False:
+            for district in self.districts:
+                for tribute in district.tributes:
+                    self.heuristic_tribute_first_attempt(tribute)
+        
