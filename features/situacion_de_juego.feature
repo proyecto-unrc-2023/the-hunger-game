@@ -2,13 +2,26 @@
   Característica: Sitauacion de juego
 
     Escenario: Dos tributos luchan y uno de ellos encuentra un item
-      Dado que empezo la simulacion
-      Y un tributo es adyacente a otr
-      Y esta sobre un item
-      Cuando se ejecute un paso de iteracion
-      Entonces el que no esta sobre el item, golpeara al otro
-      Y el otro recoge el item, perdiendo asi una iteracion
-      Y luego lucharan
+      Dado que el juego ya está inicializado
+      Y la vida de t1 es de 30
+      Y la poción cura 10 de vida
+      Y la fuerza de t2 es de 5
+      Y t1 mueve antes que t2
+      Y el estado del tablero es el siguiente
+        |0 |1 |2 |3 |
+        |  |  |  |  |
+        |  |  |  |t2|
+        |  |t1|p |  |
+        |  |  |  |  |
+      Cuando se ejecute un movimiento
+      Entonces el estado del tablero será el siguiente
+        |0 |1 |2 |3 |
+        |  |  |  |  |
+        |  |  |  |t2|
+        |  |  |t1|  |
+        |  |  |  |  |
+      Y la vida de t1 se reducirá a 35
+      Y la vida de t2 se mantiene igual
 
     Escenario: Dos tributos luchan y llega otro tributo
       Dado que empezo la simulacion
@@ -34,7 +47,7 @@
       Entonces ambos tributos mueren
 
     Escenario: Un tributo se alia con un tributo neutro
-      Dado que un tributo pertenece a un distrito y otro es neurtro
+      Dado que un tributo pertenece a un distrito y otro es neutro
       Cuando se encuentran en el mapa
       Y el tributo perteneciente al distrito es capaz de aliarse
       Entonces el tributo neutro se convierte en un miembro del tributo que se encontro
@@ -53,11 +66,16 @@
       Entonces se ignoran
 
     Escenario: Muerte de un tributo en batalla
-      Dado que dos tributos son de distinto distrito
-      Y tienen distintas estadisticas
-      Cuando se encuentran en el mapa
-      Y luchan
-      Entonces uno de ellos muere
+      Dado t1 en la posición (0,2)
+      Y t2 en la posición (1,2)
+      Y ambos son de distinto distrito
+      Y t1 mueve antes que t2
+      Y t2 tiene 5 de vida
+      Y t1 tiene 7 de fuerza
+      Cuando t1 le pega a t2
+      Entonces la vida de t2 se reduce en 7 puntos
+      Y la vida de t2 es de 0 o menos
+      Y t2 muere
 
     Escenario: Dos tributos neutros se encuentran en el mapa
       Dado que dos tributos son neutros
@@ -71,11 +89,23 @@
       Entonces su vida incrementa
       Y el item desaparece del mapa
 
-    Escenario: Tributo encuentra un item de curacion y no lo utiliza
-      Dado que un tributo encuentra un item de curacion en el mapa
-      Y tiene la vida al maximo
-      Cuando se encuentra sobre el item
-      Entonces lo ignora
+    Escenario: Tributo encuentra un item de curación y no lo utiliza
+      Dado un t1 con el 100 porciento de vida
+      Y el siguiente estado del tablero
+        |0 |1 |2 |3 |
+        |  |  |  |  |
+        |  |  |  |  |
+        |  |t1|p |  |
+        |  |  |  |  |
+      Cuando t1 se mueve hacia la celda (2,2)
+      Entonces el estado del tablero es el siguiente
+        |0 |1 |2 |3 |
+        |  |  |  |  |
+        |  |  |  |  |
+        |  |  |t1|  |
+        |  |  |  |  |
+      Y su vida se mantiene igual
+      Y la poción de la celda
 
     Escenario: Tributo encuentra una espada y la recoge
       Dado que un tributo encuentra una espada en el mapa

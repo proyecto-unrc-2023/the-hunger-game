@@ -1,39 +1,54 @@
 from flask import url_for
 from behave import given, when, then
 
+@given('que el juego ya está inicializado')
+def step_impl(context):
+    pass
+
+@given('la vida de t1 es de 30')
+def step_impl(context):
+    pass
+
+
+@given('la poción cura 10 de vida')
+def step_impl(context):
+    pass
+
+@given('la fuerza de t2 es de 5')
+def step_impl(context):
+    pass
+
+@given('t1 mueve antes que t2')
+def step_impl(context):
+    pass
+
+@given('el estado del tablero es el siguiente')
+def step_impl(context):
+    pass
+
+@when('se ejecute un movimiento')
+def step_impl(context):
+    pass
+
+
+@then('el estado del tablero será el siguiente')
+def step_impl(context):
+    pass
+
+
+@then('la vida de t1 se reducirá a 35')
+def step_impl(context):
+    pass
+
+
+@then('la vida de t2 se mantiene igual')
+def step_impl(context):
+    pass
+
+
 @given('que empezo la simulacion')
 def step_impl(context):
     pass
-
-@given('un tributo es adyacente a otr')
-def step_impl(context):
-    pass
-
-
-@given('esta sobre un item')
-def step_impl(context):
-    pass
-
-
-@when('se ejecute un paso de iteracion')
-def step_impl(context):
-    pass
-
-
-@then('el que no esta sobre el item, golpeara al otro')
-def step_impl(context):
-    pass
-
-
-@then('el otro recoge el item, perdiendo asi una iteracion')
-def step_impl(context):
-    pass
-
-
-@then('luego lucharan')
-def step_impl(context):
-    pass
-
 
 
 @given('dos tributos enemigos son adyacentes')
@@ -81,6 +96,51 @@ def step_impl(context):
     pass
 
 
+@given('t1 en la posición (0,2)')
+def step_impl(context):
+    pass
+
+
+@given('t2 en la posición (1,2)')
+def step_impl(context):
+    pass
+
+
+@given('ambos son de distinto distrito')
+def step_impl(context):
+    pass
+
+
+@given('t2 tiene 5 de vida')
+def step_impl(context):
+    pass
+
+
+@given('t1 tiene 7 de fuerza')
+def step_impl(context):
+    pass
+
+
+@when('t1 le pega a t2')
+def step_impl(context):
+    pass
+
+
+@then('la vida de t2 se reduce en 7 puntos')
+def step_impl(context):
+    pass
+
+
+@then('la vida de t2 es de 0 o menos')
+def step_impl(context):
+    pass
+
+
+@then('t2 muere')
+def step_impl(context):
+    pass
+
+
 @given('que dos tributos son de distintos distritos')
 def step_impl(context):
     pass
@@ -106,7 +166,7 @@ def step_impl(context):
     pass
 
 
-@given('que un tributo pertenece a un distrito y otro es neurtro')
+@given('que un tributo pertenece a un distrito y otro es neutro')
 def step_impl(context):
     pass
 
@@ -216,17 +276,31 @@ def step_impl(context):
     pass
 
 
-@given('tiene la vida al maximo')
+@given('un t1 con el 100 porciento de vida')
+def step_impl(context):
+    pass
+
+@given('el siguiente estado del tablero')
 def step_impl(context):
     pass
 
 
-@when('se encuentra sobre el item')
+@when('t1 se mueve hacia la celda (2,2)')
 def step_impl(context):
     pass
 
 
-@then('lo ignora')
+@then('el estado del tablero es el siguiente')
+def step_impl(context):
+    pass
+
+
+@then(u'su vida se mantiene igual')
+def step_impl(context):
+    pass
+
+
+@then(u'la poción de la celda')
 def step_impl(context):
     pass
 
