@@ -89,7 +89,7 @@ def test_move_to_random():
     tribute = Tribute()
     board.put_tribute(1, 1, tribute)
     initial_pos = board.get_pos(tribute)
-    board.move_to_random(tribute)
+    tribute.move_to_random(board)
     new_pos = board.get_pos(tribute)
     assert board.get_element(initial_pos[0], initial_pos[1]).get_state() == State.FREE
     assert initial_pos != new_pos
@@ -104,7 +104,7 @@ def test_move_to():
     board.put_tribute(1, 1, tribute)
     initial_pos = board.get_pos(tribute)
     x, y = 0, 2
-    board.move_to(x, y, tribute)
+    tribute.move_to(x, y, board)
     new_pos = board.get_pos(tribute)
     assert board.get_element(initial_pos[0], initial_pos[1]).get_state() == State.FREE
     assert initial_pos != new_pos
@@ -114,20 +114,20 @@ def test_move_to():
     tribute2 = Tribute()
     board.put_tribute(1,1, tribute2)
     board.put_item(2,2, Weapon())
-    board.move_to(2,2, tribute2)
+    tribute2.move_to(2,2, board)
 
 
 def test_move_closer_to():
     board = Board(5, 5)
     tribute = Tribute()
     board.put_tribute(1, 1, tribute)
-    (x, y) = board.move_closer_to(1, 2, tribute)
-    board.move_to(x, y, tribute)
+    (x, y) = tribute.move_closer_to(1, 2, board)
+    tribute.move_to(x, y, board)
     assert tribute.pos == (1,2)
-    (x, y) = board.move_closer_to(4, 4, tribute)
-    board.move_to(x, y, tribute)
-    (x, y) = board.move_closer_to(4, 4, tribute)
-    board.move_to(x, y, tribute)
-    (x, y) = board.move_closer_to(4, 4, tribute)
-    board.move_to(x, y, tribute)
+    (x, y) = tribute.move_closer_to(4, 4, board)
+    tribute.move_to(x, y, board)
+    (x, y) = tribute.move_closer_to(4, 4, board)
+    tribute.move_to(x, y, board)
+    (x, y) = tribute.move_closer_to(4, 4, board)
+    tribute.move_to(x, y, board)
     assert tribute.pos == (4,4)

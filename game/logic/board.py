@@ -223,34 +223,3 @@ class Board:
 
         random_position = random.choice(free_adjacents_pos)
         return random_position
-    
-    # Moves a tribute to a randomly selected free adjacent position.
-    def move_to_random(self, tribute):
-        self.remove_tribute(tribute)
-        pos = self.random_choice(tribute)
-        self.put_tribute(pos[0], pos[1], tribute)
-
-    # Moves a tribute to a specific position on the board.
-    def move_to(self, x, y, tribute):
-        self.remove_tribute(tribute)
-        if not (self.valid_pos(tribute.pos)):
-            raise ValueError(f'Position no valid')
-        if self.board[x][y].get_state() == State.TRIBUTE:
-            raise ValueError(f'Position have a Tribute')
-        adjacent_pos = self.get_free_adjacents_positions(tribute.pos[0], tribute.pos[1])
-        if not ((x,y) in adjacent_pos):
-              raise ValueError(f'Position ({x}, {y}) is not free Adjacent')
-        
-        self.put_tribute(x, y, tribute)
-
-    # Returns the closest position to coordinates (x, y) that a tribute can move to.
-    def move_closer_to(self, x, y, tribute):
-        def calculate_distance(position):
-            return ((position[0] - x) ** 2 + (position[1] - y) ** 2) ** 0.5
-
-        possible_moves = self.get_free_adjacents_positions(tribute.pos[0], tribute.pos[1])
-        possible_moves.sort(key=calculate_distance)
-        if not  possible_moves:
-            raise ValueError(f'No FREE positions')
-
-        return possible_moves[0]
