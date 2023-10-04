@@ -236,4 +236,15 @@ class GameLogic:
             if not(self.neutrals is None):
                 for neutral in self.neutrals:
                     self.heuristic_tribute_first_attempt(neutral)
+
+    def init_simulation(self, rows, columns):
+        self.new_game(rows, columns)
+        self.mode = GameMode.SIMULATION
+        for i in range(5):
+            district = District()
+            self.districts.append(district)
+            self.districts[i].set_config_random(i)
+        for i in range(len(self.districts)):
+            self.board.distribute_tributes(self.districts[i])
+
             

@@ -614,3 +614,12 @@ def test_applies_effects_rmv_correctly_item():
 
     assert cell.item is None # verify that item is removed correctly
     assert t1.life == 100
+
+
+def test_init_game():
+    game = GameLogic()
+    game.init_simulation(7, 7)
+    assert game.mode == GameMode.SIMULATION
+    assert not (game.districts is None)
+
+

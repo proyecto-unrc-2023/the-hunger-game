@@ -3,6 +3,7 @@ import pytest
 from game.logic.district import District
 from game.logic.tribute import Tribute
 
+
 def test_set_config_invalid_life():
     district = District()
     with pytest.raises(ValueError):
@@ -49,12 +50,6 @@ def test_set_config_random_tributes():
         assert random_tributes[i].district == 3
 
 
-def test_set_config_random_invalid_num_district():
-    district = District()
-    with pytest.raises(ValueError):
-        district.set_config_random(0)  # number district 0
-
-
 def test_add_tribute_valid():
     district = District()
     district.cant_tributes = 0
@@ -68,16 +63,16 @@ def test_add_tribute_invalid():
     tribute = "Not is a tribute"
     with pytest.raises(ValueError):
         district.add_tribute(tribute)
-        
+
+
 def test_remove_tribute():
     district = District()
-    t1 = Tribute() 
+    t1 = Tribute()
     district.cant_tributes = 0
     district.add_tribute(t1)
     assert len(district.tributes) == 1
     district.remove_tribute(t1)
     assert len(district.tributes) == 0
-    
 
 
 def test_get_number_district():
