@@ -439,6 +439,7 @@ def test_move_closer_to():
     (x, y) = board.move_closer_to(4, 4, tribute)
     board.move_to(x, y, tribute)
     assert tribute.pos == (4,4)
+
 def test_get_adjacent_positions():
     board = Board(4, 4)
 

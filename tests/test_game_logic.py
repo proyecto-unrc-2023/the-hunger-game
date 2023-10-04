@@ -1,10 +1,10 @@
 import pytest
 
-from game.logic.cell import State
+from game.logic.cell import State, Cell
 from game.logic.district import District
 from game.logic.game_logic import GameLogic, GameMode
 from game.logic.board import Board
-from game.logic.item import Potion, Weapon
+from game.logic.item import Item, Potion, Weapon
 from game.logic.tribute import Tribute
 from game.logic.district import District
 
@@ -534,3 +534,83 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     assert len(game.districts[0].tributes) == 0
     assert len(game.neutrals) == 0
     assert len(game.districts[1].tributes) == 1
+
+
+# tests applies_effects(..) method
+
+def test_applies_effects_potion():
+    t1 = Tribute()
+    potion = Potion()
+    cell = Cell()
+    game = GameLogic()
+
+    t1.life = 95 # if life is 95
+    cell.item = potion
+    game.applies_effects(potion, cell, t1)
+
+    assert t1.life == 100 # then life inc 100
+
+
+def test_applies_effects_potion_life_tribute_less_than_100():
+    t1 = Tribute()
+    potion = Potion()
+    cell = Cell()
+    game = GameLogic()
+
+    t1.life = 97 # if life is 97
+    cell.item = potion
+    game.applies_effects(potion, cell, t1)
+
+    assert t1.life == 100 # then life inc just 100
+
+def test_applies_effects_potion_max_life_no_effect():
+    t2 = Tribute()
+    potion = Potion()
+    cell = Cell()
+    game = GameLogic()
+
+    t2.life = 100 # if life is 100
+    cell.item = potion
+    game.applies_effects(potion, cell, t2)
+
+    assert t2.life == 100 # then life is the same
+    
+
+def test_applies_effects_weapon():
+    t1 = Tribute()
+    cell = Cell()
+    weapon = Weapon()
+    game = GameLogic()
+
+    t1.force = 8
+    cell.item = weapon
+    game.applies_effects(weapon, cell, t1)
+
+    assert t1.force == 9
+
+
+def test_applies_effects_weapon_inc_more_10():
+    t1 = Tribute()
+    cell = Cell()
+    weapon = Weapon()
+    game = GameLogic()
+
+    t1.force = 10
+    cell.item = weapon
+    game.applies_effects(weapon, cell, t1)
+
+    assert t1.force == 11
+
+
+def test_applies_effects_rmv_correctly_item():
+    t1 = Tribute()
+    cell = Cell()
+    potion = Potion()
+    game = GameLogic()
+
+    t1.life = 100
+    cell.item = potion
+    game.applies_effects(potion, cell, t1)
+
+    assert cell.item is None # verify that item is removed correctly
+    assert t1.life == 100
