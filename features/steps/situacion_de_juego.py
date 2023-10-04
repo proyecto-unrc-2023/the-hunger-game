@@ -1,6 +1,12 @@
 from flask import url_for
 from behave import given, when, then
 
+from game.logic.game_logic import GameLogic
+
+def game(self):
+    game = GameLogic()
+    game.new_game(8,8)
+
 @given('que el juego ya está inicializado')
 def step_impl(context):
     pass
