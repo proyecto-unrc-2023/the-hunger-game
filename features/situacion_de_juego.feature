@@ -13,7 +13,7 @@
         |  |  |  |t2|
         |  |t1|p |  |
         |  |  |  |  |
-      Cuando se ejecute una iteracion
+      Cuando se ejecute un movimiento
       Entonces el estado del tablero será el siguiente
         |0 |1 |2 |3 |
         |  |  |  |  |
@@ -40,19 +40,11 @@
       Entonces el aliado atacara al tributo enemigo
 
     Escenario: Enfrentamiento entre tributos
-      Dado que t1 es del distrito 0
-      Y t2 es del distrito 1
-      Y t1 tiene la misma fuerza t2
-      Y t1 tiene la misma vida t2
-      Y el estado del tablero es el siguiente
-        |0 |1 |2 |3 |
-        |t1|t2|  |  |
-        |  |  |  |  |
-        |  |  |  |  |
-        |  |  |  |  |
-      Cuando se ejecute una iteracion
-      Entonces la vida de t1 es distinta de 40
-      Y la vida de t2 es distinta de 50
+      Dado que dos tributos son de distintos distritos
+      Y tienen la mismas caracteristicas
+      Y tienen la misma cantidad de vida
+      Cuando se encuentran y enfrentan en el mapa
+      Entonces ambos tributos mueren
 
     Escenario: Un tributo se alia con un tributo neutro
       Dado que un tributo pertenece a un distrito y otro es neutro

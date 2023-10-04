@@ -1,13 +1,11 @@
 from flask import url_for
 from behave import given, when, then
-from game.logic.district import District
 
 from game.logic.game_logic import GameLogic
 
-def game():
+def game(self):
     game = GameLogic()
-    game.new_game(8, 8)
-    return game
+    game.new_game(8,8)
 
 @given('que el juego ya está inicializado')
 def step_impl(context):
@@ -148,48 +146,31 @@ def step_impl(context):
 def step_impl(context):
     pass
 
-##############################################################################
-@given('que t1 es del distrito 0')
-def step_impl(context, game): 
-    d0 = District()
-    d0.set_config(40,10,1,0,1)
-    context.game.districts.append(d0)
-    
 
-@given('t2 es del distrito 1')
-def step_impl(context, game):
-    d1 = District()
-    d1.set_config(40,10,1,0,1)
-    context.game.districts.append(d1)
-
-
-@given('t1 tiene la misma vida t2')
-def step_impl(context, game):
-    t0 = game.districts[0].tributes[0]
-    t1 = game.districts[1].tributes[0]
-    assert t0.life == t1.life
-    game.districts
-
-
-@given('t1 tiene la misma fuerza t2')
-def step_impl(context):
-    t0 = game.districts[0].tributes[0]
-    t1 = game.districts[1].tributes[0]
-    assert t0.life == t1.life
-    game.districts
-
-@when('se ejecute una iteracion')
+@given('que dos tributos son de distintos distritos')
 def step_impl(context):
     pass
 
 
-@then('la vida de t1 es distinta de 40')
+@given('tienen la mismas caracteristicas')
 def step_impl(context):
     pass
 
-@then('la vida de t2 es distinta de 50')
+
+@given('tienen la misma cantidad de vida')
 def step_impl(context):
     pass
+
+
+@when('se encuentran y enfrentan en el mapa')
+def step_impl(context):
+    pass
+
+
+@then('ambos tributos mueren')
+def step_impl(context):
+    pass
+
 
 @given('que un tributo pertenece a un distrito y otro es neutro')
 def step_impl(context):
