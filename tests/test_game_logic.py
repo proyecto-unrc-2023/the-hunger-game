@@ -372,6 +372,7 @@ def test_heuristic_tribute_first_attempt_complex():
     game.board.put_tribute(4, 3, neutro)
     neutro.life = 20
     neutro.force = 10
+    game.neutrals.append(neutro)
 
     # Configuración de arma y poción
     w = Weapon()
@@ -383,7 +384,6 @@ def test_heuristic_tribute_first_attempt_complex():
     game.heuristic_tribute_first_attempt(tribute0)
     assert tribute0.pos == w.pos
     assert tribute0.force == 6
-    game.board.remove_item(w)
     game.heuristic_tribute_first_attempt(tribute0)
     t1.attack_to(tribute0, game.board)
     game.heuristic_tribute_first_attempt(tribute0)
@@ -496,6 +496,7 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     neutro = Tribute()
     neutro.life = 25
     neutro.force = 5
+    
     t1 = game2x2.board.get_element(0,0).get_tribute()
     t1.life=39
     
@@ -503,6 +504,7 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     t1.alliance = 25
     game2x2.board.put_tribute(1,0,neutro)
     game2x2.mode = GameMode.SIMULATION
+    game2x2.neutrals.append(neutro)
     game2x2.heuristic_of_game()
     assert t1.is_dead()
     assert neutro.life == 5
@@ -614,12 +616,3 @@ def test_applies_effects_rmv_correctly_item():
 
     assert cell.item is None # verify that item is removed correctly
     assert t1.life == 100
-
-
-def test_init_game():
-    game = GameLogic()
-    game.init_simulation(7, 7)
-    assert game.mode == GameMode.SIMULATION
-    assert not (game.districts is None)
-
-

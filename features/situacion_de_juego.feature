@@ -47,17 +47,42 @@
       Entonces ambos tributos mueren
 
     Escenario: Un tributo se alia con un tributo neutro
-      Dado que un tributo pertenece a un distrito y otro es neutro
-      Cuando se encuentran en el mapa
-      Y el tributo perteneciente al distrito es capaz de aliarse
-      Entonces el tributo neutro se convierte en un miembro del tributo que se encontro
-      Y adquiere las caracteristicas del distrito al cual corresponde
+      Dado que existe un t1 y un t
+      Y t1 pertenece al distrito 0
+      Y t1 tiene un valor de alianza 25
+      Y t es un tribruto neutro
+      Y el estado del tablero es el siguiente
+        |0 |1 |2 |3 |
+        |  |  |  |  |
+        |  |  |  |  |
+        |  |t1|t |  |
+        |  |  |  |  |
+      Cuando t acepte la alianza de t1
+      Entonces el tributo t forma parte del distrito 0
+      Y el distrito 0 tiene un tributo más en su cantidad total
+      Y el tributo neutro pertenece al districto 0
+      Y el tributo neutro no pertenece más al grupo de los neutros
+
 
     Escenario: Un tributo no logra aliarse con un tributo neutro
-      Dado un tributo que pertenece a un distrito y otro neutro
-      Cuando ambos tributos se encuentran en el mapa
-      Y el tributo del distrito NO es capaz de aliarse
-      Entonces el tributo del distrito lucha con el tributo neutro
+      Dado que existe un t1 y un t
+      Y t1 pertenece al distrito 0
+
+      Y t1 tiene un valor de alianza 1
+      Y t es un tribruto neutro
+      Y el estado del tablero es el siguiente
+        |0 |1 |2 |3 |
+        |  |  |  |  |
+        |  |  |  |  |
+        |  |t1|t |  |
+        |  |  |  |  |
+      Cuando t rechaze la alianza de t1
+      Entonces el tributo t empieza a pelear con t1
+
+      #Dado un tributo que pertenece a un distrito y otro neutro
+      #Cuando ambos tributos se encuentran en el mapa
+      #Y el tributo del distrito NO es capaz de aliarse
+      #Entonces el tributo del distrito lucha con el tributo neutro
 
     Escenario: Dos tributos del mismo distrito se encuentran en el mapa
       Dado dos tributos
