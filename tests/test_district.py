@@ -40,6 +40,7 @@ def test_set_config_tributes():
 
 def test_add_tribute_valid():
     district = District()
+    district.cant_tributes = 0
     tribute = Tribute()
     district.add_tribute(tribute)
     assert tribute in district.tributes
@@ -50,6 +51,16 @@ def test_add_tribute_invalid():
     tribute = "Not is a tribute"
     with pytest.raises(ValueError):
         district.add_tribute(tribute)
+        
+def test_remove_tribute():
+    district = District()
+    t1 = Tribute() 
+    district.cant_tributes = 0
+    district.add_tribute(t1)
+    assert len(district.tributes) == 1
+    district.remove_tribute(t1)
+    assert len(district.tributes) == 0
+    
 
 
 def test_get_number_district():
