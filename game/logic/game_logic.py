@@ -178,6 +178,7 @@ class GameLogic:
                     tribute.move_to(x, y, self.board)
                     item = cell.get_item()
                     item.apply_effect(tribute)
+                    self.board.remove_item(item)
                 else:
                     pos = tribute.move_closer_to(x, y, self.board)
                     tribute.move_to(pos[0], pos[1], self.board)
@@ -189,6 +190,7 @@ class GameLogic:
                         if tribute.alliance_to(cell.get_tribute()) == True:
                             district = self.districts[tribute.district]
                             self.alliance_neutral(cell.get_tribute(), district)
+                            self.neutrals.remove(cell.get_tribute())
                         else:
                             cell.get_tribute().district = -99
                     else:
@@ -236,15 +238,4 @@ class GameLogic:
             if not(self.neutrals is None):
                 for neutral in self.neutrals:
                     self.heuristic_tribute_first_attempt(neutral)
-
-    def init_simulation(self, rows, columns):
-        self.new_game(rows, columns)
-        self.mode = GameMode.SIMULATION
-        for i in range(5):
-            district = District()
-            self.districts.append(district)
-            self.districts[i].set_config_random(i)
-        for i in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[i])
-
             
