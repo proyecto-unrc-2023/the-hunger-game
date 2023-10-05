@@ -108,11 +108,12 @@
       Entonces se ignoran
 
     Escenario: Tributo encuentra un item de curacion y lo utiliza
-      Dado que un tributo encuentra un item de curacion en el mapa
-      Y no tenga la vida al maximo
-      Cuando el tributo se encuentra sobre el item
-      Entonces su vida incrementa
-      Y el item desaparece del mapa
+      Dado un tributo t1 con 20 de vida en la posición (1,2)
+      Y una poción p en la posición (2,2)
+      Cuando se ejecute una iteracion
+      Entonces t1 se encuentra en (2,2)
+      Y p desaparece del mapa
+      Y la vida de t1 ahora es de 25
 
     Escenario: Tributo encuentra un item de curación y no lo utiliza
       Dado un t1 con el 100 porciento de vida
