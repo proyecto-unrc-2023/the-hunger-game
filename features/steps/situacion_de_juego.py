@@ -3,7 +3,8 @@ from behave import given, when, then, step
 from game.logic.district import District
 from game.logic.game_logic import GameLogic
 from game.logic.tribute import Tribute
-
+from game.logic.cell import State
+from game.logic.item import Potion
 
 @given('que el juego ya está inicializado')
 def step_impl(context):
@@ -305,30 +306,48 @@ def step_impl(context):
     pass
 
 
-@given(u'que un tributo encuentra un item de curacion en el mapa')
+@given('un tributo t1 con 20 de vida en la posición (1,2)')
 def step_impl(context):
-    pass
+    context.game = GameLogic()
+    context.game.new_game(3,3)
+    context.t1 = Tribute()
+    context.d0 = District()
+    context.d0.number_district = 0
+    context.game.districts.append(context.d0)
+    context.t1.set_config_parameters(20, None, None, None)
+    context.d0.add_tribute(context.t1)
+    context.game.board.put_tribute(1, 2, context.t1)
+    assert context.t1.life == 20
+    assert context.t1.pos == (1,2)
+    assert context.game.board.get_element(1,2).get_state() == State.TRIBUTE
 
 
-@given(u'no tenga la vida al maximo')
+@given('una poción p en la posición (2,2)')
 def step_impl(context):
-    pass
+    context.p = Potion()
+    context.game.board.put_item(2, 2, context.p)
+    assert context.p.get_pos() == (2,2)
+    assert context.game.board.get_element(2,2).get_state() == State.ITEM
 
 
-@when(u'el tributo se encuentra sobre el item')
+@when('se ejecute una iteracion')
 def step_impl(context):
-    pass
+    context.game.heuristic_tribute_first_attempt(context.t1)
 
-
-@then(u'su vida incrementa')
+@then('t1 se encuentra en (2,2)')
 def step_impl(context):
-    pass
+    assert context.t1.pos == (2,2)
+    assert context.game.board.get_element(2,2).get_tribute() is not None
 
 
-@then(u'el item desaparece del mapa')
+@then('p desaparece del mapa')
 def step_impl(context):
-    pass
+    assert context.game.board.get_element(2,2).get_state() != State.ITEM
 
+
+@then('la vida de t1 ahora es de 25')
+def step_impl(context):
+    assert context.t1.life == 25
 
 @given(u'un t1 con el 100 porciento de vida')
 def step_impl(context):
