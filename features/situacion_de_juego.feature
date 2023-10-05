@@ -4,23 +4,15 @@
     Escenario: Dos tributos luchan y uno de ellos encuentra un item
       Dado que el juego ya está inicializado
       Y la vida de t1 es de 30
-      Y la poción cura 10 de vida
+      Y la vida de t2 es de 30
+      Y la poción cura 5 de vida
       Y la fuerza de t2 es de 5
-      Y t1 mueve antes que t2
-      Y el estado del tablero es el siguiente
-        |0 |1 |2 |3 |
-        |  |  |  |  |
-        |  |  |  |t2|
-        |  |t1|p |  |
-        |  |  |  |  |
+      Y t1 esta en la posicion (2,1)
+      Y t2 esta en la posicion (1,3)
+      Y la pocion esta en la posicion (2,2)
       Cuando se ejecute un movimiento
-      Entonces el estado del tablero será el siguiente
-        |0 |1 |2 |3 |
-        |  |  |  |  |
-        |  |  |  |t2|
-        |  |  |t1|  |
-        |  |  |  |  |
-      Y la vida de t1 se reducirá a 35
+      Entonces t1 estara en (2,2)
+      Y la vida de t1 se reducirá a 30
       Y la vida de t2 se mantiene igual
 
     Escenario: Dos tributos luchan y llega otro tributo
@@ -39,7 +31,7 @@
       Y ambos tributos entran en el rango de vision del aliado
       Entonces el aliado atacara al tributo enemigo
 
-    Escenario: Enfrentamiento entre tributos
+    Escenario: Enfrentamiento entre 2 tributos
       Dado que t0 pertenece al distrito 0
       Y t0 tiene una vida de 50
       Y t0 tiene una fuerza de 10

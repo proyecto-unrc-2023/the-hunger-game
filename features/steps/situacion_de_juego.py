@@ -8,55 +8,76 @@ from game.logic.item import Potion, Weapon
 from game.logic.board import Board
 
 
+############################################################################
 @given('que el juego ya está inicializado')
 def step_impl(context):
-    pass
+    context.game = GameLogic()
+    context.t1 = Tribute()
+    context.t2 = Tribute()
+    context.game.new_game(4, 4)
+    context.t1.district = 0
+    context.t2.district = 1
+
+
+    context.potion = Potion()
+
 
 
 @given(u'la vida de t1 es de 30')
 def step_impl(context):
-    pass
+    context.t1.life = 30
 
-
-@given(u'la poción cura 10 de vida')
+@given(u'la vida de t2 es de 30')
 def step_impl(context):
-    pass
+    context.t2.life = 30
+
+
+@given(u'la poción cura 5 de vida')
+def step_impl(context):
+    context.potion = Potion()
 
 
 @given(u'la fuerza de t2 es de 5')
 def step_impl(context):
-    pass
+    context.t2.force = 5
 
 
-@given(u't1 mueve antes que t2')
+@given(u't1 esta en la posicion (2,1)')
 def step_impl(context):
-    pass
+    context.game.put_tribute_in_game(2, 1, context.t1)
 
 
-@given(u'el estado del tablero es el siguiente')
+@given(u't2 esta en la posicion (1,3)')
 def step_impl(context):
-    pass
+    context.game.put_tribute_in_game(1, 3, context.t2)
+
+
+@given(u'la pocion esta en la posicion (2,2)')
+def step_impl(context):
+    context.game.put_item_in_board(2,2,context.potion)
 
 
 @when(u'se ejecute un movimiento')
 def step_impl(context):
-    pass
+    context.game.heuristic_tribute_first_attempt(context.t1)
+    context.game.heuristic_tribute_first_attempt(context.t2)
 
 
-@then(u'el estado del tablero será el siguiente')
+@then(u't1 estara en (2,2)')
 def step_impl(context):
-    pass
+    assert  context.t1.pos == (2,2)
 
-
-@then(u'la vida de t1 se reducirá a 35')
+@then(u'la vida de t1 se reducirá a 30')
 def step_impl(context):
-    pass
+    assert context.t1.life == 30
 
 
 @then(u'la vida de t2 se mantiene igual')
 def step_impl(context):
-    pass
+    assert  context.t2.life == 30
 
+
+###########################################################################
 
 @given(u'que empezo la simulacion')
 def step_impl(context):
@@ -418,8 +439,6 @@ def step_impl(context):
     pass
 
 
-
-
 @given('que un t1 se encuentra en la posicion (2,2) del mapa')
 def step_impl(context):
     context.game = GameLogic()
@@ -450,7 +469,6 @@ def step_impl(context):
     context.game.heuristic_tribute_first_attempt(context.t0)
 
 
-
 @then('su fuerza aumenta a 9')
 def step_impl(context):
     assert context.t0.force == 9
@@ -458,7 +476,7 @@ def step_impl(context):
 
 @then('la espada desaparece del mapa')
 def step_impl(context):
-    assert not(context.game.board.get_element(2, 3).get_tribute() is None)
+    assert not (context.game.board.get_element(2, 3).get_tribute() is None)
 
 
 @then('la posicion de t1 es (2,3)')
@@ -486,6 +504,7 @@ def step_impl(context):
 @then(u'no la recoge')
 def step_impl(context):
     pass
+
 
 ###############################################################################################################
 
@@ -570,5 +589,9 @@ def step_impl(context):
 
 
 @then(u'el tributo con menos fuerza inflige menos daño')
+def step_impl(context):
+    pass
+
+@given(u'el estado del tablero es el siguiente')
 def step_impl(context):
     pass
