@@ -272,3 +272,11 @@ class GameLogic:
 
     def put_item_in_board(self, row, column, item):
         self.board.put_item(row, column, item)
+
+    def one_iteration(self):
+        for district in self.districts:
+            for tribute in district.tributes:
+                self.heuristic_tribute_first_attempt(tribute)
+        if not(self.neutrals is None):
+            for neutral in self.neutrals:
+                self.heuristic_tribute_first_attempt(neutral)
