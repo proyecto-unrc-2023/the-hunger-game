@@ -40,11 +40,17 @@
       Entonces el aliado atacara al tributo enemigo
 
     Escenario: Enfrentamiento entre tributos
-      Dado que dos tributos son de distintos distritos
-      Y tienen la mismas caracteristicas
-      Y tienen la misma cantidad de vida
-      Cuando se encuentran y enfrentan en el mapa
-      Entonces ambos tributos mueren
+      Dado que t0 pertenece al distrito 0
+      Y t0 tiene una vida de 50
+      Y t0 tiene una fuerza de 10
+      Y t1 pertenece al distrito 1
+      Y t1 tiene una vida de 50
+      Y t1 tiene una fuerza de 10
+      Y t0 esta en la posicion (0,0)
+      Y t1 esta en la posicion (0,1)
+      Cuando se ejecute una iteracion del juego
+      Entonces la vida de t0 es 40
+      Y la vida de t1 es 40
 
     Escenario: Un tributo se alia con un tributo neutro
       Dado que existe un t1 y un t
