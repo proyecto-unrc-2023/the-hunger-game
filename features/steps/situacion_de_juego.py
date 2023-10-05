@@ -105,30 +105,70 @@ def step_impl(context):
 def step_impl(context):
     pass
 
+#####################################
 
-@given(u'que dos tributos son de distintos distritos')
+@given(u'que t0 pertenece al distrito 0')
 def step_impl(context):
-    pass
+    context.game = GameLogic()
+    context.game.new_game(2,2)
+    context.t0 = Tribute()
+    context.d0 = District()
+    context.t0.district = 0
+    context.d0.number_district = 0
+    context.d0.add_tribute(context.t0)
+    context.game.districts.append(context.d0)
 
-
-@given(u'tienen la mismas caracteristicas')
+    
+@given(u't0 tiene una vida de 50')
 def step_impl(context):
-    pass
+    context.t0.life = 50
 
-
-@given(u'tienen la misma cantidad de vida')
+@given(u't0 tiene una fuerza de 10')
 def step_impl(context):
-    pass
+    context.t0.force = 10
 
-
-@when(u'se encuentran y enfrentan en el mapa')
+@given(u't1 pertenece al distrito 1')
 def step_impl(context):
-    pass
+        context.t1 = Tribute()
+        context.d1 = District()
+        context.d0.number_district = 1
+        context.t1 = Tribute()
+        context.t1.district = 1
+        context.d1.add_tribute(context.t1)
+        context.game.districts.append(context.d1)
+    
 
-
-@then(u'ambos tributos mueren')
+@given(u't1 tiene una vida de 50')
 def step_impl(context):
-    pass
+    context.t1.life = 50
+
+@given(u't1 tiene una fuerza de 10')
+def step_impl(context):
+    context.t1.force = 10
+
+
+@given(u't0 esta en la posicion (0,0)')
+def step_impl(context):
+    context.game.board.put_tribute(0, 0, context.t0)
+
+@given(u't1 esta en la posicion (0,1)')
+def step_impl(context):
+    context.game.board.put_tribute(0, 1, context.t1)
+    
+
+@when(u'se ejecute una iteracion del juego')
+def step_impl(context):
+    context.game.heuristic_tribute_first_attempt(context.t0)
+    context.game.heuristic_tribute_first_attempt(context.t1)
+
+
+@then(u'la vida de t0 es 40')
+def step_impl(context):
+    assert context.t0.life == 40
+
+@then(u'la vida de t1 es 40')
+def step_impl(context):
+    assert context.t1.life == 40
 
 
 # ------------------------------------------------------------------- Inicio del escenario
@@ -211,30 +251,6 @@ def step_impl(context):
 @then('el tributo t empieza a pelear con t1')
 def step_impl(context):
     pass
-
-
-""""
-@given(u'un tributo que pertenece a un distrito y otro neutro')
-def step_impl(context):
-    pass
-
-
-@when(u'ambos tributos se encuentran en el mapa')
-def step_impl(context):
-    pass
-
-
-@when(u'el tributo del distrito NO es capaz de aliarse')
-def step_impl(context):
-    pass
-
-
-@then(u'el tributo del distrito lucha con el tributo neutro')
-def step_impl(context):
-    pass
-
-"""
-
 
 @given(u'dos tributos')
 def step_impl(context):
