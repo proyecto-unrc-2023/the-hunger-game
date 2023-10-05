@@ -8,6 +8,7 @@ from game.logic.district import District
 
 import random
 
+
 class GameMode(Enum):
     NOT_STARTED = 1
     TRIBUTES_PLACEMENT = 2
@@ -27,27 +28,27 @@ class GameLogic:
     def new_game(self, rows, columns):
         self.board = Board(rows, columns)
         self.mode = GameMode.TRIBUTES_PLACEMENT
-        
+
     # Places a Neutral at a specific position on the board and in Neutrals.
     def put_neutral(self, x, y):
         neutral = Tribute()
         neutral.life = 50
         neutral.force = 10
-        self.board.put_tribute(x,y,neutral)
+        self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
-        
+
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
-        if tribute.district == -99: 
+        if tribute.district == -99:
             self.neutrals.remove(tribute)
-        else: 
+        else:
             self.districts[tribute.district].remove_tribute(tribute)
-        
+
         self.board.remove_tribute(tribute)
-        
+
     # Configure the own district with all stats that we need and configure five random districts 
     def configuration_districts(self, district, life, force, alliance, num_district, cant_tributes):
-        
+
         district.set_config(life, force, alliance, num_district, cant_tributes)
         self.districts.append(district)
         my_num_district = district.get_number_district()
@@ -58,13 +59,12 @@ class GameLogic:
             district.set_config_random(list_district[i])
             self.districts.append(district)
 
-    
-    def applies_effects(self, item, cell, tribute):            
-        if isinstance(item, Potion): # if item is an Potion
-            item.apply_effect(tribute) # + 5 life
-        elif isinstance(item, Weapon): # if item is an Weapon
-            item.apply_effect(tribute) # + 1 force
-        
+    def applies_effects(self, item, cell, tribute):
+        if isinstance(item, Potion):  # if item is an Potion
+            item.apply_effect(tribute)  # + 5 life
+        elif isinstance(item, Weapon):  # if item is an Weapon
+            item.apply_effect(tribute)  # + 1 force
+
         cell.remove_item()
 
     # Returns the positions visible to an tribute within an certain range.
@@ -227,7 +227,6 @@ class GameLogic:
             if cant_of_districts_alive == 1:
                 return district_alive
 
-                    
     def heuristic_of_game(self):
         if self.mode != GameMode.SIMULATION:
             raise ValueError(f'The state of the game is not SIMULATION')
@@ -235,10 +234,9 @@ class GameLogic:
             for district in self.districts:
                 for tribute in district.tributes:
                     self.heuristic_tribute_first_attempt(tribute)
-            if not(self.neutrals is None):
+            if not (self.neutrals is None):
                 for neutral in self.neutrals:
                     self.heuristic_tribute_first_attempt(neutral)
-
 
     def init_simulation(self, rows, columns):
         self.new_game(rows, columns)
@@ -250,3 +248,27 @@ class GameLogic:
         for i in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[i])
 
+    # Method to add a tribute in a game
+    # "tribute" is the tribute configured
+    # Row and Column are the position of tribute
+    def put_tribute_in_game(self, row, column, tribute):
+        district = tribute.district
+        district_aux = District()
+        if len(self.districts) == district:
+            district_aux.number_district = district
+            district_aux.add_tribute(tribute)
+            self.districts.append(district_aux)
+            self.board.put_tribute(row, column, tribute)
+        else:
+            self.board.put_tribute(row, column, tribute)
+            self.districts[tribute.district].add_tribute(tribute)
+
+    def put_neutral_tribute_in_game(self, row, column, neutral_tribute):
+        if self.neutrals.__contains__(neutral_tribute) is False:
+            self.neutrals.append(neutral_tribute)
+            self.board.put_tribute(row, column, neutral_tribute)
+        else:
+            raise ValueError("This neutral tribute is in the board")
+
+    def put_item_in_board(self, row, column, item):
+        self.board.put_item(row, column, item)
