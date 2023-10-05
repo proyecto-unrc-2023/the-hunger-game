@@ -151,10 +151,16 @@
       Y se encuentre sobre la espada
       Entonces no la recoge
 
-    Escenario: Tributo con más fuerza inflige más daño a su enemigo
-	    Dado que dos tributos son de distinto distrito
-	    Cuando se cruzan en el mapa
-	    Entonces el tributo con más fuerza inflige más daño
+    Escenario: Tributo con mayor fuerza inflige mayor daño a otro tributo con menor fuerza en combate
+	    Dado que dos tributos son de distinto distrito en un tablero de 5 x 5
+      Y tributo t1 del distrito 1 tiene fuerza de 9 y vida de 50
+      Y tributo t2 del distrito 2 tiene fuerza de 5 y vida de 50
+      Y tributo t1 se encuentra en la posición (0, 3) del tablero
+      Y tributo t2 se encuentra en la posición (1, 2) del tablero
+	    Cuando se ejecute un paso de simulación
+	    Entonces tributo t1 con mayor fuerza inflige mayor daño a tributo t2
+      Y vida del tributo t2 se decrementa en 9
+      Y vida del tributo t1 se decrementa en 5
 
     Escenario: Tributo con menos fuerza inflige menos daño a su enemigo
 	    Dado que dos tributos son de distinto distrito
