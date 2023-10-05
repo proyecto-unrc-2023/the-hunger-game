@@ -5,6 +5,7 @@ from game.logic.game_logic import GameLogic
 from game.logic.tribute import Tribute
 from game.logic.cell import State
 from game.logic.item import Potion
+from game.logic.board import Board
 
 @given('que el juego ya está inicializado')
 def step_impl(context):
@@ -452,21 +453,80 @@ def step_impl(context):
 def step_impl(context):
     pass
 
+#---------------------------------------------------------------------------
+# Escenario: Tributo con mayor fuerza inflige mayor daño a otro tributo con menor fuerza en combate
+@given('que dos tributos son de distinto distrito en un tablero de 5 x 5')
+def step_impl(context):
+    context.t1 = Tribute()
+    context.t2 = Tribute()
+    context.game = GameLogic()
+    context.game.new_game(5, 5) # create board of 5 x 5
+    context.t1.set_config_parameters(50, 9, 1, 1) # life, force, alliance, district
+    context.t2.set_config_parameters(50, 5, 1, 2) # life, force, alliance, district
+    assert context.t1.district != context.t2.district 
 
-@given(u'que dos tributos son de distinto distrito')
+
+@step('tributo t1 del distrito 1 tiene fuerza de 9 y vida de 50')
+def step_impl(context):
+    assert context.t1.district == 1
+    assert context.t1.force == 9
+    assert context.t1.life == 50
+
+
+@step('tributo t2 del distrito 2 tiene fuerza de 5 y vida de 50')
+def step_impl(context):
+    assert context.t2.district == 2
+    assert context.t2.force == 5
+    assert context.t2.life == 50
+
+
+@step('tributo t1 se encuentra en la posición (0, 3) del tablero')
+def step_impl(context):
+    context.game.board.put_tribute(0, 3, context.t1)
+    assert context.t1.pos == (0, 3)
+    assert context.game.board.get_element(0, 3).get_state() == State.TRIBUTE
+
+
+@step('tributo t2 se encuentra en la posición (1, 2) del tablero')
+def step_impl(context):
+    context.game.board.put_tribute(1, 2, context.t2)
+    assert context.t2.pos == (1, 2)
+    assert context.game.board.get_element(1, 2).get_state() == State.TRIBUTE
+
+
+@when('se ejecute un paso de simulación')
+def step_impl(context):
+    context.game.heuristic_tribute_first_attempt(context.t1) # working t1
+    context.game.heuristic_tribute_first_attempt(context.t2) # working t2
+
+
+@then('tributo t1 con mayor fuerza inflige mayor daño a tributo t2')
+def step_impl(context):
+    context.force_tribute_1 = context.t1.force
+    context.force_tribute_2 = context.t2.force
+    assert context.force_tribute_1 > context.force_tribute_2
+
+
+@step('vida del tributo t2 se decrementa en 9')
+def step_impl(context):
+    assert context.t2.life ==  41
+    assert context.game.board.get_element(1, 2).get_state() == State.TRIBUTE # verify that t2 still in your position fighting
+
+
+@step('vida del tributo t1 se decrementa en 5')
+def step_impl(context):
+    assert context.t1.life == 45
+    assert context.game.board.get_element(0, 3).get_state() == State.TRIBUTE # verify that t1 still in your position figthing
+
+#-----------------------------------------------------------------------------------
+
+@given('que dos tributos son de distinto distrito')
 def step_impl(context):
     pass
 
-
-@when(u'se cruzan en el mapa')
+@when('se cruzan en el mapa')
 def step_impl(context):
     pass
-
-
-@then(u'el tributo con más fuerza inflige más daño')
-def step_impl(context):
-    pass
-
 
 @then(u'el tributo con menos fuerza inflige menos daño')
 def step_impl(context):
