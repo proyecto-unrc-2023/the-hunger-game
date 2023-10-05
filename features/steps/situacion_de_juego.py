@@ -1,5 +1,5 @@
 from behave import given, when, then, step
-
+from game.logic.cell import State
 from game.logic.district import District
 from game.logic.game_logic import GameLogic
 from game.logic.tribute import Tribute
@@ -255,49 +255,67 @@ def step_impl(context):
     pass
 
 
-@given(u't1 en la posición (0,2)')
+@given('t1 en la posición (0,2)')
 def step_impl(context):
+    context.game = GameLogic()
+    context.game.new_game(4,4)
+    context.t1 = Tribute()
+    context.d0 = District()
+    context.t1.set_config_parameters(None, 7, None, 0)
+    context.d0.number_district = 0
+    context.d0.add_tribute(context.t1)
+    context.game.districts.append(context.d0)
+    context.t1.set_config_parameters(None, 7, None, 0)
+    context.game.board.put_tribute(0, 2, context.t1)
+    assert context.t1.pos == (0,2)
+    assert context.game.board.get_element(0,2).get_state() == State.TRIBUTE
+
+
+@given('t2 en la posición (1,2)')
+def step_impl(context):
+    context.t2 = Tribute()
+    context.d1 = District()
+    context.t2.set_config_parameters(5, None, None, 1)
+    context.d1.number_district = 1
+    context.d1.add_tribute(context.t2)
+    context.game.districts.append(context.d1)
+    context.game.board.put_tribute(1, 2, context.t2)
+    assert context.t2.pos == (1,2)
+    assert context.game.board.get_element(1,2).get_state() == State.TRIBUTE
+
+
+@given('ambos son de distinto distrito')
+def step_impl(context):
+    assert context.t1.district != context.t2.district
+
+
+@given('t2 tiene 5 de vida')
+def step_impl(context):
+    assert context.t2.life == 5
+
+
+@given('t1 tiene 7 de fuerza')
+def step_impl(context):
+    assert context.t1.force == 7
+  
+@when('t1 le pega a t2')
+def step_impl(context):
+    context.game.heuristic_tribute_first_attempt(context.t1)
     pass
 
-
-@given(u't2 en la posición (1,2)')
+@then('la vida de t2 se reduce en 7 puntos')
 def step_impl(context):
-    pass
+    assert context.t2.life == -2
 
 
-@given(u'ambos son de distinto distrito')
+@then('la vida de t2 es de 0 o menos')
 def step_impl(context):
-    pass
+    assert context.t2.life <= 0
 
 
-@given(u't2 tiene 5 de vida')
+@then('t2 muere')
 def step_impl(context):
-    pass
-
-
-@given(u't1 tiene 7 de fuerza')
-def step_impl(context):
-    pass
-
-
-@when(u't1 le pega a t2')
-def step_impl(context):
-    pass
-
-
-@then(u'la vida de t2 se reduce en 7 puntos')
-def step_impl(context):
-    pass
-
-
-@then(u'la vida de t2 es de 0 o menos')
-def step_impl(context):
-    pass
-
-
-@then(u't2 muere')
-def step_impl(context):
-    pass
+    assert context.t2.is_dead()
 
 
 @given(u'que dos tributos son neutros')

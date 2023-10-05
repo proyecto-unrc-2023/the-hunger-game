@@ -94,7 +94,6 @@
       Dado t1 en la posición (0,2)
       Y t2 en la posición (1,2)
       Y ambos son de distinto distrito
-      Y t1 mueve antes que t2
       Y t2 tiene 5 de vida
       Y t1 tiene 7 de fuerza
       Cuando t1 le pega a t2
