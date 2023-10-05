@@ -139,11 +139,14 @@
       Y la poción de la celda
 
     Escenario: Tributo encuentra una espada y la recoge
-      Dado que un tributo encuentra una espada en el mapa
-      Cuando el tributo no tenga una espada
-      Y se escuentre sobre la espada
-      Entonces su daño se incrementa
+      Dado que un t1 se encuentra en la posicion (2,2) del mapa
+      Y que una espada se encuentra en la posicion (2,3) del mapa
+      Y t1 tiene una fuerza de 8
+      Cuando se ejecuta una iteracion
+      Entonces su fuerza aumenta a 9
       Y la espada desaparece del mapa
+      Y la posicion de t1 es (2,3)
+
 
     Escenario: Tributo encuentra una espada y no la recoge
       Dado que un tributo encuentra una espada en el mapa
