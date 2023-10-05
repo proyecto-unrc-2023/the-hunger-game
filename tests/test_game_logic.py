@@ -25,41 +25,45 @@ def game():
     game.board.put_item(4, 3, p1)
     return game
 
+
 @pytest.fixture
 def game2x2():
     game2x2 = GameLogic()
-    game2x2.new_game(2,2)
+    game2x2.new_game(2, 2)
     district0 = District()
     district1 = District()
     t0 = Tribute()
     t1 = Tribute()
     district0.number_district = 0
     district1.number_district = 1
-    
+
     game2x2.districts.append(district0)
     game2x2.districts.append(district1)
-    t0.set_config_parameters(40,20,1,0)
-    t1.set_config_parameters(40,20,1,1)
-    game2x2.board.put_tribute(0,0,t0)
-    game2x2.board.put_tribute(0,1,t1)
+    t0.set_config_parameters(40, 20, 1, 0)
+    t1.set_config_parameters(40, 20, 1, 1)
+    game2x2.board.put_tribute(0, 0, t0)
+    game2x2.board.put_tribute(0, 1, t1)
     district0.add_tribute(t0)
     district1.add_tribute(t1)
     return game2x2
 
+
 def test_put_neutral(game2x2):
-    game2x2.put_neutral(1,0)
-    neutral = game2x2.board.get_element(1,0).get_tribute()
+    game2x2.put_neutral(1, 0)
+    neutral = game2x2.board.get_element(1, 0).get_tribute()
     assert neutral.life == 50
     assert neutral.force == 10
-    assert neutral.pos == (1,0)
+    assert neutral.pos == (1, 0)
     assert neutral.district is None
     assert len(game2x2.neutrals) == 1
-    
+
+
 def test_remove_tribute(game2x2):
-    t1 = game2x2.board.get_element(0,0).get_tribute()
+    t1 = game2x2.board.get_element(0, 0).get_tribute()
     game2x2.remove_tribute(t1)
-    assert game2x2.board.get_element(0,0).get_state() == State.FREE
-    assert not(t1 in game2x2.districts[t1.district].tributes)
+    assert game2x2.board.get_element(0, 0).get_state() == State.FREE
+    assert not (t1 in game2x2.districts[t1.district].tributes)
+
 
 def test_tribute_vision_pos():
     game = GameLogic()
@@ -135,7 +139,6 @@ def test_tribute_vision_cells_with_boundary():
     assert game.board.get_element(1, 1) in adjacent_cells
     # Modifica el cuarto assert
     assert len([cell for cell in adjacent_cells if cell.get_pos() == (7, 7)]) == 0
-
 
 
 def test_tribute_vision_cells_with_cells_state_tribute():
@@ -214,22 +217,24 @@ def test_tribute_vision_cells_ocupped_order_by_closeness_empty_board():
     game.board.put_tribute(2, 2, t1)
     result = game.tribute_vision_cells_ocupped_order_by_closeness(t1)
     assert result == False
-    
+
+
 def test_tribute_vision_cells_loseness_tributes_same_district2():
     game = GameLogic()
-    game.new_game(2,2)
-    t0= Tribute()
-    t1= Tribute()
-    t0.set_config_parameters(40,4,4,0)
-    t1.set_config_parameters(40,4,4,0)
-    game.board.put_tribute(0,0,t0)
-    game.board.put_tribute(0,1,t1)
+    game.new_game(2, 2)
+    t0 = Tribute()
+    t1 = Tribute()
+    t0.set_config_parameters(40, 4, 4, 0)
+    t1.set_config_parameters(40, 4, 4, 0)
+    game.board.put_tribute(0, 0, t0)
+    game.board.put_tribute(0, 1, t1)
     d0 = District()
     d0.add_tribute(t0)
     d0.add_tribute(t1)
     game.districts.append(d0)
     result = game.tribute_vision_cells_ocupped_order_by_closeness(t1)
     assert result is False
+
 
 def test_tribute_vision_cells_ocupped_order_by_closeness_items_only():
     game = GameLogic()
@@ -254,7 +259,7 @@ def test_tribute_vision_cells_ocupped_order_by_closeness_multiple_items(game):
 
 def test_fight_2_tributes_and_one_died():
     game = GameLogic()
-    game.new_game(2,2)
+    game.new_game(2, 2)
     district0 = District()
     district1 = District()
     t1 = Tribute()
@@ -267,21 +272,22 @@ def test_fight_2_tributes_and_one_died():
     district1.cant_tributes = 1
     game.districts.append(district0)
     game.districts.append(district1)
-    t1.set_config_parameters(40,20,1,0)
-    t2.set_config_parameters(40,20,1,1)
-    game.board.put_tribute(0,0,t1)
-    game.board.put_tribute(0,1,t2)
-    
-    game.fight(t1,t2)
+    t1.set_config_parameters(40, 20, 1, 0)
+    t2.set_config_parameters(40, 20, 1, 1)
+    game.board.put_tribute(0, 0, t1)
+    game.board.put_tribute(0, 1, t2)
+
+    game.fight(t1, t2)
     assert t2.life == 20
-    game.fight(t2,t1)
+    game.fight(t2, t1)
     assert t1.life == 20
     assert t2 in game.districts[1].tributes
     game.fight(t1, t2)
     assert t2.is_dead()
-    assert game.board.get_element(0,1).get_state() == State.FREE
-    assert not (t2 in game.districts[1].tributes) 
-    
+    assert game.board.get_element(0, 1).get_state() == State.FREE
+    assert not (t2 in game.districts[1].tributes)
+
+
 def test_heuristic_tribute_move_towards_item():
     game = GameLogic()
     game.new_game(7, 7)
@@ -397,6 +403,7 @@ def test_heuristic_tribute_first_attempt_complex():
     game.heuristic_tribute_first_attempt(tribute0)
     assert neutro in game.districts[0].tributes
 
+
 def test_end_game():
     district1 = District()
     district2 = District()
@@ -444,7 +451,7 @@ def test_config_district_my_cant_tributes():
     game_logic.configuration_districts(district, 50, 5, 5, 1, 5)
     my_district = game_logic.districts[0]
     my_cant_tributes = my_district.get_cant_tribute()
-    assert my_cant_tributes == 5    
+    assert my_cant_tributes == 5
 
 
 def test_alliance_neutral_tribute():
@@ -458,37 +465,40 @@ def test_alliance_neutral_tribute():
     assert old_number_of_tributes + 1 == district.get_cant_tribute()
     assert district.tributes.__contains__(tribute)
 
+
 def test_heuristic_of_game_simple_2_tribute_1_died(game2x2):
     game2x2.mode = GameMode.SIMULATION
     game2x2.heuristic_of_game()
-    assert len(game2x2.districts[0].tributes) == 1 
+    assert len(game2x2.districts[0].tributes) == 1
     assert len(game2x2.districts[1].tributes) == 0
-    
+
+
 def test_heuristic_of_game_simple_2_tribute_1_weapon_1_died(game2x2):
     w1 = Weapon()
-    game2x2.board.put_item(1,0,w1)
+    game2x2.board.put_item(1, 0, w1)
     game2x2.mode = GameMode.SIMULATION
-    t1 = game2x2.board.get_element(0,0).get_tribute()
-    t2 = game2x2.board.get_element(0,1).get_tribute()
+    t1 = game2x2.board.get_element(0, 0).get_tribute()
+    t2 = game2x2.board.get_element(0, 1).get_tribute()
     game2x2.heuristic_of_game()
     assert t1.is_dead()
     assert t1.force == 21
-    assert  t2.is_alive()
-    
-    assert len(game2x2.districts[0].tributes) == 0 
+    assert t2.is_alive()
+
+    assert len(game2x2.districts[0].tributes) == 0
     assert len(game2x2.districts[1].tributes) == 1
-    
-#fix potion problem, its not respect limit of tribute life
+
+
+# fix potion problem, its not respect limit of tribute life
 def test_heuristic_of_game_simple_2_tribute_1_potion_1_died(game2x2):
     p1 = Potion()
-    game2x2.board.put_item(1,0,p1)
+    game2x2.board.put_item(1, 0, p1)
     game2x2.mode = GameMode.SIMULATION
-    t1 = game2x2.board.get_element(0,0).get_tribute()
-    t2 = game2x2.board.get_element(0,1).get_tribute()
+    t1 = game2x2.board.get_element(0, 0).get_tribute()
+    t2 = game2x2.board.get_element(0, 1).get_tribute()
     game2x2.heuristic_of_game()
     assert t1.is_alive()
-    assert  t2.is_dead()
-    assert len(game2x2.districts[0].tributes) == 1 
+    assert t2.is_dead()
+    assert len(game2x2.districts[0].tributes) == 1
     assert len(game2x2.districts[1].tributes) == 0
 
 
@@ -496,25 +506,26 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     neutro = Tribute()
     neutro.life = 25
     neutro.force = 5
-    
-    t1 = game2x2.board.get_element(0,0).get_tribute()
-    t1.life=39
-    
-    t2 = game2x2.board.get_element(0,1).get_tribute()
+
+    t1 = game2x2.board.get_element(0, 0).get_tribute()
+    t1.life = 39
+
+    t2 = game2x2.board.get_element(0, 1).get_tribute()
     t1.alliance = 25
-    game2x2.board.put_tribute(1,0,neutro)
+    game2x2.board.put_tribute(1, 0, neutro)
     game2x2.mode = GameMode.SIMULATION
     game2x2.neutrals.append(neutro)
     game2x2.heuristic_of_game()
     assert t1.is_dead()
     assert neutro.life == 5
-    assert  t2.is_dead()
-    assert len(game2x2.districts[0].tributes) == 1 
+    assert t2.is_dead()
+    assert len(game2x2.districts[0].tributes) == 1
     assert len(game2x2.districts[1].tributes) == 0
-    
+
+
 def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     game = GameLogic()
-    game.new_game(8,8)
+    game.new_game(8, 8)
     game.mode = GameMode.SIMULATION
     district0 = District()
     district1 = District()
@@ -524,14 +535,14 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     district1.number_district = 1
     game.districts.append(district0)
     game.districts.append(district1)
-    t0.set_config_parameters(41,20,1,0)
+    t0.set_config_parameters(41, 20, 1, 0)
     t0.alliance = -25
-    t1.set_config_parameters(40,20,1,1)
-    game.board.put_tribute(0,0,t0)
-    game.board.put_tribute(7,7,t1)
+    t1.set_config_parameters(40, 20, 1, 1)
+    game.board.put_tribute(0, 0, t0)
+    game.board.put_tribute(7, 7, t1)
     district0.add_tribute(t0)
     district1.add_tribute(t1)
-    game.put_neutral(0,1)
+    game.put_neutral(0, 1)
     game.heuristic_of_game()
     assert len(game.districts[0].tributes) == 0
     assert len(game.neutrals) == 0
@@ -546,11 +557,11 @@ def test_applies_effects_potion():
     cell = Cell()
     game = GameLogic()
 
-    t1.life = 95 # if life is 95
+    t1.life = 95  # if life is 95
     cell.item = potion
     game.applies_effects(potion, cell, t1)
 
-    assert t1.life == 100 # then life inc 100
+    assert t1.life == 100  # then life inc 100
 
 
 def test_applies_effects_potion_life_tribute_less_than_100():
@@ -559,11 +570,12 @@ def test_applies_effects_potion_life_tribute_less_than_100():
     cell = Cell()
     game = GameLogic()
 
-    t1.life = 97 # if life is 97
+    t1.life = 97  # if life is 97
     cell.item = potion
     game.applies_effects(potion, cell, t1)
 
-    assert t1.life == 100 # then life inc just 100
+    assert t1.life == 100  # then life inc just 100
+
 
 def test_applies_effects_potion_max_life_no_effect():
     t2 = Tribute()
@@ -571,12 +583,12 @@ def test_applies_effects_potion_max_life_no_effect():
     cell = Cell()
     game = GameLogic()
 
-    t2.life = 100 # if life is 100
+    t2.life = 100  # if life is 100
     cell.item = potion
     game.applies_effects(potion, cell, t2)
 
-    assert t2.life == 100 # then life is the same
-    
+    assert t2.life == 100  # then life is the same
+
 
 def test_applies_effects_weapon():
     t1 = Tribute()
@@ -614,7 +626,7 @@ def test_applies_effects_rmv_correctly_item():
     cell.item = potion
     game.applies_effects(potion, cell, t1)
 
-    assert cell.item is None # verify that item is removed correctly
+    assert cell.item is None  # verify that item is removed correctly
     assert t1.life == 100
 
 
@@ -625,3 +637,42 @@ def test_init_game():
     assert not (game.districts is None)
 
 
+def test_put_tribute_in_game():
+    game = GameLogic()
+    game.new_game(2, 2)
+    t0 = Tribute()
+    t0.set_config_parameters(50, 10, 4, 0)
+    game.put_tribute_in_game(0, 0, t0)
+    assert t0.pos == (0, 0)
+    assert game.board.get_element(0, 0).get_tribute() == t0
+    t1 = Tribute()
+    t1.set_config_parameters(50, 10, 4, 1)
+    game.put_tribute_in_game(1, 1, t1)
+    assert t1.pos == (1, 1)
+    assert game.board.get_element(1, 1).get_tribute() == t1
+    assert len(game.districts) == 2
+    s1 = Tribute()
+    s1.set_config_parameters(50, 10, 4, 1)
+    game.put_tribute_in_game(1, 0, s1)
+    assert s1.pos == (1, 0)
+    assert game.board.get_element(1, 0).get_tribute() == s1
+    assert len(game.districts[1].tributes) == 2
+
+
+def test_put_neutral_tribute_in_game():
+    t = Tribute()
+    game = GameLogic()
+    game.new_game(2, 2)
+    game.put_neutral_tribute_in_game(0, 0, t)
+    assert len(game.neutrals) == 1
+    assert game.neutrals.__contains__(t)
+    assert game.neutrals[0].pos is not None
+    assert game.neutrals[0].pos == (0, 0)
+
+
+def test_put_item_in_board():
+    w = Weapon()
+    game = GameLogic()
+    game.new_game(2, 2)
+    game.put_item_in_board(0, 0, w)
+    assert game.board.get_element(0, 0).get_item().pos == (0, 0)
