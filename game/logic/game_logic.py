@@ -3,10 +3,8 @@ from enum import Enum
 from game.logic.board import Board
 from game.logic.tribute import Tribute
 from game.logic.cell import State
-from game.logic.item import Item, Weapon, Potion
+from game.logic.item import Weapon, Potion
 from game.logic.district import District
-
-import random
 
 
 class GameMode(Enum):
@@ -28,6 +26,11 @@ class GameLogic:
     def new_game(self, rows, columns):
         self.board = Board(rows, columns)
         self.mode = GameMode.TRIBUTES_PLACEMENT
+
+    def from_string(self, str):
+        result = Board.from_string(str)
+        self.board = result[0]
+        self.districts = result[1]
 
     # Places a Neutral at a specific position on the board and in Neutrals.
     def put_neutral(self, x, y):
@@ -277,6 +280,6 @@ class GameLogic:
         for district in self.districts:
             for tribute in district.tributes:
                 self.heuristic_tribute_first_attempt(tribute)
-        if not(self.neutrals is None):
+        if not (self.neutrals is None):
             for neutral in self.neutrals:
                 self.heuristic_tribute_first_attempt(neutral)

@@ -55,7 +55,7 @@ class Board:
                             elif tribute_number == 5:
                                 tribute.set_config_parameters(50, 5, 3, 5)
                                 districts[5].add_tribute(tribute)
-                            new_board.get_element(row, col).put_tribute(tribute)
+                            new_board.put_tribute(row,col, tribute)
                         else:
                             raise ValueError(f'Invalid tribute number: {tribute_number}')
                     except ValueError:

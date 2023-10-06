@@ -48,6 +48,20 @@ def game2x2():
     return game2x2
 
 
+def test_from_string():
+    game = GameLogic()
+    board_str = 't3|t2\n' \
+                't4|t1'
+    game.from_string(board_str)
+    assert len(game.districts[1].tributes) == 1
+    assert len(game.districts[2].tributes) == 1
+    assert len(game.districts[3].tributes) == 1
+    assert len(game.districts[4].tributes) == 1
+    t1 = game.board.get_element(1, 1).get_tribute()
+    game.remove_tribute(t1)
+    assert len(game.districts[1].tributes) == 0
+
+
 def test_put_neutral(game2x2):
     game2x2.put_neutral(1, 0)
     neutral = game2x2.board.get_element(1, 0).get_tribute()
