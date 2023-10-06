@@ -19,34 +19,28 @@ def test_set_config_invalid_force():
 def test_set_config_invalid_alliance():
     district = District()
     with pytest.raises(ValueError):
-        district.set_config(50, 10, 11, 3, 4)  # aliance 11
-
-
-def test_set_config_invalid_num_district():
-    district = District()
-    with pytest.raises(ValueError):
-        district.set_config(50, 10, 11, -1, 4)  # number district -1
+        district.set_config(50, 2, 11, 3, 4)  # aliance 2
 
 
 def test_set_config_tributes():
     district = District()
-    district.set_config(50, 10, 6, 1, 5)
+    district.set_config(50, 10, 6, 0, 5)
     list_tributes = district.tributes
     for i in range(len(list_tributes)):
         assert list_tributes[i].life == 50
         assert list_tributes[i].force == 10
         assert list_tributes[i].alliance == 6
-        assert list_tributes[i].district == 1
+        assert list_tributes[i].district == 0
 
 
 def test_set_config_random_tributes():
     district = District()
-    district.set_config_random(3)
+    district.set_config_random(3) # 3 is number_district
     random_tributes = district.tributes
     for i in range(len(random_tributes)):
         assert random_tributes[i].life == 50
         assert 5 <= random_tributes[i].force <= 10
-        assert 1 <= random_tributes[i].alliance <= 10
+        assert 3 <= random_tributes[i].alliance <= 10
         assert random_tributes[i].district == 3
 
 
