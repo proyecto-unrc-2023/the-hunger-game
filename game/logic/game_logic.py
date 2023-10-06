@@ -241,15 +241,37 @@ class GameLogic:
                 for neutral in self.neutrals:
                     self.heuristic_tribute_first_attempt(neutral)
 
+
+    # This method create a new board, request by console stats of your district, 
+    # configure five random districts and distributes tributes in board
     def init_simulation(self, rows, columns):
         self.new_game(rows, columns)
+        # Diccionary of parameters. When invoked init_simulation method, this 
+        # request you for console: life, force, alliance, number_district and cant_tributes
+        tributes_parameters = { 
+            "life": int(input("Vida: ")),
+            "force": int(input("Fuerza: ")),
+            "alliance": int(input("Alianza: ")),
+            "number_district": int(input("Numero de distrito: ")),
+            "cant_tributes": int(input("Cantidad de tributos: ")),
+        }
+
+        district = District() 
+        district.set_config(**tributes_parameters) # all inputs store in **tributes_parameters 
+        self.districts.append(district)
+        for i in range(6): 
+            if i != tributes_parameters["number_district"]: # I dont want that my district configure again
+                district = District()
+                district.cant_tributes = 4
+                district.set_config_random(i)
+                self.districts.append(district)
+
+        # distribute all tributes of districts in board       
+        for j in range(len(self.districts)):
+            self.board.distribute_tributes(self.districts[j]) 
+	
         self.mode = GameMode.SIMULATION
-        for i in range(5):
-            district = District()
-            self.districts.append(district)
-            self.districts[i].set_config_random(i)
-        for i in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[i])
+        
 
     # Method to add a tribute in a game
     # "tribute" is the tribute configured

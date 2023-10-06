@@ -170,7 +170,7 @@ def test_3x3_board_distribute_tribute():
                 ' | | '
     board = Board.from_string(board_str)[0]
     distrito1 = District()
-    distrito1.set_config(50, 5, 1, 1, 4)
+    distrito1.set_config(50, 5, 3, 1, 4)
     board.distribute_tributes(distrito1)
     tributes_count = 0
     for row in board.board:
