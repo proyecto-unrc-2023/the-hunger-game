@@ -1,6 +1,7 @@
 import random
 
 from game.logic.cell import Cell, State
+from game.logic.district import District
 from game.logic.item import Weapon, Potion
 from game.logic.tribute import Tribute
 
@@ -18,13 +19,47 @@ class Board:
             raise ValueError(f'Invalid number of columns: {n_cols}')
 
         new_board = Board(n_rows, n_cols)
-
+        districts = []
+        for i in range(5):
+            district = District()
+            districts.append(district)
+            
         for row in range(n_rows):
             for col in range(n_cols):
                 char = matrix[row][col].strip()
                 if char == 't':
                     tribute = Tribute()
                     new_board.get_element(row, col).put_tribute(tribute)
+                elif char.startswith('t'):
+                    # Check if it's a tribute character ('t') followed by a number
+                    try:
+                        tribute_number = int(char[1])
+                        if 0 <= tribute_number <= 5:
+                            tribute = Tribute()
+                            # Customize tribute parameters based on the number
+                            if tribute_number == 0:
+                                tribute.set_config_parameters(50, 5, 3, 0)
+                                districts[0].add_tribute(tribute)
+                            elif tribute_number == 1:
+                                tribute.set_config_parameters(50, 5, 3, 1)
+                                districts[1].add_tribute(tribute)
+                            elif tribute_number == 2:
+                                tribute.set_config_parameters(50, 5, 3, 2)
+                                districts[2].add_tribute(tribute)                               
+                            elif tribute_number == 3:
+                                tribute.set_config_parameters(50, 5, 3, 3)
+                                districts[3].add_tribute(tribute)
+                            elif tribute_number == 4:
+                                tribute.set_config_parameters(50, 5, 3, 4)
+                                districts[4].add_tribute(tribute)
+                            elif tribute_number == 5:
+                                tribute.set_config_parameters(50, 5, 3, 5)
+                                districts[5].add_tribute(tribute)
+                            new_board.get_element(row, col).put_tribute(tribute)
+                        else:
+                            raise ValueError(f'Invalid tribute number: {tribute_number}')
+                    except ValueError:
+                        raise ValueError(f'Invalid tribute character: {char}')
                 elif char == ' ':
                     pass
                 elif char == 'w':
@@ -36,7 +71,7 @@ class Board:
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
-        return new_board
+        return [new_board,districts]
 
     # Creates a new instance of the Board class from a matrix of tributes.
     # @staticmethod

@@ -30,7 +30,7 @@ class Tribute:
         if self.district is None:
             return 't'
         else:
-            return 't' + str(self.district.get_number_district())
+            return 't' + str(self.district)
 
     def __eq__(self, other):
         return isinstance(other, Tribute)
