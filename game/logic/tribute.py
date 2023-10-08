@@ -1,6 +1,7 @@
 import random
 from game.logic.cell import State
 
+
 class Tribute:
 
     def __init__(self):
@@ -10,6 +11,8 @@ class Tribute:
         self.district = None
         self.pos = None
         self.past_pos = None
+        self.weapon = False
+        self.max_life = 50
 
     @staticmethod
     def from_string(tribute_str):
@@ -90,9 +93,9 @@ class Tribute:
         if board.board[x][y].get_state() == State.TRIBUTE:
             raise ValueError(f'Position have a Tribute')
         adjacent_pos = board.get_free_adjacents_positions(self.pos[0], self.pos[1])
-        if not ((x,y) in adjacent_pos):
-              raise ValueError(f'Position ({x}, {y}) is not free Adjacent')
-        
+        if not ((x, y) in adjacent_pos):
+            raise ValueError(f'Position ({x}, {y}) is not free Adjacent')
+
         board.put_tribute(x, y, self)
 
     # Returns the closest position to coordinates (x, y) that a tribute can move to.
@@ -102,7 +105,7 @@ class Tribute:
 
         possible_moves = board.get_free_adjacents_positions(self.pos[0], self.pos[1])
         possible_moves.sort(key=calculate_distance)
-        if not  possible_moves:
+        if not possible_moves:
             raise ValueError(f'No FREE positions')
 
         return possible_moves[0]
