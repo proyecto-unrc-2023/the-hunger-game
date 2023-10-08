@@ -4,7 +4,7 @@ from game.logic.cell import State, Cell
 from game.logic.district import District
 from game.logic.game_logic import GameLogic, GameMode
 from game.logic.board import Board
-from game.logic.item import Item, Potion, Weapon
+from game.logic.item import Item, Potion, Weapon, WEAPON_EFFECT
 from game.logic.tribute import Tribute
 from game.logic.district import District
 
@@ -39,8 +39,8 @@ def game2x2():
 
     game2x2.districts.append(district0)
     game2x2.districts.append(district1)
-    t0.set_config_parameters(40, 20, 1, 0)
-    t1.set_config_parameters(40, 20, 1, 1)
+    t0.set_config_parameters(50, 20, 1, 0)
+    t1.set_config_parameters(50, 20, 1, 1)
     game2x2.board.put_tribute(0, 0, t0)
     game2x2.board.put_tribute(0, 1, t1)
     district0.add_tribute(t0)
@@ -403,7 +403,7 @@ def test_heuristic_tribute_first_attempt_complex():
     game.heuristic_tribute_first_attempt(tribute0)
     game.heuristic_tribute_first_attempt(tribute0)
     assert tribute0.pos == w.pos
-    assert tribute0.force == 6
+    assert tribute0.force == 10
     game.heuristic_tribute_first_attempt(tribute0)
     t1.attack_to(tribute0, game.board)
     game.heuristic_tribute_first_attempt(tribute0)
@@ -494,12 +494,12 @@ def test_heuristic_of_game_simple_2_tribute_1_weapon_1_died(game2x2):
     t1 = game2x2.board.get_element(0, 0).get_tribute()
     t2 = game2x2.board.get_element(0, 1).get_tribute()
     game2x2.heuristic_of_game()
-    assert t1.is_dead()
-    assert t1.force == 21
-    assert t2.is_alive()
+    assert t2.is_dead()
+    assert t1.force == 25
+    assert t1.is_alive()
 
-    assert len(game2x2.districts[0].tributes) == 0
-    assert len(game2x2.districts[1].tributes) == 1
+    assert len(game2x2.districts[0].tributes) == 1
+    assert len(game2x2.districts[1].tributes) == 0
 
 
 # fix potion problem, its not respect limit of tribute life
@@ -510,10 +510,10 @@ def test_heuristic_of_game_simple_2_tribute_1_potion_1_died(game2x2):
     t1 = game2x2.board.get_element(0, 0).get_tribute()
     t2 = game2x2.board.get_element(0, 1).get_tribute()
     game2x2.heuristic_of_game()
-    assert t1.is_alive()
-    assert t2.is_dead()
-    assert len(game2x2.districts[0].tributes) == 1
-    assert len(game2x2.districts[1].tributes) == 0
+    assert t2.is_alive()
+    assert t1.is_dead()
+    assert len(game2x2.districts[0].tributes) == 0
+    assert len(game2x2.districts[1].tributes) == 1
 
 
 def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
@@ -531,10 +531,10 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     game2x2.neutrals.append(neutro)
     game2x2.heuristic_of_game()
     assert t1.is_dead()
-    assert neutro.life == 5
-    assert t2.is_dead()
-    assert len(game2x2.districts[0].tributes) == 1
-    assert len(game2x2.districts[1].tributes) == 0
+    assert neutro.life == -15
+    assert t2.is_alive()
+    assert len(game2x2.districts[0].tributes) == 0
+    assert len(game2x2.districts[1].tributes) == 1
 
 
 def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
@@ -572,6 +572,7 @@ def test_applies_effects_potion():
     game = GameLogic()
 
     t1.life = 95  # if life is 95
+    t1.max_life = 100
     cell.item = potion
     game.applies_effects(potion, cell, t1)
 
@@ -585,6 +586,7 @@ def test_applies_effects_potion_life_tribute_less_than_100():
     game = GameLogic()
 
     t1.life = 97  # if life is 97
+    t1.max_life = 100
     cell.item = potion
     game.applies_effects(potion, cell, t1)
 
@@ -598,6 +600,7 @@ def test_applies_effects_potion_max_life_no_effect():
     game = GameLogic()
 
     t2.life = 100  # if life is 100
+    t2.max_life = 100
     cell.item = potion
     game.applies_effects(potion, cell, t2)
 
@@ -614,7 +617,7 @@ def test_applies_effects_weapon():
     cell.item = weapon
     game.applies_effects(weapon, cell, t1)
 
-    assert t1.force == 9
+    assert t1.force == 8 + WEAPON_EFFECT
 
 
 def test_applies_effects_weapon_inc_more_10():
@@ -627,7 +630,7 @@ def test_applies_effects_weapon_inc_more_10():
     cell.item = weapon
     game.applies_effects(weapon, cell, t1)
 
-    assert t1.force == 11
+    assert t1.force == 10 + WEAPON_EFFECT
 
 
 def test_applies_effects_rmv_correctly_item():
@@ -637,6 +640,7 @@ def test_applies_effects_rmv_correctly_item():
     game = GameLogic()
 
     t1.life = 100
+    t1.max_life = 100
     cell.item = potion
     game.applies_effects(potion, cell, t1)
 

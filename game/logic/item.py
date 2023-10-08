@@ -2,6 +2,9 @@
 #  - to string
 #  - from string
 
+POTION_EFFECT = 10
+WEAPON_EFFECT = 5
+
 
 class Item:
 
@@ -39,10 +42,13 @@ class Potion(Item):
         return isinstance(other, Potion)
 
     def apply_effect(self, tribute):
-        if tribute.life < 100:
-            tribute.life += 5
-            if tribute.life > 100:
-                tribute.life = 100 
+        if tribute.life == tribute.max_life:
+            tribute.life += 0
+        if tribute.life + POTION_EFFECT > tribute.max_life:
+            effect = tribute.max_life - tribute.life
+            tribute.life += effect
+        if tribute.life + POTION_EFFECT < tribute.max_life:
+            tribute.life += POTION_EFFECT
 
 
 class Weapon(Item):
@@ -54,4 +60,8 @@ class Weapon(Item):
         return isinstance(other, Weapon)
 
     def apply_effect(self, tribute):
-        tribute.force += 1
+        if not tribute.weapon:
+            tribute.force += WEAPON_EFFECT
+            tribute.weapon = True
+        else:
+            raise ValueError("Tribute has a weapon already")
