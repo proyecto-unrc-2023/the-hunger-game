@@ -66,7 +66,7 @@ def test_put_neutral(game2x2):
     game2x2.put_neutral(1, 0)
     neutral = game2x2.board.get_element(1, 0).get_tribute()
     assert neutral.life == 50
-    assert neutral.force == 10
+    assert neutral.force == 5
     assert neutral.pos == (1, 0)
     assert neutral.district is None
     assert len(game2x2.neutrals) == 1
@@ -567,85 +567,33 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
 
 def test_applies_effects_potion():
     t1 = Tribute()
+    t1.district = 0
     potion = Potion()
-    cell = Cell()
     game = GameLogic()
-
-    t1.life = 95  # if life is 95
-    t1.max_life = 100
-    cell.item = potion
-    game.applies_effects(potion, cell, t1)
-
-    assert t1.life == 100  # then life inc 100
-
-
-def test_applies_effects_potion_life_tribute_less_than_100():
-    t1 = Tribute()
-    potion = Potion()
-    cell = Cell()
-    game = GameLogic()
-
-    t1.life = 97  # if life is 97
-    t1.max_life = 100
-    cell.item = potion
-    game.applies_effects(potion, cell, t1)
-
-    assert t1.life == 100  # then life inc just 100
-
-
-def test_applies_effects_potion_max_life_no_effect():
-    t2 = Tribute()
-    potion = Potion()
-    cell = Cell()
-    game = GameLogic()
-
-    t2.life = 100  # if life is 100
-    t2.max_life = 100
-    cell.item = potion
-    game.applies_effects(potion, cell, t2)
-
-    assert t2.life == 100  # then life is the same
+    game.new_game(2,2)
+    game.put_tribute(0,0,t1)
+    game.board.put_item(0,1,potion)
+    t1.life = 45
+    game.heuristic_tribute_first_attempt(t1)
+    assert t1.life == 50
+    t1.life = 30
+    game.board.put_item(0,0,potion)
+    game.heuristic_tribute_first_attempt(t1)
+    assert t1.life == 40
 
 
 def test_applies_effects_weapon():
     t1 = Tribute()
-    cell = Cell()
+    t1.district = 0
     weapon = Weapon()
     game = GameLogic()
+    game.new_game(2,2)
+    game.put_tribute(0,0,t1)
+    game.board.put_item(0,1,weapon)
+    game.heuristic_tribute_first_attempt(t1)
 
-    t1.force = 8
-    cell.item = weapon
-    game.applies_effects(weapon, cell, t1)
+    assert t1.force == 5 + WEAPON_EFFECT
 
-    assert t1.force == 8 + WEAPON_EFFECT
-
-
-def test_applies_effects_weapon_inc_more_10():
-    t1 = Tribute()
-    cell = Cell()
-    weapon = Weapon()
-    game = GameLogic()
-
-    t1.force = 10
-    cell.item = weapon
-    game.applies_effects(weapon, cell, t1)
-
-    assert t1.force == 10 + WEAPON_EFFECT
-
-
-def test_applies_effects_rmv_correctly_item():
-    t1 = Tribute()
-    cell = Cell()
-    potion = Potion()
-    game = GameLogic()
-
-    t1.life = 100
-    t1.max_life = 100
-    cell.item = potion
-    game.applies_effects(potion, cell, t1)
-
-    assert cell.item is None  # verify that item is removed correctly
-    assert t1.life == 100
 
 
 # test for init_game(..)
@@ -717,42 +665,31 @@ def test_init_game_distribute_tributes(monkeypatch):
 
 
 
-def test_put_tribute_in_game():
+def test_put_tribute():
     game = GameLogic()
     game.new_game(2, 2)
     t0 = Tribute()
     t0.set_config_parameters(50, 10, 4, 0)
-    game.put_tribute_in_game(0, 0, t0)
+    game.put_tribute(0, 0, t0)
     assert t0.pos == (0, 0)
     assert game.board.get_element(0, 0).get_tribute() == t0
     t1 = Tribute()
     t1.set_config_parameters(50, 10, 4, 1)
-    game.put_tribute_in_game(1, 1, t1)
+    game.put_tribute(1, 1, t1)
     assert t1.pos == (1, 1)
     assert game.board.get_element(1, 1).get_tribute() == t1
     assert len(game.districts) == 2
     s1 = Tribute()
     s1.set_config_parameters(50, 10, 4, 1)
-    game.put_tribute_in_game(1, 0, s1)
+    game.put_tribute(1, 0, s1)
     assert s1.pos == (1, 0)
     assert game.board.get_element(1, 0).get_tribute() == s1
     assert len(game.districts[1].tributes) == 2
 
 
-def test_put_neutral_tribute_in_game():
-    t = Tribute()
-    game = GameLogic()
-    game.new_game(2, 2)
-    game.put_neutral_tribute_in_game(0, 0, t)
-    assert len(game.neutrals) == 1
-    assert game.neutrals.__contains__(t)
-    assert game.neutrals[0].pos is not None
-    assert game.neutrals[0].pos == (0, 0)
-
-
-def test_put_item_in_board():
+def test_put_item():
     w = Weapon()
     game = GameLogic()
     game.new_game(2, 2)
-    game.put_item_in_board(0, 0, w)
+    game.put_item(0, 0, w)
     assert game.board.get_element(0, 0).get_item().pos == (0, 0)

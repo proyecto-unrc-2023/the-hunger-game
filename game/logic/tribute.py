@@ -5,9 +5,9 @@ from game.logic.cell import State
 class Tribute:
 
     def __init__(self):
-        self.life = None
-        self.force = None
-        self.alliance = None
+        self.life = 50
+        self.force = 5
+        self.alliance = 3
         self.district = None
         self.pos = None
         self.past_pos = None
