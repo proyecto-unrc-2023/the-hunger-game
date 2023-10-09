@@ -49,7 +49,7 @@ class GameLogic:
 
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
-        if tribute.district == -99:
+        if tribute.district is None:
             self.neutrals.remove(tribute)
         else:
             self.districts[tribute.district].remove_tribute(tribute)
@@ -168,6 +168,7 @@ class GameLogic:
             tribute.attack_to(t2, self.board)
             if tribute2.is_dead():
                 self.remove_tribute(tribute2)
+                tribute.enemy = None
 
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
@@ -178,9 +179,8 @@ class GameLogic:
     
     
     def neutral_heuristic(self, neutral):
-        if neutral.district == -99:
-            tribute = self.tribute_vision_cells_ocupped_order_by_closeness(neutral)
-            self.fight(neutral,tribute)
+        if not (neutral.enemy is None):
+            self.fight(neutral,neutral.enemy)
         else:
             neutral.move_to_random(self.board)    
         
@@ -201,40 +201,43 @@ class GameLogic:
             Tx = tribute.pos[0]
             Ty = tribute.pos[1]
             # Check the state of the cell (ITEM or TRIBUTE).
-            if cell.get_state() == State.ITEM:
-                # If it's an item, go to retrieve it.
-                if cell.get_item().pos in self.board.get_adjacent_positions(Tx, Ty):
-                    tribute.move_to(x, y, self.board)
-                    item = cell.get_item()
-                    item.apply_effect(tribute)
-                    self.board.remove_item(item)
-                else:
-                    pos = tribute.move_closer_to(x, y, self.board)
-                    tribute.move_to(pos[0], pos[1], self.board)
+            if not (tribute.enemy is None):
+                self.fight(tribute, tribute.enemy)
+            else:
+                if cell.get_state() == State.ITEM:
+                    # If it's an item, go to retrieve it.
+                    if cell.get_item().pos in self.board.get_adjacent_positions(Tx, Ty):
+                        tribute.move_to(x, y, self.board)
+                        item = cell.get_item()
+                        item.apply_effect(tribute)
+                        self.board.remove_item(item)
+                    else:
+                        pos = tribute.move_closer_to(x, y, self.board)
+                        tribute.move_to(pos[0], pos[1], self.board)
 
-            elif cell.get_state() == State.TRIBUTE:
-                # If it's a tribute,check if its a neutral or not
-                if cell.get_tribute().district == None:
-                    if cell.get_tribute().pos in self.board.get_adjacent_positions(Tx, Ty):
-                        if tribute.alliance_to(cell.get_tribute()) == True:
-                            district = self.districts[tribute.district]
-                            self.alliance_neutral(cell.get_tribute(), district)
-                            self.neutrals.remove(cell.get_tribute())
+                elif cell.get_state() == State.TRIBUTE:
+                    # If it's a tribute,check if its a neutral or not
+                    if cell.get_tribute().district == None:
+                        if cell.get_tribute().pos in self.board.get_adjacent_positions(Tx, Ty):
+                            if tribute.alliance_to(cell.get_tribute()) == True:
+                                district = self.districts[tribute.district]
+                                self.alliance_neutral(cell.get_tribute(), district)
+                                self.neutrals.remove(cell.get_tribute())
+                            else:
+                                tribute.enemy = cell.get_tribute()
                         else:
-                            cell.get_tribute().district = -99
+                            pos = tribute.move_closer_to(x, y, self.board)
+                            tribute.move_to(pos[0], pos[1], self.board)
                     else:
-                        pos = tribute.move_closer_to(x, y, self.board)
-                        tribute.move_to(pos[0], pos[1], self.board)
-                else:
-                    pos = cell.get_tribute().pos
-                    # move to an adjacent position to it, and if already adjacent, attack.
-                    if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
-                        pos = tribute.move_closer_to(x, y, self.board)
-                        tribute.move_to(pos[0], pos[1], self.board)
-                    else:
-                        cell_with_tribute = self.board.get_element(x, y)
-                        t2 = cell_with_tribute.get_tribute()
-                        self.fight(tribute, t2)
+                        pos = cell.get_tribute().pos
+                        # move to an adjacent position to it, and if already adjacent, attack.
+                        if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+                            pos = tribute.move_closer_to(x, y, self.board)
+                            tribute.move_to(pos[0], pos[1], self.board)
+                        else:
+                            cell_with_tribute = self.board.get_element(x, y)
+                            t2 = cell_with_tribute.get_tribute()
+                            self.fight(tribute, t2)
 
     # Check which district won (literally return a district)
     # Return false if still in play
@@ -265,7 +268,7 @@ class GameLogic:
                     self.heuristic_tribute_first_attempt(tribute)
             if not (self.neutrals is None):
                 for neutral in self.neutrals:
-                    self.heuristic_tribute_first_attempt(neutral)
+                    self.neutral_heuristic(neutral)
 
 
     # This method create a new board, request by console stats of your district, 
@@ -305,4 +308,4 @@ class GameLogic:
                 self.heuristic_tribute_first_attempt(tribute)
         if not (self.neutrals is None):
             for neutral in self.neutrals:
-                self.heuristic_tribute_first_attempt(neutral)
+                self.neutral_heuristic(neutral)
