@@ -17,7 +17,7 @@ class Tribute:
     @staticmethod
     def from_string(tribute_str):
         if tribute_str == Tribute().__str__():
-            return Tribute()  # from_string takes "t" and returns Tribute()
+            return Tribute()
         else:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
