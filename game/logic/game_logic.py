@@ -31,14 +31,21 @@ class GameLogic:
         result = Board.from_string(str)
         self.board = result[0]
         self.districts = result[1]
-
-    # Places a Neutral at a specific position on the board and in Neutrals.
-    def put_neutral(self, x, y):
-        neutral = Tribute()
-        neutral.life = 50
-        neutral.force = 10
-        self.board.put_tribute(x, y, neutral)
-        self.neutrals.append(neutral)
+        
+    # Method to add a tribute in a game
+    # "tribute" is the tribute configured
+    # Row and Column are the position of tribute
+    def put_tribute(self, row, column, tribute):
+        district = tribute.district
+        district_aux = District()
+        if len(self.districts) == district:
+            district_aux.number_district = district
+            district_aux.add_tribute(tribute)
+            self.districts.append(district_aux)
+            self.board.put_tribute(row, column, tribute)
+        else:
+            self.board.put_tribute(row, column, tribute)
+            self.districts[tribute.district].add_tribute(tribute)
 
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
@@ -48,6 +55,22 @@ class GameLogic:
             self.districts[tribute.district].remove_tribute(tribute)
 
         self.board.remove_tribute(tribute)
+
+    # Places a Item at a specific position on the board.
+    def put_item(self, row, column, item):
+        self.board.put_item(row, column, item)
+        
+    #Applies the effect of the item on the tribute and remove tribute of game.  
+    def applies_effects(self, item, tribute):
+        item.apply_effect(tribute)
+        self.board.remove_item(item)
+        
+    # Places a Neutral at a specific position on the board and in Neutrals.
+    def put_neutral(self, x, y):
+        neutral = Tribute()
+        self.board.put_tribute(x, y, neutral)
+        self.neutrals.append(neutral)
+
 
     # Configure the own district with all stats that we need and configure five random districts 
     def configuration_districts(self, district, life, force, alliance, num_district, cant_tributes):
@@ -62,13 +85,6 @@ class GameLogic:
             district.set_config_random(list_district[i])
             self.districts.append(district)
 
-    def applies_effects(self, item, cell, tribute):
-        if isinstance(item, Potion):  # if item is an Potion
-            item.apply_effect(tribute)  # + 5 life
-        elif isinstance(item, Weapon):  # if item is an Weapon
-            item.apply_effect(tribute)  # + 1 force
-
-        cell.remove_item()
 
     # Returns the positions visible to an tribute within an certain range.
     def tribute_vision_pos(self, tribute):
@@ -159,8 +175,18 @@ class GameLogic:
         tribute.district = district.get_number_district()
         district.tributes.append(tribute)
         district.cant_tributes = district.cant_tributes + 1
-
-    # Implements a heuristic move for a character referred to as "tribute" in a game or simulation.
+    
+    
+    def neutral_heuristic(self, neutral):
+        if neutral.district == -99:
+            tribute = self.tribute_vision_cells_ocupped_order_by_closeness(neutral)
+            self.fight(neutral,tribute)
+        else:
+            neutral.move_to_random(self.board)    
+        
+    
+    
+    # Implements a heuristic move for a tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
         cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute)
@@ -271,32 +297,7 @@ class GameLogic:
             self.board.distribute_tributes(self.districts[j]) 
 	
         self.mode = GameMode.SIMULATION
-        
 
-    # Method to add a tribute in a game
-    # "tribute" is the tribute configured
-    # Row and Column are the position of tribute
-    def put_tribute_in_game(self, row, column, tribute):
-        district = tribute.district
-        district_aux = District()
-        if len(self.districts) == district:
-            district_aux.number_district = district
-            district_aux.add_tribute(tribute)
-            self.districts.append(district_aux)
-            self.board.put_tribute(row, column, tribute)
-        else:
-            self.board.put_tribute(row, column, tribute)
-            self.districts[tribute.district].add_tribute(tribute)
-
-    def put_neutral_tribute_in_game(self, row, column, neutral_tribute):
-        if self.neutrals.__contains__(neutral_tribute) is False:
-            self.neutrals.append(neutral_tribute)
-            self.board.put_tribute(row, column, neutral_tribute)
-        else:
-            raise ValueError("This neutral tribute is in the board")
-
-    def put_item_in_board(self, row, column, item):
-        self.board.put_item(row, column, item)
 
     def one_iteration(self):
         for district in self.districts:
