@@ -40,7 +40,7 @@ class Cell:
 
     def __str__(self):
         if self.state == FREE:
-            return ' '
+            return '  '
         if self.state == ITEM:
             return self.item.__str__()
         if self.state == TRIBUTE:

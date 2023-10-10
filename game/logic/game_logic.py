@@ -31,22 +31,29 @@ class GameLogic:
         result = Board.from_string(str)
         self.board = result[0]
         self.districts = result[1]
-        
+        self.neutrals = result[2]
+    
+    def to_string(self):
+        return self.board.__str__()
+    
     # Method to add a tribute in a game
     # "tribute" is the tribute configured
     # Row and Column are the position of tribute
     def put_tribute(self, row, column, tribute):
         district = tribute.district
         district_aux = District()
+        letters = 'tabcdefghijklm'
         if len(self.districts) == district:
             district_aux.number_district = district
             district_aux.add_tribute(tribute)
             self.districts.append(district_aux)
             self.board.put_tribute(row, column, tribute)
+            tribute.name = letters[district_aux.cant_tributes-1] + str(district_aux.number_district)
         else:
             self.board.put_tribute(row, column, tribute)
             self.districts[tribute.district].add_tribute(tribute)
-
+            tribute.name = letters[self.districts[tribute.district].cant_tributes -1] + str(self.districts[tribute.district].number_district)
+                
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
         if tribute.district is None:
@@ -70,6 +77,7 @@ class GameLogic:
         neutral = Tribute()
         self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
+        neutral.name = 'n' + str(len(self.neutrals) -1)
 
 
     # Configure the own district with all stats that we need and configure five random districts 

@@ -36,7 +36,7 @@ class Item:
 class Potion(Item):
 
     def __str__(self):
-        return 'p'
+        return 'p '
 
     def __eq__(self, other):
         return isinstance(other, Potion)
@@ -54,7 +54,7 @@ class Potion(Item):
 class Weapon(Item):
 
     def __str__(self):
-        return 'w'
+        return 'w '
 
     def __eq__(self, other):
         return isinstance(other, Weapon)

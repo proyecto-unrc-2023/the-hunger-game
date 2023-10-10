@@ -28,6 +28,7 @@ def test_tribute_is_dead_or_is_alive():
 
 def test_tribute_to_string():
     tribute1 = Tribute()
+    tribute1.name = 't0'
     tribute1.set_config_parameters(50,5,3,0)
     assert (tribute1.__str__()).__eq__('t0')
 
