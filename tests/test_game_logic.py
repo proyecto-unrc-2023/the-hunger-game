@@ -48,15 +48,18 @@ def game2x2():
     return game2x2
 
 
-def test_from_string():
+def test_from_string_and_to_string():
     game = GameLogic()
     board_str = 't3|t2\n' \
-                't4|t1'
+                't4|t1\n' \
+                'n4|n1'
     game.from_string(board_str)
+    assert board_str == game.to_string()
     assert len(game.districts[1].tributes) == 1
     assert len(game.districts[2].tributes) == 1
     assert len(game.districts[3].tributes) == 1
     assert len(game.districts[4].tributes) == 1
+    assert len(game.neutrals) == 2
     t1 = game.board.get_element(1, 1).get_tribute()
     game.remove_tribute(t1)
     assert len(game.districts[1].tributes) == 0
@@ -64,12 +67,16 @@ def test_from_string():
 
 def test_put_neutral(game2x2):
     game2x2.put_neutral(1, 0)
+    game2x2.put_neutral(1, 1)
     neutral = game2x2.board.get_element(1, 0).get_tribute()
+    neutral1 = game2x2.board.get_element(1, 1).get_tribute()
+    assert neutral.name == 'n0'
+    assert neutral1.name == 'n1'
     assert neutral.life == 50
     assert neutral.force == 5
     assert neutral.pos == (1, 0)
     assert neutral.district is None
-    assert len(game2x2.neutrals) == 1
+    assert len(game2x2.neutrals) == 2
 
 
 def test_remove_tribute(game2x2):
@@ -574,20 +581,24 @@ def test_put_tribute():
     t0 = Tribute()
     t0.set_config_parameters(50, 10, 4, 0)
     game.put_tribute(0, 0, t0)
+    assert t0.name == 't0'
     assert t0.pos == (0, 0)
     assert game.board.get_element(0, 0).get_tribute() == t0
     t1 = Tribute()
     t1.set_config_parameters(50, 10, 4, 1)
     game.put_tribute(1, 1, t1)
+    assert t1.name  == 't1'
     assert t1.pos == (1, 1)
     assert game.board.get_element(1, 1).get_tribute() == t1
     assert len(game.districts) == 2
     s1 = Tribute()
     s1.set_config_parameters(50, 10, 4, 1)
     game.put_tribute(1, 0, s1)
+    assert s1.name == 'a1'
     assert s1.pos == (1, 0)
     assert game.board.get_element(1, 0).get_tribute() == s1
     assert len(game.districts[1].tributes) == 2
+    
 
 
 def test_put_item():

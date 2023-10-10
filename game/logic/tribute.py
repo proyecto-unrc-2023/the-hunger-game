@@ -8,6 +8,7 @@ ALLIANCE_DEFAULT = 3
 class Tribute:
 
     def __init__(self):
+        self.name = 't '
         self.life = LIFE_DEFAULT
         self.force = FORCE_DEFAULT
         self.alliance = ALLIANCE_DEFAULT
@@ -21,8 +22,10 @@ class Tribute:
 
     @staticmethod
     def from_string(tribute_str):
-        if tribute_str == Tribute().__str__():
-            return Tribute()
+        if tribute_str.startswith(('t', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm')):
+            t = Tribute()
+            t.name = tribute_str
+            return t
         else:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
@@ -35,10 +38,7 @@ class Tribute:
             return True
 
     def __str__(self):
-        if self.district is None:
-            return 't'
-        else:
-            return 't' + str(self.district)
+        return str(self.name)
 
     def __eq__(self, other):
         return isinstance(other, Tribute)

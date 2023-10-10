@@ -5,12 +5,12 @@ from game.logic.item import Item, Potion, Weapon, WEAPON_EFFECT, POTION_EFFECT
 
 
 def test_create_potion_from_str():
-    res = Item.from_string('p')
+    res = Item.from_string('p ')
     assert res.__eq__(Potion())
 
 
 def test_create_weapon_from_str():
-    res = Item.from_string('w')
+    res = Item.from_string('w ')
     assert res.__eq__(Weapon())
 
 

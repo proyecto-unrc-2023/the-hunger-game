@@ -29,6 +29,14 @@ def test_put_one_live_tribute(board: Board):
     assert board.get_element(1, 0).get_state() == State.TRIBUTE
     assert board.get_element(1, 1).get_state() == State.FREE
 
+def test_from_string():
+    expected = '  |n0|t1\n' \
+               'a1|b0|a0\n' \
+               'a2|n1|b2'
+    board_obj = Board.from_string(expected)[0]  # Crea el objeto Board a partir de la cadena
+    print(board_obj.get_element(0,1).get_tribute().name)
+    res = str(board_obj.__str__())  # Obtiene la representación de cadena del objeto Board
+    assert expected == res
 
 def test_put_tribute_fails(board: Board):
     tribute = Tribute()
@@ -42,16 +50,18 @@ def test_empty_board_to_string(board: Board):
     board.put_tribute(0, 1, tribute)
     t0 = Tribute()
     t0.set_config_parameters(50,5,3,0)
+    t0.name = 't0'
     board.put_tribute(1,1,t0)
     res = board.__str__()
-    expected = ' |t\n' \
-               ' |t0'
+    expected = '  |t \n' \
+               '  |t0'
     assert expected == res
     t1 = Tribute()
     t1.set_config_parameters(50,5,3,1)
+    t1.name = 't1'
     board.put_tribute(1,0,t1)
     res = board.__str__()
-    expected = ' |t\n' \
+    expected = '  |t \n' \
                't1|t0'
     assert expected == res
     assert board.get_element(1,0).get_tribute() == t1
@@ -62,8 +72,8 @@ def test_board_with_two_tributes_to_string(board: Board):
     board.put_tribute(0, 1, tribute1)
     board.put_tribute(1, 1, tribute2)
     res = board.__str__()
-    expected = ' |t\n' \
-               ' |t'
+    expected = '  |t \n' \
+               '  |t '
     assert expected == res
 
 
@@ -74,20 +84,11 @@ def test_4x4_board_with_two_tribute_to_string():
     board.put_tribute(2, 1, tribute1)
     board.put_tribute(3, 3, tribute2)
     res = board.__str__()
-    expected = ' | | | \n' \
-               ' | | | \n' \
-               ' |t| | \n' \
-               ' | | |t'
+    expected = '  |  |  |  \n' \
+               '  |  |  |  \n' \
+               '  |t |  |  \n' \
+               '  |  |  |t '
     assert expected == res
-
-
-def test_2x4_board_to_string():
-    board = Board(2, 4)
-    res = board.__str__()
-    expected = ' | | | \n' \
-               ' | | | '
-    assert expected == res
-
 
 def test_2x2_board_to_string_with_tribute_weapon_potion():
     board = Board(2, 2)
@@ -95,8 +96,8 @@ def test_2x2_board_to_string_with_tribute_weapon_potion():
     board.put_item(0, 0, Potion())
     board.put_item(1, 1, Weapon())
     res = board.__str__()
-    expected = 'p|t\n' \
-               ' |w'
+    expected = 'p |t \n' \
+               '  |w '
     assert expected == res
 
 
@@ -117,8 +118,8 @@ def test_2x2_board_from_string():
 
 
 def test_2x4_board_from_string():
-    board_str = ' | | | \n' \
-                ' | | | '
+    board_str = '  |  |  |  \n' \
+                '  |  |  |  '
     board = Board.from_string(board_str)[0]
     assert board.__str__() == board_str
 
@@ -140,7 +141,7 @@ def test_2x2_board_put_tribute():
     board.put_tribute(0, 1, tribute1)
     assert board.get_element(0, 1).get_state() == State.TRIBUTE
     tribute2 = board.get_element(0, 1).get_tribute()
-    assert tribute2.__str__() == 't'
+    assert tribute2.__str__() == 't '
 
 
 def test_2x2_board_put_tribute_and_remove_tribute():
@@ -160,9 +161,9 @@ def test_2x2_board_remove_tribute():
     board = Board.from_string(board_str)[0]
     tribute1 = Tribute()
     board.put_tribute(0, 1, tribute1)
-    assert (board.get_element(0, 1)).__str__() == 't'
+    assert (board.get_element(0, 1)).__str__() == 't '
     board.remove_tribute(tribute1)
-    assert (board.get_element(0, 1)).__str__() == ' '
+    assert (board.get_element(0, 1)).__str__() == '  '
 
 
 def test_3x3_board_distribute_tribute():
@@ -181,34 +182,34 @@ def test_3x3_board_distribute_tribute():
 
 
 def test_2x2_board_put_item_weapon_from_string():
-    board_str = 'w| \n' \
-                ' | '
+    board_str = 'w |  \n' \
+                '  |  '
     board = Board.from_string(board_str)[0]
     assert board.get_element(0, 0).get_state() == State.ITEM
     weapon = board.get_element(0, 0).get_item()
-    assert weapon.__str__() == 'w'
+    assert weapon.__str__() == 'w '
 
 
 def test_2x2_board_put_item_potion_from_string():
-    board_str = ' |p\n' \
-                ' | '
+    board_str = '  |p \n' \
+                '  |  '
     board = Board.from_string(board_str)[0]
     assert board.get_element(0, 1).get_state() == State.ITEM
     weapon = board.get_element(0, 1).get_item()
-    assert weapon.__str__() == 'p'
+    assert weapon.__str__() == 'p '
 
 
 def test_2x2_board_put_item_and_remove_item(board: Board):
     weapon1 = Weapon()
     board.put_item(0, 1, weapon1)
-    assert board.get_element(0, 1).__str__() == 'w'
+    assert board.get_element(0, 1).__str__() == 'w '
     board.remove_item(weapon1)
-    assert board.get_element(0, 1).__str__() == ' '
+    assert board.get_element(0, 1).__str__() == '  '
 
 
 def test_2x2_board_random_pos():
-    board_str = 't|t\n' \
-                ' |t'
+    board_str = 'n|n\n' \
+                ' |a1'
     board = Board.from_string(board_str)[0]
     pos = board.random_pos()
     assert pos == (1, 0)
@@ -385,8 +386,8 @@ def test_fill_board_with_tributes(board: Board):
         x, y = board.random_choice(tribute1)
         board.put_tribute(x, y, tribute)
 
-    board_str = 't|t\n' \
-                't|t'
+    board_str = 't |t \n' \
+                't |t '
     board1 = board.__str__()
     assert board_str == board1
     # chequear si estan realmente todas ocupadas

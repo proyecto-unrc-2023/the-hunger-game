@@ -99,7 +99,7 @@ def test_item_and_tribute_interaction():
 
 def test_string_representation():
     cell = Cell()
-    assert str(cell) == ' '
+    assert str(cell) == '  '
 
     weapon = Weapon()
     cell.put_item(weapon)

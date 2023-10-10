@@ -20,6 +20,7 @@ class Board:
 
         new_board = Board(n_rows, n_cols)
         districts = []
+        neutrals = []
         for i in range(5):
             district = District()
             districts.append(district)
@@ -27,15 +28,18 @@ class Board:
         for row in range(n_rows):
             for col in range(n_cols):
                 char = matrix[row][col].strip()
-                if char == 't':
+                if char.startswith('n'):
                     tribute = Tribute()
+                    tribute.name = char
                     new_board.get_element(row, col).put_tribute(tribute)
-                elif char.startswith('t'):
+                    neutrals.append(tribute)
+                elif char.startswith(('t', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm')):
                     # Check if it's a tribute character ('t') followed by a number
                     try:
                         tribute_number = int(char[1])
                         if 0 <= tribute_number <= 5:
                             tribute = Tribute()
+                            tribute.name = char
                             # Customize tribute parameters based on the number
                             if tribute_number == 0:
                                 tribute.set_config_parameters(50, 5, 3, 0)
@@ -71,7 +75,7 @@ class Board:
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
-        return [new_board,districts]
+        return [new_board,districts,neutrals]
 
     # Creates a new instance of the Board class from a matrix of tributes.
     # @staticmethod
@@ -148,7 +152,7 @@ class Board:
         for col in range(columns):
             cell = row[col]
             if cell.get_state() == State.FREE:
-                res += ' '
+                res += '  '
             else:
                 res += cell.__str__()  # Use the __str__ method of the cell
             if col < columns - 1:
