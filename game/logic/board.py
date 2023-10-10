@@ -21,7 +21,7 @@ class Board:
         new_board = Board(n_rows, n_cols)
         districts = []
         neutrals = []
-        for i in range(5):
+        for i in range(6):
             district = District()
             districts.append(district)
             
@@ -69,9 +69,11 @@ class Board:
                 elif char == 'w':
                     weapon = Weapon()
                     new_board.get_element(row, col).put_item(weapon)
+                    weapon.pos = (row,col)
                 elif char == 'p':
                     potion = Potion()
                     new_board.get_element(row, col).put_item(potion)
+                    potion.pos = (row,col)
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
