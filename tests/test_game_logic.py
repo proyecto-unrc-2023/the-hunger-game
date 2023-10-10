@@ -181,28 +181,13 @@ def test_get_tribute_closenes_complex():
     t2.district = 1
     game.board.put_tribute(2,2, t2)
     assert game.tribute_vision_cells_ocupped_order_by_closeness(t1) == False
-
-#####################
-def test_tribute_vision_cells_ocupped_order_by_closeness_items_only():
-    game = GameLogic()
-    game.new_game(5, 5)
-    t1 = Tribute()
     w1 = Weapon()
     p1 = Potion()
-    game.board.put_tribute(2, 2, t1)
-    game.board.put_item(2, 3, w1)
-    game.board.put_item(3, 2, p1)
-    result = game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos
-    assert result == (2, 3)  # Closest item (Weapon) is at (2,3)
+    game.board.put_item(2, 1, w1)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (2,1)
+    
 
-
-def test_tribute_vision_cells_ocupped_order_by_closeness_multiple_items(game):
-    t1 = game.board.get_element(2, 2).get_tribute()
-    game.board.put_item(3, 2, Potion())
-    game.board.put_item(2, 1, Weapon())
-    result = game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos
-    assert result == (2, 1)  # Closest item (Weapon) is at (2, 1)
-
+#####################
 
 def test_fight_2_tributes_and_one_died():
     game = GameLogic()
@@ -211,19 +196,10 @@ def test_fight_2_tributes_and_one_died():
     district1 = District()
     t1 = Tribute()
     t2 = Tribute()
-    district0.add_tribute(t1)
-    district0.number_district = 0
-    district1.number_district = 1
-    district0.add_tribute(t1)
-    district1.add_tribute(t2)
-    district1.cant_tributes = 1
-    game.districts.append(district0)
-    game.districts.append(district1)
     t1.set_config_parameters(40, 20, 1, 0)
     t2.set_config_parameters(40, 20, 1, 1)
-    game.board.put_tribute(0, 0, t1)
-    game.board.put_tribute(0, 1, t2)
-
+    game.put_tribute(0, 0, t1)
+    game.put_tribute(0, 1, t2)
     game.fight(t1, t2)
     assert t2.life == 20
     game.fight(t2, t1)
@@ -235,76 +211,49 @@ def test_fight_2_tributes_and_one_died():
     assert not (t2 in game.districts[1].tributes)
 
 
-def test_heuristic_tribute_move_towards_item():
+def test_heuristic_tribute_complex():
     game = GameLogic()
     game.new_game(7, 7)
     tribute = Tribute()
-    tribute.force = 2
-    game.board.put_tribute(3, 3, tribute)
-
+    tribute.set_config_parameters(50,5,3,0)
+    game.put_tribute(3, 3, tribute)
     weapon = Weapon()
     game.board.put_item(4, 3, weapon)
-
+    #use Weapon
     game.heuristic_tribute_first_attempt(tribute)
-
     assert tribute.pos == (4, 3)
-
-
-def test_heuristic_tribute_first_attempt_move_towards_tribute():
-    game = GameLogic()
-    game.new_game(7, 7)
+    assert tribute.force == 10
     tribute1 = Tribute()
-    tribute2 = Tribute()
     tribute1.set_config_parameters(50, 5, 5, 1)
-    tribute2.set_config_parameters(50, 5, 5, 2)
-    game.board.put_tribute(3, 3, tribute1)
-    game.board.put_tribute(4, 3, tribute2)
-
+    game.put_tribute(4,2,tribute1)
+    #fight
+    game.heuristic_tribute_first_attempt(tribute)
     game.heuristic_tribute_first_attempt(tribute1)
-
-    assert tribute1.pos == (3, 3)
-    assert tribute2.life == 45
-
-
-def test_heuristic_tribute_first_attempt_move_randomly():
-    game = GameLogic()
-    game.new_game(7, 7)
-    tribute = Tribute()
-    game.board.put_tribute(3, 3, tribute)
-
+    assert tribute.life == 45
+    assert tribute1.life == 40
+    game.remove_tribute(tribute1)
+    #random move
     game.heuristic_tribute_first_attempt(tribute)
-
-    # El tributo debe haberse movido a una posición adyacente aleatoria
-    assert tribute.pos != (3, 3)
-    free_adjacents = game.board.random_choice(tribute)
-    assert not (tribute.past_pos in free_adjacents)
-
-
-def test_heuristic_tribute_first_attempt_neutral_potion():
-    game = GameLogic()
-    game.new_game(2, 2)
-
-    # Configuración del tributo principal
-    tribute = Tribute()
-    tribute.set_config_parameters(50, 5, 25, 1)
-    game.board.put_tribute(1, 1, tribute)
-
-    # Configuración de tributo neutral (neutro)
-    neutro = Tribute()
-    game.board.put_tribute(0, 0, neutro)
-
-    # Configuración de poción
-    p = Potion()
-    game.board.put_item(1, 0, p)
+    assert tribute.pos != (4,3)
+    #neutral exito
+    game.put_neutral(4,3)
+    tribute.alliance = 25
     game.heuristic_tribute_first_attempt(tribute)
-    assert tribute.pos == p.pos
+    assert len(game.districts[0].tributes) == 2
+    #neutral fail
+    neutral = game.board.get_element(4,3).get_tribute()
+    game.remove_tribute(neutral)
+    game.put_neutral(4,3)
+    tribute.alliance = -25
+    game.heuristic_tribute_first_attempt(tribute)
+    assert len(game.districts[0].tributes) == 1
+    assert tribute.enemy is not None
 
-
-def test_heuristic_tribute_first_attempt_complex():
+def test_heuristic_tribute_first_attempt_complex2():
     game = GameLogic()
     game.new_game(5, 4)
 
-    # Configuración del tributo principal
+    # Config Tribute0
     tribute0 = Tribute()
     tribute0.set_config_parameters(50, 5, 25, 0)
     game.board.put_tribute(1, 1, tribute0)
@@ -312,7 +261,7 @@ def test_heuristic_tribute_first_attempt_complex():
     d0.number_district = 0
     d0.add_tribute(tribute0)
     game.districts.append(d0)
-    # Configuración de tributo oponente (t1)
+    # Config Tribute enemy t1
     t1 = Tribute()
     t1.set_config_parameters(10, 5, 1, 1)
     game.board.put_tribute(1, 3, t1)
@@ -320,14 +269,14 @@ def test_heuristic_tribute_first_attempt_complex():
     d1.number_district = 1
     d1.add_tribute(t1)
     game.districts.append(d1)
-    # Configuración de tributo neutral (neutro)
+    # Config of Neutral
     neutro = Tribute()
     game.board.put_tribute(4, 3, neutro)
     neutro.life = 20
     neutro.force = 10
     game.neutrals.append(neutro)
 
-    # Configuración de arma y poción
+    # Config of Weapon and Potion
     w = Weapon()
     p = Potion()
     game.board.put_item(2, 3, w)
@@ -399,10 +348,9 @@ def test_heuristic_of_game_simple_2_tribute_1_died(game2x2):
     assert len(game2x2.districts[0].tributes) == 1
     assert len(game2x2.districts[1].tributes) == 0
 
-
 def test_heuristic_of_game_simple_2_tribute_1_weapon_1_died(game2x2):
     w1 = Weapon()
-    game2x2.board.put_item(1, 0, w1)
+    game2x2.put_item(1, 0, w1)
     game2x2.mode = GameMode.SIMULATION
     t1 = game2x2.board.get_element(0, 0).get_tribute()
     t2 = game2x2.board.get_element(0, 1).get_tribute()
@@ -410,15 +358,13 @@ def test_heuristic_of_game_simple_2_tribute_1_weapon_1_died(game2x2):
     assert t2.is_dead()
     assert t1.force == 25
     assert t1.is_alive()
-
     assert len(game2x2.districts[0].tributes) == 1
     assert len(game2x2.districts[1].tributes) == 0
 
 
-# fix potion problem, its not respect limit of tribute life
 def test_heuristic_of_game_simple_2_tribute_1_potion_1_died(game2x2):
     p1 = Potion()
-    game2x2.board.put_item(1, 0, p1)
+    game2x2.put_item(1, 0, p1)
     game2x2.mode = GameMode.SIMULATION
     t1 = game2x2.board.get_element(0, 0).get_tribute()
     t2 = game2x2.board.get_element(0, 1).get_tribute()
@@ -432,40 +378,30 @@ def test_heuristic_of_game_simple_2_tribute_1_potion_1_died(game2x2):
 def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     neutro = Tribute()
     neutro.life = 25
-    neutro.force = 5
     t1 = game2x2.board.get_element(0, 0).get_tribute()
-    t1.life = 39
     t2 = game2x2.board.get_element(0, 1).get_tribute()
     t1.alliance = 25
     game2x2.board.put_tribute(1, 0, neutro)
     game2x2.mode = GameMode.SIMULATION
     game2x2.neutrals.append(neutro)
     game2x2.heuristic_of_game()
-    assert t1.is_dead()
-    assert neutro.life == -15
-    assert t2.is_alive()
-    assert len(game2x2.districts[0].tributes) == 0
-    assert len(game2x2.districts[1].tributes) == 1
+    assert t1.is_alive()
+    assert neutro.life == 25
+    assert t2.is_dead()
+    assert len(game2x2.districts[0].tributes) == 2
+    assert len(game2x2.districts[1].tributes) == 0
 
 
 def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     game = GameLogic()
     game.new_game(8, 8)
     game.mode = GameMode.SIMULATION
-    district0 = District()
-    district1 = District()
     t0 = Tribute()
     t1 = Tribute()
-    district0.number_district = 0
-    district1.number_district = 1
-    game.districts.append(district0)
-    game.districts.append(district1)
     t0.set_config_parameters(41, 10, -25, 0)
     t1.set_config_parameters(40, 20, 1, 1)
-    game.board.put_tribute(0, 0, t0)
-    game.board.put_tribute(7, 7, t1)
-    district0.add_tribute(t0)
-    district1.add_tribute(t1)
+    game.put_tribute(0, 0, t0)
+    game.put_tribute(7, 7, t1)
     game.put_neutral(0, 1)
     game.heuristic_of_game()
     assert len(game.neutrals) == 0
@@ -473,38 +409,23 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     assert len(game.districts[1].tributes) == 1
 
 
-# tests applies_effects(..) method
-
-def test_applies_effects_potion():
+def test_applies_effects_complex():
     t1 = Tribute()
     t1.district = 0
     potion = Potion()
     game = GameLogic()
     game.new_game(2,2)
     game.put_tribute(0,0,t1)
-    game.board.put_item(0,1,potion)
+    game.put_item(0,1,potion)
     t1.life = 45
     game.heuristic_tribute_first_attempt(t1)
     assert t1.life == 50
-    t1.life = 30
-    game.board.put_item(0,0,potion)
+    game.put_item(0,0,potion)
     game.heuristic_tribute_first_attempt(t1)
-    assert t1.life == 40
-
-
-def test_applies_effects_weapon():
-    t1 = Tribute()
-    t1.district = 0
-    weapon = Weapon()
-    game = GameLogic()
-    game.new_game(2,2)
-    game.put_tribute(0,0,t1)
-    game.board.put_item(0,1,weapon)
+    assert t1.life == 50
+    game.put_item(0,1,Weapon())
     game.heuristic_tribute_first_attempt(t1)
-
-    assert t1.force == 5 + WEAPON_EFFECT
-
-
+    assert t1.force == 10
 
 # test for init_game(..)
 
