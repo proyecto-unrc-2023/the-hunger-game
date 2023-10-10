@@ -1,18 +1,23 @@
 import random
 from game.logic.cell import State
 
-
+MAX_LIFE_DEFAULT = 50
+LIFE_DEFAULT = 50
+FORCE_DEFAULT = 5
+ALLIANCE_DEFAULT = 3
 class Tribute:
 
     def __init__(self):
-        self.life = 50
-        self.force = 5
-        self.alliance = 3
+        self.life = LIFE_DEFAULT
+        self.force = FORCE_DEFAULT
+        self.alliance = ALLIANCE_DEFAULT
         self.district = None
         self.pos = None
         self.past_pos = None
         self.weapon = False
-        self.max_life = 50
+        self.max_life = MAX_LIFE_DEFAULT
+        self.enemy = None
+        
 
     @staticmethod
     def from_string(tribute_str):
@@ -67,6 +72,7 @@ class Tribute:
         if self.generates_alliance_value(self.alliance, random.randint(1, 10)) is True:
             return True
         else:
+            tribute.enemy = self
             return False
 
     @staticmethod

@@ -71,6 +71,11 @@ def test_of_alliance_to():
     tribute_neutral.district = 2  # Stop being neutral
     with pytest.raises(ValueError):
         tribute1.alliance_to(tribute_neutral)
+    tribute1.alliance = -25
+    n1 = Tribute()
+    tribute1.alliance_to(n1)
+    assert n1.enemy == tribute1
+    
 
 
 def test_generates_alliance_value():

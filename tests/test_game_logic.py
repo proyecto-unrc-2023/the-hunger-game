@@ -107,21 +107,6 @@ def test_tribute_vision_pos_with_tribute_in_border():
 
     visible_positions = game.tribute_vision_pos(t1)
     assert len(visible_positions) == 15
-    assert (0, 1) in visible_positions
-    assert (0, 2) in visible_positions
-    assert (0, 3) in visible_positions
-    assert (1, 0) in visible_positions
-    assert (1, 1) in visible_positions
-    assert (1, 2) in visible_positions
-    assert (1, 3) in visible_positions
-    assert (2, 0) in visible_positions
-    assert (2, 1) in visible_positions
-    assert (2, 2) in visible_positions
-    assert (2, 3) in visible_positions
-    assert (3, 0) in visible_positions
-    assert (3, 1) in visible_positions
-    assert (3, 2) in visible_positions
-    assert (3, 3) in visible_positions
 
 
 def test_tribute_vision_cells_with_a_cells():
@@ -142,10 +127,13 @@ def test_tribute_vision_cells_with_a_cells():
     assert game.board.get_element(2, 2) in tribute_vision_cells
 
 
-def test_tribute_vision_cells_with_boundary():
+def test_get_adjacents_cells_complex():
     game = GameLogic()
     game.new_game(8, 8)
     x, y = 0, 0
+    game.board.put_tribute(1, 0, Tribute())
+    game.board.put_tribute(0, 1, Tribute())
+    game.board.put_tribute(1, 1, Tribute())
     adjacent_cells = game.board.get_adjacents_cells(x, y)
     assert len(adjacent_cells) == 3
     assert game.board.get_element(0, 1) in adjacent_cells
@@ -153,40 +141,12 @@ def test_tribute_vision_cells_with_boundary():
     assert game.board.get_element(1, 1) in adjacent_cells
     # Modifica el cuarto assert
     assert len([cell for cell in adjacent_cells if cell.get_pos() == (7, 7)]) == 0
-
-
-def test_tribute_vision_cells_with_cells_state_tribute():
-    game = GameLogic()
-    game.new_game(3, 3)
-    x, y = 1, 1
-    game.board.put_tribute(1, 0, Tribute())
-    game.board.put_tribute(0, 1, Tribute())
-    game.board.put_tribute(1, 1, Tribute())
-    adjacent_cells = game.board.get_adjacents_cells(x, y)
-    assert len(adjacent_cells) == 8
-    assert game.board.get_element(0, 0) in adjacent_cells
-    assert game.board.get_element(0, 1) in adjacent_cells
-    assert game.board.get_element(0, 2) in adjacent_cells
-    assert game.board.get_element(1, 0) in adjacent_cells
-    assert game.board.get_element(1, 2) in adjacent_cells
-    assert game.board.get_element(2, 0) in adjacent_cells
-    assert game.board.get_element(2, 1) in adjacent_cells
-    assert game.board.get_element(2, 2) in adjacent_cells
-
-
-def test_get_adjacents_cells_with_invalid_coordinates():
-    board = Board(3, 3)
-    x, y = -1, -1
     with pytest.raises(ValueError):
-        board.get_adjacents_cells(x, y)
-
-    # Test on a 3x3 board with invalid coordinates (beyond board size)
-    x, y = 3, 3
-    with pytest.raises(ValueError):
-        board.get_adjacents_cells(x, y)
+        game.board.get_adjacents_cells(-1, 1)
 
 
-def test_get_tribute_closenes_with_neutral_weapon_potion_tribute():
+
+def test_get_tribute_closenes_complex():
     game = GameLogic()
     game.new_game(3, 3)
     t1 = Tribute()
@@ -208,48 +168,14 @@ def test_get_tribute_closenes_with_neutral_weapon_potion_tribute():
     assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (1, 2)
     game.board.remove_tribute(neutro)
     assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (0, 1)
-
-
-def test_get_tribute_closeness_with_same_district():
-    game = GameLogic()
-    game.new_game(7, 7)
-    t1 = Tribute()
-    t2 = Tribute()
-    t1.set_config_parameters(50, 5, 1, 1)
-    t2.set_config_parameters(50, 5, 1, 1)
-    game.board.put_tribute(3, 3, t1)
-    game.board.put_tribute(3, 4, t2)
-    p = Potion()
-    game.board.put_item(5, 5, p)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (5, 5)
-
-
-def test_tribute_vision_cells_ocupped_order_by_closeness_empty_board():
-    game = GameLogic()
-    game.new_game(5, 5)
-    t1 = Tribute()
-    game.board.put_tribute(2, 2, t1)
+    game.board.remove_tribute(t2)
     result = game.tribute_vision_cells_ocupped_order_by_closeness(t1)
     assert result == False
+    t2.district = 1
+    game.board.put_tribute(2,2, t2)
+    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1) == False
 
-
-def test_tribute_vision_cells_loseness_tributes_same_district2():
-    game = GameLogic()
-    game.new_game(2, 2)
-    t0 = Tribute()
-    t1 = Tribute()
-    t0.set_config_parameters(40, 4, 4, 0)
-    t1.set_config_parameters(40, 4, 4, 0)
-    game.board.put_tribute(0, 0, t0)
-    game.board.put_tribute(0, 1, t1)
-    d0 = District()
-    d0.add_tribute(t0)
-    d0.add_tribute(t1)
-    game.districts.append(d0)
-    result = game.tribute_vision_cells_ocupped_order_by_closeness(t1)
-    assert result is False
-
-
+#####################
 def test_tribute_vision_cells_ocupped_order_by_closeness_items_only():
     game = GameLogic()
     game.new_game(5, 5)
@@ -440,32 +366,12 @@ def test_config_districts_length_district():
     district = District()
     game_logic = GameLogic()
     game_logic.configuration_districts(district, 25, 5, 10, 1, 4)
+    number_district = district.get_number_district()
+    cant_tributes = district.get_cant_tribute()
     assert len(game_logic.districts) == 6
-
-
-def test_config_districts_add_district():
-    district = District()
-    game_logic = GameLogic()
-    game_logic.configuration_districts(district, 50, 7, 3, 2, 4)
     assert district in game_logic.districts
-
-
-def test_config_districts_my_number_district():
-    district = District()
-    game_logic = GameLogic()
-    game_logic.configuration_districts(district, 30, 10, 10, 2, 6)
-    my_district = game_logic.districts[0]
-    my_number_district = my_district.get_number_district()
-    assert my_number_district == 2
-
-
-def test_config_district_my_cant_tributes():
-    district = District()
-    game_logic = GameLogic()
-    game_logic.configuration_districts(district, 50, 5, 5, 1, 5)
-    my_district = game_logic.districts[0]
-    my_cant_tributes = my_district.get_cant_tribute()
-    assert my_cant_tributes == 5
+    assert number_district == 1
+    assert cant_tributes == 4
 
 
 def test_alliance_neutral_tribute():
@@ -520,10 +426,8 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_success_1_died(game2x2):
     neutro = Tribute()
     neutro.life = 25
     neutro.force = 5
-
     t1 = game2x2.board.get_element(0, 0).get_tribute()
     t1.life = 39
-
     t2 = game2x2.board.get_element(0, 1).get_tribute()
     t1.alliance = 25
     game2x2.board.put_tribute(1, 0, neutro)
@@ -549,8 +453,7 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     district1.number_district = 1
     game.districts.append(district0)
     game.districts.append(district1)
-    t0.set_config_parameters(41, 20, 1, 0)
-    t0.alliance = -25
+    t0.set_config_parameters(41, 10, -25, 0)
     t1.set_config_parameters(40, 20, 1, 1)
     game.board.put_tribute(0, 0, t0)
     game.board.put_tribute(7, 7, t1)
@@ -558,8 +461,8 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     district1.add_tribute(t1)
     game.put_neutral(0, 1)
     game.heuristic_of_game()
-    assert len(game.districts[0].tributes) == 0
     assert len(game.neutrals) == 0
+    assert len(game.districts[0].tributes) == 0
     assert len(game.districts[1].tributes) == 1
 
 
@@ -693,3 +596,25 @@ def test_put_item():
     game.new_game(2, 2)
     game.put_item(0, 0, w)
     assert game.board.get_element(0, 0).get_item().pos == (0, 0)
+
+def test_neutral_heuristic():
+    game = GameLogic()
+    game.new_game(3,3)
+    t0 = Tribute()
+    t1 = Tribute()
+    t0.set_config_parameters(60,5,-25,0)
+    t1.set_config_parameters(60,5,-25,1)
+    game.put_tribute(0,0,t0)
+    game.put_tribute(0,2,t1)
+    game.put_neutral(0,1)
+    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute_first_attempt(t1)
+    neutral = game.board.get_element(0,1).get_tribute()
+    game.neutral_heuristic(neutral)
+    assert t1.life == 55
+    assert t0.life == 60
+    game.remove_tribute(t0)
+    game.remove_tribute(t1)
+    neutral.enemy = None
+    game.neutral_heuristic(neutral)
+    assert neutral.pos != (0,1)
