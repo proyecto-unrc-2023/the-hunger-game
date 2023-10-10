@@ -214,11 +214,11 @@ class GameLogic:
             else:
                 if cell.get_state() == State.ITEM:
                     # If it's an item, go to retrieve it.
-                    if cell.get_item().pos in self.board.get_adjacent_positions(Tx, Ty):
+                    if (x,y) in self.board.get_adjacent_positions(Tx, Ty):
                         tribute.move_to(x, y, self.board)
                         item = cell.get_item()
-                        item.apply_effect(tribute)
-                        self.board.remove_item(item)
+                        self.applies_effects(item,tribute)
+                        
                     else:
                         pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)

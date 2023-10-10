@@ -63,8 +63,7 @@ def test_from_string_and_to_string():
     t1 = game.board.get_element(1, 1).get_tribute()
     game.remove_tribute(t1)
     assert len(game.districts[1].tributes) == 0
-
-
+    
 def test_put_neutral(game2x2):
     game2x2.put_neutral(1, 0)
     game2x2.put_neutral(1, 1)
