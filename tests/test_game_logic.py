@@ -426,73 +426,58 @@ def test_applies_effects_complex():
     game.heuristic_tribute_first_attempt(t1)
     assert t1.force == 10
 
-# test for init_game(..)
+# test for init_simulation(..)
 
-def test_init_game_input_stats_own_district(monkeypatch):
-    # Simula la entrada de datos por consola (donde configuro mi distrito)
-    # Con vida: 50, fuerza: 7, alianza: 3, numero distrito: 0, cantidad tributos: 5
-    monkeypatch.setattr('builtins.input', lambda x: '70' if 'Vida' in x 
-                        else '7' if 'Fuerza' in x 
-                        else '3' if 'Alianza' in x 
-                        else '4' if 'Numero de distrito' in x 
-                        else '4' if 'Cantidad de tributos' in x 
-                        else '')
-    
+def test_init_simulation_inputs_one(monkeypatch):
     game = GameLogic()
-    game.init_simulation(8, 8)
+    user_inputs = iter(['2', '1', '5', '4', '4', '2', '1', 'n']) # first is number_district, then choice, points,..., yes or no 
+    
+    def mock_input(prompt):
+        return next(user_inputs)
+    
+    monkeypatch.setattr('builtins.input', mock_input)
+    game.init_simulation(10, 10)
     my_district = game.districts[0]
 
-    for i in range(my_district.get_cant_tribute()):
+    for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
-        assert tribute_my_district.life == 70
+        assert tribute_my_district.district == 2
+        assert tribute_my_district.life == 75
         assert tribute_my_district.force == 7
         assert tribute_my_district.alliance == 3
-        assert tribute_my_district.district == 4
+     
+    tributes_count = 0 
+    for row in game.board.board:
+        for cell in row:
+            if cell.state == State.TRIBUTE:
+                tributes_count += 1
+    assert tributes_count == 25
 
 
-def test_init_game_configure_random_districts(monkeypatch):
-    # Simulo entrada de datos por consola para configurar mi distrito
-    monkeypatch.setattr('builtins.input', lambda x: '50' if 'Vida' in x 
-                        else '10' if 'Fuerza' in x 
-                        else '5' if 'Alianza' in x 
-                        else '2' if 'Numero de distrito' in x 
-                        else '4' if 'Cantidad de tributos' in x 
-                        else '')
-    
+def test_init_simulation_inputs_two(monkeypatch):
     game = GameLogic()
-    game.init_simulation(8, 8)
-    my_num_district = game.districts[0].get_number_district() # recupero mi numero de distrito
-    game.districts = game.districts[1:] # elimino mi distrito
-    for i in range(5): # cinco distritos
-        random_district = game.districts[i]
-        for j in range(4):
-            random_tribute = random_district.tributes[j]
-            assert random_tribute.life == 50
-            assert 5 <= random_tribute.force <= 10
-            assert 3 <= random_tribute.alliance <= 10
-            assert random_tribute.district != my_num_district
-
-
-def test_init_game_distribute_tributes(monkeypatch):
-    # Simulo entrada de datos por consola para configurar mi distrito
-    monkeypatch.setattr('builtins.input', lambda x: '75' if 'Vida' in x 
-                        else '8' if 'Fuerza' in x 
-                        else '6' if 'Alianza' in x 
-                        else '5' if 'Numero de distrito' in x 
-                        else '6' if 'Cantidad de tributos' in x 
-                        else '')
+    user_inputs = iter(['0', '4', '8', '1', '1', '2', '1', 'n']) # first is number_district, then choice, points,..., yes or no 
     
-    game = GameLogic()
-    game.init_simulation(8, 8)    
-    tributes_count = 0
+    def mock_input(prompt):
+        return next(user_inputs)
     
-    # chequeo que se agregaron 26 tributos en el tablero
+    monkeypatch.setattr('builtins.input', mock_input)
+    game.init_simulation(10, 10)
+    my_district = game.districts[0]
+
+    for i in range(len(my_district.tributes)):
+        tribute_my_district = my_district.tributes[i]
+        assert tribute_my_district.district == 0
+        assert tribute_my_district.life == 55
+        assert tribute_my_district.force == 7
+        assert tribute_my_district.alliance == 3
+     
+    tributes_count = 0 
     for row in game.board.board:
         for cell in row:
             if cell.state == State.TRIBUTE:
                 tributes_count += 1
     assert tributes_count == 26
-
 
 
 def test_put_tribute():
@@ -519,7 +504,6 @@ def test_put_tribute():
     assert game.board.get_element(1, 0).get_tribute() == s1
     assert len(game.districts[1].tributes) == 2
     
-
 
 def test_put_item():
     w = Weapon()

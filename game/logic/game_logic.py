@@ -1,7 +1,7 @@
 from enum import Enum
 
 from game.logic.board import Board
-from game.logic.tribute import Tribute
+from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 from game.logic.cell import State
 from game.logic.item import Weapon, Potion
 from game.logic.district import District
@@ -282,22 +282,126 @@ class GameLogic:
     # This method create a new board, request by console stats of your district, 
     # configure five random districts and distributes tributes in board
     def init_simulation(self, rows, columns):
-        self.new_game(rows, columns)
-        # Diccionary of parameters. When invoked init_simulation method, this 
-        # request you for console: life, force, alliance, number_district and cant_tributes
-        tributes_parameters = { 
-            "life": int(input("Vida: ")),
-            "force": int(input("Fuerza: ")),
-            "alliance": int(input("Alianza: ")),
-            "number_district": int(input("Numero de distrito: ")),
-            "cant_tributes": int(input("Cantidad de tributos: ")),
-        }
-
-        district = District() 
-        district.set_config(**tributes_parameters) # all inputs store in **tributes_parameters 
+        self.new_game(rows, columns)        
+        # Is necesary create an instance of district here and set by deafault every stat.
+        district = District()
+        life = LIFE_DEFAULT
+        force = FORCE_DEFAULT
+        alliance = ALLIANCE_DEFAULT
+        cant_tributes = 4
+        number_district = -1
+        # Input your number of district
+        while number_district not in range(6):
+            try:
+                number_district = int(input("Choice number of your district between 0 and 5: "))
+                if number_district not in range(6):
+                    print("Invalid input. Please enter a valid number between 0 and 5.")
+            except ValueError:
+                print("Please, enter a number between 0 and 5.")
+        
+        print("\nGood, your number of district is:", number_district)
+        var_yes = 'y'
+        points = 10
+        # Beginning a big while
+        while var_yes == 'y':
+            
+            print("\nYou have", points, "point available to distribute in:")
+            print("1. Life")
+            print("2. Force")
+            print("3. Alliance")
+            print("4. Tributos")
+            try:
+                choice = int(input("¿Where do you want to spend your points? Choose a number (1 - 4): "))
+                # Choice 1 means Life
+                if choice == 1:
+                    while True:
+                        life_points = int(input("How many points do you want to spend on Life?: "))
+                        # Calculate points and increases life
+                        if 1 <= life_points <= points:
+                            life = life + (5 * life_points)
+                            points -= life_points
+                            print("Life increased by:", life)
+                            break
+                        else:
+                            print("Invalid input. You have", points, "points.")
+                # Choice 2 means Force         
+                elif choice == 2:
+                    while True:
+                        force_points = int(input("How many points do you want to spend on Force?: "))
+                        # Calculate points and increases force
+                        if 1 <= force_points <= points:
+                            force = force + (2 * force_points)
+                            points -= force_points
+                            print("Force increased by:", force)
+                            break
+                        else:
+                            print("Invalid input. You have", points, "points.")
+                # Choice 3 means Alliance
+                elif choice == 3:
+                    while True:
+                        alli_points = int(input("How many points do you want to spend on Alliance?: "))
+                        if alliance == 10:
+                            print("Alliance is at 10. You can't spend more points on it.")
+                            break
+                        # Calculate points and increases alliance
+                        if 1 <= alli_points <= points and alli_points <= 7:
+                            alliance += alli_points
+                            points -= alli_points
+                            print("Alliance increased by:", alliance)
+                            break
+                        elif 7 < alli_points <= 10:
+                            print("The limit for spending points on alliance is 7.")
+                            break
+                        else:
+                            print("Invalid input. You have", points, "points.")
+                # Choice 4 means Tributes
+                elif choice == 4:
+                    while True: 
+                        tributes_points = int(input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
+                        # Calculate points and increases tributes
+                        if tributes_points in (4, 8):
+                            if points >= tributes_points:
+                                num_tributes = tributes_points // 4
+                                points = district.buy_tribute(points)
+                                cant_tributes += 1  
+                                if num_tributes == 2: 
+                                    points = district.buy_tribute(points)
+                                    cant_tributes += 1
+                                print("The number of tributes increased by:", cant_tributes)
+                                break    
+                            else:
+                                print("You don't have enough points for this operation. You have", points, "points.")
+                                break
+                        else:    
+                            print("Invalid input. You should enter 4 or 8 points to spend on Tributes.")
+                else:
+                    print("Invalid option. Please choose a number between 1 and 4.")
+            # If you dont enter a valid input then begin again the while
+            except ValueError:
+                print("Invalid input. Please enter a valid number (1 - 4).")
+            # If you spent all your points then it asks if you want to reconfigure the district,
+            # y (es si) o n (es no)
+            if points <= 0:
+                print("\nYou have spent all your points.")
+                print("The stats of your district are:\nLife:", life, "\nForce:", force, "\nAlliance:", alliance, "\nTributes:", cant_tributes)
+                var_yes = input("Do you want to redistribute the points (y/n)?: ").strip().lower()
+                while var_yes not in ('y', 'n'):
+                    var_yes = input("Invalid input. Enter (y/n): ").strip().lower()
+                
+                # If you choice y, then sets all stats like in beginning
+                if var_yes == 'y':
+                    points = 10
+                    life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
+                    # Remove tributes if you buy tributes
+                    for tribute in district.tributes:
+                        district.remove_tribute(tribute)
+        
+        # If you choice n, this function configure your district
+        district.set_config(life, force, alliance, number_district, cant_tributes) 
         self.districts.append(district)
+        # Configure districts by random
         for i in range(6): 
-            if i != tributes_parameters["number_district"]: # I dont want that my district configure again
+            if i != number_district: # I dont want that my district configure again
                 district = District()
                 district.cant_tributes = 4
                 district.set_config_random(i)
@@ -308,6 +412,7 @@ class GameLogic:
             self.board.distribute_tributes(self.districts[j]) 
 	
         self.mode = GameMode.SIMULATION
+        #self.heuristic_of_game()
 
 
     def one_iteration(self):
