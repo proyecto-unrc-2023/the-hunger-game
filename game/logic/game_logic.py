@@ -59,6 +59,8 @@ class GameLogic:
         if tribute.district is None:
             self.neutrals.remove(tribute)
         else:
+            print(tribute.district)
+            print(tribute.name)
             self.districts[tribute.district].remove_tribute(tribute)
 
         self.board.remove_tribute(tribute)
@@ -78,20 +80,6 @@ class GameLogic:
         self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
         neutral.name = 'n' + str(len(self.neutrals) -1)
-
-
-    # Configure the own district with all stats that we need and configure five random districts 
-    def configuration_districts(self, district, life, force, alliance, num_district, cant_tributes):
-
-        district.set_config(life, force, alliance, num_district, cant_tributes)
-        self.districts.append(district)
-        my_num_district = district.get_number_district()
-        list_district = [1, 2, 3, 4, 5, 6]
-        list_district.remove(my_num_district)
-
-        for i in range(5):
-            district.set_config_random(list_district[i])
-            self.districts.append(district)
 
 
     # Returns the positions visible to an tribute within an certain range.
@@ -143,7 +131,6 @@ class GameLogic:
                     distance -= 0.001
 
             return distance
-
         vision_cells = self.tribute_vision_cells(tribute)
 
         occupied_cells = [
@@ -171,9 +158,7 @@ class GameLogic:
         if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
             tribute.move_to(pos[0], pos[1], self.board)
         else:
-            cell_with_tribute = self.board.get_element(x, y)
-            t2 = cell_with_tribute.get_tribute()
-            tribute.attack_to(t2, self.board)
+            tribute.attack_to(tribute2, self.board)
             if tribute2.is_dead():
                 self.remove_tribute(tribute2)
                 tribute.enemy = None
@@ -198,7 +183,6 @@ class GameLogic:
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
         cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute)
-
         # If there are no occupied cells nearby, move the tribute to a random cell on the game board.
         if cell == False:
             tribute.move_to_random(self.board)
@@ -218,11 +202,9 @@ class GameLogic:
                         tribute.move_to(x, y, self.board)
                         item = cell.get_item()
                         self.applies_effects(item,tribute)
-                        
                     else:
                         pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)
-
                 elif cell.get_state() == State.TRIBUTE:
                     # If it's a tribute,check if its a neutral or not
                     if cell.get_tribute().district == None:
@@ -273,10 +255,12 @@ class GameLogic:
         while self.end_game() == False:
             for district in self.districts:
                 for tribute in district.tributes:
+                    print(tribute.name)
                     self.heuristic_tribute_first_attempt(tribute)
             if not (self.neutrals is None):
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
+            print(self.to_string())
 
 
     # This method create a new board, request by console stats of your district, 
@@ -309,18 +293,18 @@ class GameLogic:
             print("1. Life")
             print("2. Force")
             print("3. Alliance")
-            print("4. Tributos")
+            print("4. Tributes")
             try:
                 choice = int(input("¿Where do you want to spend your points? Choose a number (1 - 4): "))
                 # Choice 1 means Life
                 if choice == 1:
                     while True:
-                        life_points = int(input("How many points do you want to spend on Life?: "))
+                        life_points = int(input("How many points do you want to spend on Life?: "))##no muestra por consola esto
                         # Calculate points and increases life
                         if 1 <= life_points <= points:
                             life = life + (5 * life_points)
                             points -= life_points
-                            print("Life increased by:", life)
+                            print("Life increased to:", life)
                             break
                         else:
                             print("Invalid input. You have", points, "points.")
@@ -332,7 +316,7 @@ class GameLogic:
                         if 1 <= force_points <= points:
                             force = force + (2 * force_points)
                             points -= force_points
-                            print("Force increased by:", force)
+                            print("Force increased to:", force)
                             break
                         else:
                             print("Invalid input. You have", points, "points.")
@@ -362,12 +346,12 @@ class GameLogic:
                         if tributes_points in (4, 8):
                             if points >= tributes_points:
                                 num_tributes = tributes_points // 4
-                                points = district.buy_tribute(points)
                                 cant_tributes += 1  
+                                points -= 4
                                 if num_tributes == 2: 
-                                    points = district.buy_tribute(points)
-                                    cant_tributes += 1
-                                print("The number of tributes increased by:", cant_tributes)
+                                    cant_tributes += 2
+                                    points -= 8
+                                print("The number of tributes increased to:", cant_tributes)
                                 break    
                             else:
                                 print("You don't have enough points for this operation. You have", points, "points.")
@@ -404,7 +388,7 @@ class GameLogic:
             if i != number_district: # I dont want that my district configure again
                 district = District()
                 district.cant_tributes = 4
-                district.set_config_random(i)
+                district.set_config_by_default(i)
                 self.districts.append(district)
 
         # distribute all tributes of districts in board       
@@ -412,7 +396,7 @@ class GameLogic:
             self.board.distribute_tributes(self.districts[j]) 
 	
         self.mode = GameMode.SIMULATION
-        #self.heuristic_of_game()
+        self.heuristic_of_game()
 
 
     def one_iteration(self):
@@ -422,3 +406,10 @@ class GameLogic:
         if not (self.neutrals is None):
             for neutral in self.neutrals:
                 self.neutral_heuristic(neutral)
+                
+    # Distributes the tributes from a district to random positions on the board.
+    def distribute_tributes(self):
+        for j in range(len(self.districts)):
+            for i in range(self.districts[j].cant_tributes):
+                pos = self.board.random_pos()
+                self.put_tribute(pos[0], pos[1], self.districts[j].tributes[i])

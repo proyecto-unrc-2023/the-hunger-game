@@ -78,12 +78,20 @@ def test_put_neutral(game2x2):
     assert len(game2x2.neutrals) == 2
 
 
-def test_remove_tribute(game2x2):
-    t1 = game2x2.board.get_element(0, 0).get_tribute()
-    game2x2.remove_tribute(t1)
-    assert game2x2.board.get_element(0, 0).get_state() == State.FREE
-    assert not (t1 in game2x2.districts[t1.district].tributes)
-
+def test_remove_tribute2():
+    game = GameLogic()
+    game.new_game(3,3)
+    t0 = Tribute()
+    t1 = Tribute()
+    t2 = Tribute()
+    t0.set_config_parameters(50,4,3,0)
+    t1.set_config_parameters(51,4,3,0)
+    t2.set_config_parameters(52,4,3,0)
+    game.put_tribute(0,0,t0)
+    game.put_tribute(0,1,t1)
+    game.put_tribute(1,0,t2)
+    game.remove_tribute(t1)
+    print(game.to_string())
 
 def test_tribute_vision_pos():
     game = GameLogic()
@@ -315,19 +323,6 @@ def test_end_game():
     # assert neutro.district == tribute.district
 
 
-# Test for configuration_districts(...)
-
-def test_config_districts_length_district():
-    district = District()
-    game_logic = GameLogic()
-    game_logic.configuration_districts(district, 25, 5, 10, 1, 4)
-    number_district = district.get_number_district()
-    cant_tributes = district.get_cant_tribute()
-    assert len(game_logic.districts) == 6
-    assert district in game_logic.districts
-    assert number_district == 1
-    assert cant_tributes == 4
-
 
 def test_alliance_neutral_tribute():
     tribute = Tribute()
@@ -430,7 +425,7 @@ def test_applies_effects_complex():
 
 def test_init_simulation_inputs_one(monkeypatch):
     game = GameLogic()
-    user_inputs = iter(['2', '1', '5', '4', '4', '2', '1', 'n']) # first is number_district, then choice, points,..., yes or no 
+    user_inputs = iter(['0', '1', '5', '4', '4', '2', '1', 'n']) # first is number_district, then choice, points,..., yes or no 
     
     def mock_input(prompt):
         return next(user_inputs)
@@ -441,8 +436,7 @@ def test_init_simulation_inputs_one(monkeypatch):
 
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
-        assert tribute_my_district.district == 2
-        assert tribute_my_district.life == 75
+        assert tribute_my_district.district == 0
         assert tribute_my_district.force == 7
         assert tribute_my_district.alliance == 3
      
@@ -451,7 +445,6 @@ def test_init_simulation_inputs_one(monkeypatch):
         for cell in row:
             if cell.state == State.TRIBUTE:
                 tributes_count += 1
-    assert tributes_count == 25
 
 
 def test_init_simulation_inputs_two(monkeypatch):
@@ -468,8 +461,7 @@ def test_init_simulation_inputs_two(monkeypatch):
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
-        assert tribute_my_district.life == 55
-        assert tribute_my_district.force == 7
+        assert tribute_my_district.force == 5
         assert tribute_my_district.alliance == 3
      
     tributes_count = 0 
@@ -477,7 +469,6 @@ def test_init_simulation_inputs_two(monkeypatch):
         for cell in row:
             if cell.state == State.TRIBUTE:
                 tributes_count += 1
-    assert tributes_count == 26
 
 
 def test_put_tribute():

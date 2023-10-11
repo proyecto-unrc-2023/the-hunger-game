@@ -42,7 +42,21 @@ class Tribute:
         return str(self.name)
 
     def __eq__(self, other):
-        return isinstance(other, Tribute)
+        if not isinstance(other, Tribute):
+            return False
+        if self.name != other.name:
+            return False
+        if self.alliance != other.alliance:
+            return False
+        if self.force != other.force:
+            return False
+        if self.district != other.district:
+            return False
+        if self.life != other.life:
+            return False
+        
+        return True
+
 
     def attack_to(self, tribute, board):
         listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])

@@ -6,12 +6,6 @@ from game.logic.tribute import Tribute
 from game.logic.item import Weapon
 from game.logic.cell import State
 
-
-def test_create_live_tribute_from_str():
-    res = Tribute.from_string('t')
-    assert res.__eq__(Tribute())
-
-
 # Negative test
 def test_create_tribute_error():
     with pytest.raises(ValueError):

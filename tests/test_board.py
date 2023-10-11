@@ -106,7 +106,6 @@ def test_2x2_board_from_string():
                 't4|t1'
     board = Board.from_string(board_str)[0]
     assert board.__str__() == board_str
-    assert board.get_element(1,1).get_tribute() == Tribute()
     t1 = board.get_element(1,1).get_tribute()
     t3 = board.get_element(0,0).get_tribute()
     t2 = board.get_element(0,1).get_tribute()
