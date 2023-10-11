@@ -242,9 +242,7 @@ class Board:
                 element = self.get_element(new_row, new_column)
                 if element.get_state() != State.TRIBUTE:
                     free_positions.append((new_row, new_column))
-                else:
-                    print(f'Position ({new_row}, {new_column}) is not considered free because it has a tribute.')
-
+                
         return free_positions
 
     
