@@ -1,0 +1,25 @@
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #0000001c;
+  /* Agrega estilos adicionales según el estado de la celda */
+}
+
+.free {
+  background-color: #ffffff;
+}
+
+.tribute {
+  background-color: #00ff0d;
+  color: black;
+}
+
+.item {
+  background-color: #ff0000;
+  color: black;
+}
