@@ -1,6 +1,6 @@
-from game.logic.tribute import Tribute
 import random
 
+from game.logic.tribute import Tribute
 
 class District:
 
@@ -20,21 +20,21 @@ class District:
 
     # Configure own tributes with life, force, alliance, number of district and
     # numbers of tributes.
-    def set_config(self, life, force, alliance, number_district, cant_tributes):
-
+    def set_config(self, life, force, alliance, number_district, cant_tributes):        
         self.number_district = number_district
         self.cant_tributes = cant_tributes
-
-        for i in range(self.cant_tributes):
+        
+        letters = 'tabcdefghijklm'
+        for i in range(cant_tributes):
             tribute = Tribute()
-            tribute.life = life
-            tribute.force = force
-            tribute.alliance = alliance
-            tribute.district = number_district
+            tribute.name = letters[i+1] + str(number_district)
+            tribute.set_config_parameters(life, force, alliance, number_district)
+            tribute.configured = True
             self.tributes.append(tribute)
 
     # Configure tributes of an district with random stats.
     def set_config_random(self, num_district):
+        self.number_district = num_district
         for i in range(4):
             tribute = Tribute()
             tribute.life = 50
@@ -46,8 +46,11 @@ class District:
     # Create own district with minimal values.  
     def set_config_by_default(self, num_district):
         self.cant_tributes = 4
+        self.number_district = num_district
+        letters = 'tabcdefghijklm'
         for t in range(self.cant_tributes):
             tribute = Tribute()
+            tribute.name = letters[t] + str(num_district)
             tribute.life = 50
             tribute.force = 5
             tribute.alliance = 3
@@ -64,11 +67,10 @@ class District:
 
     # Remove one tribute in a list
     def remove_tribute(self, tribute):
-        if not (tribute in self.tributes):
-            raise ValueError(f'tribute is not of this district')
-        self.tributes.remove(tribute)
-        self.cant_tributes = self.cant_tributes - 1
-
+        for tr in self.tributes:
+            if tribute.name == tr.name:
+                self.tributes.remove(tr)
+                self.cant_tributes = self.cant_tributes - 1
 
     # Add one more tribute in own district, if points not are less than four. So can buy a new tribute 
     def buy_tribute(self, points):

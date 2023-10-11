@@ -1,7 +1,7 @@
 from enum import Enum
 
 from game.logic.board import Board
-from game.logic.tribute import Tribute
+from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 from game.logic.cell import State
 from game.logic.item import Weapon, Potion
 from game.logic.district import District
@@ -59,6 +59,8 @@ class GameLogic:
         if tribute.district is None:
             self.neutrals.remove(tribute)
         else:
+            print(tribute.district)
+            print(tribute.name)
             self.districts[tribute.district].remove_tribute(tribute)
 
         self.board.remove_tribute(tribute)
@@ -78,20 +80,6 @@ class GameLogic:
         self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
         neutral.name = 'n' + str(len(self.neutrals) -1)
-
-
-    # Configure the own district with all stats that we need and configure five random districts 
-    def configuration_districts(self, district, life, force, alliance, num_district, cant_tributes):
-
-        district.set_config(life, force, alliance, num_district, cant_tributes)
-        self.districts.append(district)
-        my_num_district = district.get_number_district()
-        list_district = [1, 2, 3, 4, 5, 6]
-        list_district.remove(my_num_district)
-
-        for i in range(5):
-            district.set_config_random(list_district[i])
-            self.districts.append(district)
 
 
     # Returns the positions visible to an tribute within an certain range.
@@ -143,7 +131,6 @@ class GameLogic:
                     distance -= 0.001
 
             return distance
-
         vision_cells = self.tribute_vision_cells(tribute)
 
         occupied_cells = [
@@ -171,9 +158,7 @@ class GameLogic:
         if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
             tribute.move_to(pos[0], pos[1], self.board)
         else:
-            cell_with_tribute = self.board.get_element(x, y)
-            t2 = cell_with_tribute.get_tribute()
-            tribute.attack_to(t2, self.board)
+            tribute.attack_to(tribute2, self.board)
             if tribute2.is_dead():
                 self.remove_tribute(tribute2)
                 tribute.enemy = None
@@ -198,7 +183,6 @@ class GameLogic:
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
         cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute)
-
         # If there are no occupied cells nearby, move the tribute to a random cell on the game board.
         if cell == False:
             tribute.move_to_random(self.board)
@@ -218,11 +202,9 @@ class GameLogic:
                         tribute.move_to(x, y, self.board)
                         item = cell.get_item()
                         self.applies_effects(item,tribute)
-                        
                     else:
                         pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)
-
                 elif cell.get_state() == State.TRIBUTE:
                     # If it's a tribute,check if its a neutral or not
                     if cell.get_tribute().district == None:
@@ -273,34 +255,140 @@ class GameLogic:
         while self.end_game() == False:
             for district in self.districts:
                 for tribute in district.tributes:
+                    print(tribute.name)
                     self.heuristic_tribute_first_attempt(tribute)
             if not (self.neutrals is None):
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
+            print(self.to_string())
 
 
     # This method create a new board, request by console stats of your district, 
     # configure five random districts and distributes tributes in board
     def init_simulation(self, rows, columns):
-        self.new_game(rows, columns)
-        # Diccionary of parameters. When invoked init_simulation method, this 
-        # request you for console: life, force, alliance, number_district and cant_tributes
-        tributes_parameters = { 
-            "life": int(input("Vida: ")),
-            "force": int(input("Fuerza: ")),
-            "alliance": int(input("Alianza: ")),
-            "number_district": int(input("Numero de distrito: ")),
-            "cant_tributes": int(input("Cantidad de tributos: ")),
-        }
-
-        district = District() 
-        district.set_config(**tributes_parameters) # all inputs store in **tributes_parameters 
+        self.new_game(rows, columns)        
+        # Is necesary create an instance of district here and set by deafault every stat.
+        district = District()
+        life = LIFE_DEFAULT
+        force = FORCE_DEFAULT
+        alliance = ALLIANCE_DEFAULT
+        cant_tributes = 4
+        number_district = -1
+        # Input your number of district
+        while number_district not in range(6):
+            try:
+                number_district = int(input("Choice number of your district between 0 and 5: "))
+                if number_district not in range(6):
+                    print("Invalid input. Please enter a valid number between 0 and 5.")
+            except ValueError:
+                print("Please, enter a number between 0 and 5.")
+        
+        print("\nGood, your number of district is:", number_district)
+        var_yes = 'y'
+        points = 10
+        # Beginning a big while
+        while var_yes == 'y':
+            
+            print("\nYou have", points, "point available to distribute in:")
+            print("1. Life")
+            print("2. Force")
+            print("3. Alliance")
+            print("4. Tributes")
+            try:
+                choice = int(input("¿Where do you want to spend your points? Choose a number (1 - 4): "))
+                # Choice 1 means Life
+                if choice == 1:
+                    while True:
+                        life_points = int(input("How many points do you want to spend on Life?: "))##no muestra por consola esto
+                        # Calculate points and increases life
+                        if 1 <= life_points <= points:
+                            life = life + (5 * life_points)
+                            points -= life_points
+                            print("Life increased to:", life)
+                            break
+                        else:
+                            print("Invalid input. You have", points, "points.")
+                # Choice 2 means Force         
+                elif choice == 2:
+                    while True:
+                        force_points = int(input("How many points do you want to spend on Force?: "))
+                        # Calculate points and increases force
+                        if 1 <= force_points <= points:
+                            force = force + (2 * force_points)
+                            points -= force_points
+                            print("Force increased to:", force)
+                            break
+                        else:
+                            print("Invalid input. You have", points, "points.")
+                # Choice 3 means Alliance
+                elif choice == 3:
+                    while True:
+                        alli_points = int(input("How many points do you want to spend on Alliance?: "))
+                        if alliance == 10:
+                            print("Alliance is at 10. You can't spend more points on it.")
+                            break
+                        # Calculate points and increases alliance
+                        if 1 <= alli_points <= points and alli_points <= 7:
+                            alliance += alli_points
+                            points -= alli_points
+                            print("Alliance increased by:", alliance)
+                            break
+                        elif 7 < alli_points <= 10:
+                            print("The limit for spending points on alliance is 7.")
+                            break
+                        else:
+                            print("Invalid input. You have", points, "points.")
+                # Choice 4 means Tributes
+                elif choice == 4:
+                    while True: 
+                        tributes_points = int(input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
+                        # Calculate points and increases tributes
+                        if tributes_points in (4, 8):
+                            if points >= tributes_points:
+                                num_tributes = tributes_points // 4
+                                cant_tributes += 1  
+                                points -= 4
+                                if num_tributes == 2: 
+                                    cant_tributes += 2
+                                    points -= 8
+                                print("The number of tributes increased to:", cant_tributes)
+                                break    
+                            else:
+                                print("You don't have enough points for this operation. You have", points, "points.")
+                                break
+                        else:    
+                            print("Invalid input. You should enter 4 or 8 points to spend on Tributes.")
+                else:
+                    print("Invalid option. Please choose a number between 1 and 4.")
+            # If you dont enter a valid input then begin again the while
+            except ValueError:
+                print("Invalid input. Please enter a valid number (1 - 4).")
+            # If you spent all your points then it asks if you want to reconfigure the district,
+            # y (es si) o n (es no)
+            if points <= 0:
+                print("\nYou have spent all your points.")
+                print("The stats of your district are:\nLife:", life, "\nForce:", force, "\nAlliance:", alliance, "\nTributes:", cant_tributes)
+                var_yes = input("Do you want to redistribute the points (y/n)?: ").strip().lower()
+                while var_yes not in ('y', 'n'):
+                    var_yes = input("Invalid input. Enter (y/n): ").strip().lower()
+                
+                # If you choice y, then sets all stats like in beginning
+                if var_yes == 'y':
+                    points = 10
+                    life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
+                    # Remove tributes if you buy tributes
+                    for tribute in district.tributes:
+                        district.remove_tribute(tribute)
+        
+        # If you choice n, this function configure your district
+        district.set_config(life, force, alliance, number_district, cant_tributes) 
         self.districts.append(district)
+        # Configure districts by random
         for i in range(6): 
-            if i != tributes_parameters["number_district"]: # I dont want that my district configure again
+            if i != number_district: # I dont want that my district configure again
                 district = District()
                 district.cant_tributes = 4
-                district.set_config_random(i)
+                district.set_config_by_default(i)
                 self.districts.append(district)
 
         # distribute all tributes of districts in board       
@@ -308,6 +396,7 @@ class GameLogic:
             self.board.distribute_tributes(self.districts[j]) 
 	
         self.mode = GameMode.SIMULATION
+        self.heuristic_of_game()
 
 
     def one_iteration(self):
@@ -317,3 +406,10 @@ class GameLogic:
         if not (self.neutrals is None):
             for neutral in self.neutrals:
                 self.neutral_heuristic(neutral)
+                
+    # Distributes the tributes from a district to random positions on the board.
+    def distribute_tributes(self):
+        for j in range(len(self.districts)):
+            for i in range(self.districts[j].cant_tributes):
+                pos = self.board.random_pos()
+                self.put_tribute(pos[0], pos[1], self.districts[j].tributes[i])

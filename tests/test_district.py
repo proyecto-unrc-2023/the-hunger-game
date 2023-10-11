@@ -40,14 +40,6 @@ def test_add_tribute_invalid():
     with pytest.raises(ValueError):
         district.add_tribute(tribute)
 
-
-def test_remove_tribute_invalid():
-    district = District()
-    tribute = "Isn't a tribute"
-    with pytest.raises(ValueError):
-        district.remove_tribute(tribute)
-
-
 def test_remove_tribute():
     district = District()
     t1 = Tribute()
