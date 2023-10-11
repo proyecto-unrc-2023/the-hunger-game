@@ -59,8 +59,6 @@ class GameLogic:
         if tribute.district is None:
             self.neutrals.remove(tribute)
         else:
-            print(tribute.district)
-            print(tribute.name)
             self.districts[tribute.district].remove_tribute(tribute)
 
         self.board.remove_tribute(tribute)
@@ -255,11 +253,11 @@ class GameLogic:
         while self.end_game() == False:
             for district in self.districts:
                 for tribute in district.tributes:
-                    print(tribute.name)
                     self.heuristic_tribute_first_attempt(tribute)
             if not (self.neutrals is None):
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
+            print("------------------------------------")
             print(self.to_string())
 
 
@@ -413,3 +411,4 @@ class GameLogic:
             for i in range(self.districts[j].cant_tributes):
                 pos = self.board.random_pos()
                 self.put_tribute(pos[0], pos[1], self.districts[j].tributes[i])
+
