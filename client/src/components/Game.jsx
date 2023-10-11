@@ -17,14 +17,23 @@ const Game = () => {
     </>
     );
   };
+  const size = 20;
+  const boardState = Array.from({ length: size }, () => Array(size).fill('free'));
+  //probando posiciones
+  boardState[4][4] = 'tribute';
+  boardState[9][17] = 'tribute';
+  boardState[19][1] = 'tribute';
+  boardState[8][8] = 'item';
+  boardState[5][15] = 'item';
+
   return (
     <main className='board'>
       <h1>The Hunger Games</h1>
       <TransformWrapper>
-        <Controls />
+        <div className= 'button section'><Controls /></div>        
         <TransformComponent>
           <section className='game'>
-            <Board/>
+            <Board size={size} boardState={boardState} />
           </section>
         </TransformComponent>
       </TransformWrapper>

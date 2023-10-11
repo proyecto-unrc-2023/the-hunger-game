@@ -32,6 +32,10 @@ body {
   width: fit-content;
   margin: 40px auto;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .board h1 {
@@ -57,75 +61,16 @@ body {
   color: #222;
 }
 
-.board .game {
+/* .board .game {
   display: grid;
-  /* esto me va a separar las celdas en columnas */
-  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-}
+} */
 
-.turn {
+.game{
+  margin: 0;
   display: flex;
-  justify-content: center;
-  margin: 15px auto;
-  width: fit-content;
-  position: relative;
-  border-radius: 10px;
-}
-
-.turn .square,
-.winner .square {
-  width: 70px;
-  height: 70px;
-  pointer-events: none;
-  border-color: transparent;
-}
-
-.square.is-selected {
-  color: #fff;
-  background: #09f;
-}
-
-.winner {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  display: grid;
-  place-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.winner .text {
-  background: #111;
-  height: 300px;
-  width: 320px;
-  border: 2px solid #eee;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-}
-
-.winner .win {
-  margin: 0 auto;
-  width: fit-content;
-  border: 2px solid #eee;
-  border-radius: 10px;
-  display: flex;
-  gap: 15px;
-}
-
-.square {
-  width: 100px;
-  height: 100px;
-  border: 2px solid #eee;
-  border-radius: 5px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  font-size: 48px;
+  min-width: 320px;
 }
