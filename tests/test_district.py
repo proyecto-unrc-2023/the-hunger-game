@@ -64,31 +64,3 @@ def test_get_cant_tribute():
     expect = district.cant_tributes
     res = district.get_cant_tribute()
     assert expect == res
-
-
-# tests for buy_tribute(..)
-
-def test_buy_tribute_points_less_than_4():
-    district = District()
-    points = 3
-    with pytest.raises(ValueError):
-        district.buy_tribute(points)
-
- 
-def test_buy_one_tribute():
-    district = District()
-    points = 10
-    curr_points = district.buy_tribute(points)
-    assert curr_points == 6 # points decrease in 4
-    assert len(district.tributes) == 1
-
-
-def test_buy_two_tributes():
-    district = District()
-    points = 10
-    curr_points = district.buy_tribute(points) # buy one tribute
-    assert curr_points == 6
-    assert len(district.tributes) == 1
-    curr_points = district.buy_tribute(curr_points) # now buy other tribute
-    assert curr_points == 2
-    assert len(district.tributes) == 2

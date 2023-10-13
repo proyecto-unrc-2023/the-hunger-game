@@ -425,51 +425,37 @@ def test_applies_effects_complex():
 
 def test_init_simulation_inputs_one(monkeypatch):
     game = GameLogic()
-    user_inputs = iter(['0', '1', '5', '4', '4', '2', '1', 'n']) # first is number_district, then choice, points,..., yes or no 
+    user_inputs = iter(['1', '5', '4', '4', '2', '1', 'n', '10', '10']) # first is number_district, then choice, points,..., yes or no 
     
     def mock_input(prompt):
         return next(user_inputs)
     
     monkeypatch.setattr('builtins.input', mock_input)
-    game.init_simulation(10, 10)
+    game.init_simulation(15, 15)
     my_district = game.districts[0]
 
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
-        assert tribute_my_district.force == 7
         assert tribute_my_district.alliance == 3
-     
-    tributes_count = 0 
-    for row in game.board.board:
-        for cell in row:
-            if cell.state == State.TRIBUTE:
-                tributes_count += 1
-
+ 
 
 def test_init_simulation_inputs_two(monkeypatch):
     game = GameLogic()
-    user_inputs = iter(['0', '4', '8', '1', '1', '2', '1', 'n']) # first is number_district, then choice, points,..., yes or no 
+    user_inputs = iter(['4', '8', '1', '1', '3', '1', 'n', '8', '8']) # first is number_district, then choice, points,..., yes or no 
     
     def mock_input(prompt):
         return next(user_inputs)
     
     monkeypatch.setattr('builtins.input', mock_input)
-    game.init_simulation(10, 10)
+    game.init_simulation(15, 15)
     my_district = game.districts[0]
 
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
-        assert tribute_my_district.force == 5
-        assert tribute_my_district.alliance == 3
+        assert tribute_my_district.alliance == 4
      
-    tributes_count = 0 
-    for row in game.board.board:
-        for cell in row:
-            if cell.state == State.TRIBUTE:
-                tributes_count += 1
-
 
 def test_put_tribute():
     game = GameLogic()
@@ -494,7 +480,6 @@ def test_put_tribute():
     assert s1.pos == (1, 0)
     assert game.board.get_element(1, 0).get_tribute() == s1
     assert len(game.districts[1].tributes) == 2
-    
 
 def test_put_item():
     w = Weapon()

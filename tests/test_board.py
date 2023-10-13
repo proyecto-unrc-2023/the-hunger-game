@@ -444,3 +444,71 @@ def test_get_adjacent_positions():
     adjacent_positions = board.get_adjacent_positions(3, 1)
     expected_positions = [(2, 0), (2, 1), (2, 2), (3, 0), (3, 2)]
     assert adjacent_positions == expected_positions
+
+
+# Testing for distribute_items(..)
+
+def test_put_item_using_create_item():
+    board = Board(3, 2)
+    potion = Potion()
+    weapon = Weapon()
+    num_potions = 2
+    num_weapons = 2
+
+    potion.create_item(num_potions)
+    weapon.create_item(num_weapons)
+
+    board.put_item(0, 0, potion.items[0])
+    board.put_item(1, 1, potion.items[1])
+    board.put_item(2, 0, weapon.items[0])
+    board.put_item(2, 1, weapon.items[1])    
+    res = board.__str__()
+    expected = 'p |  \n' \
+               '  |p \n' \
+               'w |w '
+    assert expected == res
+    board.remove_item(potion.items[0])
+    res = board.__str__()
+    expected = '  |  \n' \
+               '  |p \n' \
+               'w |w '
+    assert expected == res
+
+
+def test_distribute_items_potions():
+  board = Board(4, 3)
+  potion = Potion()
+  num_potions = 10
+  potion.create_item(num_potions)
+  board.distribute_items(potion)
+  count_potions = 0
+  for row in board.board:
+        for cell in row:
+            if cell.state == State.ITEM:
+                count_potions += 1
+  
+  assert count_potions == potion.cant_items
+
+  # Verify that positions of potions are unique
+  potion_pos = []
+  for idx_row, row in enumerate(board.board):
+      for idx_col, cell in enumerate(row):
+          if cell.state == State.ITEM:
+              potion_pos.append((idx_row, idx_col))
+
+  assert len(potion_pos) == len(set(potion_pos))
+
+def test_distribute_items_weapons():
+  board = Board(3, 3)
+  weapon = Weapon()
+  num_weapons = 5
+  weapon.create_item(num_weapons)
+  board.distribute_items(weapon)
+  
+  count_weapons = 0
+  for row in board.board:
+        for cell in row:
+            if cell.state == State.ITEM:
+                count_weapons += 1
+  
+  assert count_weapons == weapon.cant_items

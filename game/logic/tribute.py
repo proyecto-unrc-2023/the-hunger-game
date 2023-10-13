@@ -5,6 +5,7 @@ MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50
 FORCE_DEFAULT = 5
 ALLIANCE_DEFAULT = 3
+
 class Tribute:
 
     def __init__(self):

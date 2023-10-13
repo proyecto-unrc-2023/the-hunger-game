@@ -3,7 +3,7 @@ from enum import Enum
 from game.logic.board import Board
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 from game.logic.cell import State
-from game.logic.item import Weapon, Potion
+from game.logic.item import Item, Weapon, Potion
 from game.logic.district import District
 
 
@@ -21,6 +21,7 @@ class GameLogic:
         self.board = None
         self.districts = []
         self.neutrals = []
+        self.items = []
 
     # Starts a new game with the specified number of rows and columns.
     def new_game(self, rows, columns):
@@ -70,7 +71,7 @@ class GameLogic:
     #Applies the effect of the item on the tribute and remove tribute of game.  
     def applies_effects(self, item, tribute):
         item.apply_effect(tribute)
-        self.board.remove_item(item)
+        self.board.remove_item(item) 
         
     # Places a Neutral at a specific position on the board and in Neutrals.
     def put_neutral(self, x, y):
@@ -78,7 +79,6 @@ class GameLogic:
         self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
         neutral.name = 'n' + str(len(self.neutrals) -1)
-
 
     # Returns the positions visible to an tribute within an certain range.
     def tribute_vision_pos(self, tribute):
@@ -176,7 +176,6 @@ class GameLogic:
             neutral.move_to_random(self.board)    
         
     
-    
     # Implements a heuristic move for a tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
@@ -199,7 +198,7 @@ class GameLogic:
                     if (x,y) in self.board.get_adjacent_positions(Tx, Ty):
                         tribute.move_to(x, y, self.board)
                         item = cell.get_item()
-                        self.applies_effects(item,tribute)
+                        self.applies_effects(item, tribute)
                     else:
                         pos = tribute.move_closer_to(x, y, self.board)
                         tribute.move_to(pos[0], pos[1], self.board)
@@ -265,40 +264,26 @@ class GameLogic:
     # configure five random districts and distributes tributes in board
     def init_simulation(self, rows, columns):
         self.new_game(rows, columns)        
-        # Is necesary create an instance of district here and set by deafault every stat.
+        # Is necesary create an instance of district here and set by default every stat.
         district = District()
-        life = LIFE_DEFAULT
-        force = FORCE_DEFAULT
-        alliance = ALLIANCE_DEFAULT
-        cant_tributes = 4
-        number_district = -1
-        # Input your number of district
-        while number_district not in range(6):
-            try:
-                number_district = int(input("Choice number of your district between 0 and 5: "))
-                if number_district not in range(6):
-                    print("Invalid input. Please enter a valid number between 0 and 5.")
-            except ValueError:
-                print("Please, enter a number between 0 and 5.")
-        
-        print("\nGood, your number of district is:", number_district)
-        var_yes = 'y'
-        points = 10
-        # Beginning a big while
-        while var_yes == 'y':
-            
-            print("\nYou have", points, "point available to distribute in:")
+        life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT 
+        cant_tributes, number_district = 4, 0
+        print(f"Board is {rows} x {columns}.")
+        print("\nBy default, your number of district is", number_district)
+        var_yes , points = 'y', 10
+        # Beginning a big while    
+        while var_yes == 'y': 
+            print("\nYou have", points, "points available to distribute on:")
             print("1. Life")
             print("2. Force")
             print("3. Alliance")
             print("4. Tributes")
             try:
                 choice = int(input("¿Where do you want to spend your points? Choose a number (1 - 4): "))
-                # Choice 1 means Life
+                # Choice 1 Life
                 if choice == 1:
                     while True:
                         life_points = int(input("How many points do you want to spend on Life?: "))##no muestra por consola esto
-                        # Calculate points and increases life
                         if 1 <= life_points <= points:
                             life = life + (5 * life_points)
                             points -= life_points
@@ -306,11 +291,10 @@ class GameLogic:
                             break
                         else:
                             print("Invalid input. You have", points, "points.")
-                # Choice 2 means Force         
+                # Choice 2 Force         
                 elif choice == 2:
                     while True:
                         force_points = int(input("How many points do you want to spend on Force?: "))
-                        # Calculate points and increases force
                         if 1 <= force_points <= points:
                             force = force + (2 * force_points)
                             points -= force_points
@@ -318,14 +302,13 @@ class GameLogic:
                             break
                         else:
                             print("Invalid input. You have", points, "points.")
-                # Choice 3 means Alliance
+                # Choice 3 Alliance
                 elif choice == 3:
                     while True:
                         alli_points = int(input("How many points do you want to spend on Alliance?: "))
                         if alliance == 10:
                             print("Alliance is at 10. You can't spend more points on it.")
                             break
-                        # Calculate points and increases alliance
                         if 1 <= alli_points <= points and alli_points <= 7:
                             alliance += alli_points
                             points -= alli_points
@@ -336,19 +319,16 @@ class GameLogic:
                             break
                         else:
                             print("Invalid input. You have", points, "points.")
-                # Choice 4 means Tributes
+                # Choice 4 Tributes
                 elif choice == 4:
                     while True: 
                         tributes_points = int(input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
-                        # Calculate points and increases tributes
                         if tributes_points in (4, 8):
-                            if points >= tributes_points:
-                                num_tributes = tributes_points // 4
-                                cant_tributes += 1  
-                                points -= 4
-                                if num_tributes == 2: 
-                                    cant_tributes += 2
-                                    points -= 8
+                            required_points = tributes_points 
+                            num_tributes = tributes_points // 4
+                            if points >= required_points:  
+                                cant_tributes += num_tributes
+                                points -= required_points
                                 print("The number of tributes increased to:", cant_tributes)
                                 break    
                             else:
@@ -358,44 +338,80 @@ class GameLogic:
                             print("Invalid input. You should enter 4 or 8 points to spend on Tributes.")
                 else:
                     print("Invalid option. Please choose a number between 1 and 4.")
-            # If you dont enter a valid input then begin again the while
             except ValueError:
                 print("Invalid input. Please enter a valid number (1 - 4).")
-            # If you spent all your points then it asks if you want to reconfigure the district,
-            # y (es si) o n (es no)
+            # If you spent all points then it asks if you want to reconfigure the district
             if points <= 0:
                 print("\nYou have spent all your points.")
-                print("The stats of your district are:\nLife:", life, "\nForce:", force, "\nAlliance:", alliance, "\nTributes:", cant_tributes)
-                var_yes = input("Do you want to redistribute the points (y/n)?: ").strip().lower()
+                print("The stats of your district are: \nLife:", life, "\nForce:", force, "\nAlliance:", alliance, "\nTributes:", cant_tributes)
+                var_yes = input("Do you want to redistribute the points (y / n)?: ").strip().lower()
                 while var_yes not in ('y', 'n'):
-                    var_yes = input("Invalid input. Enter (y/n): ").strip().lower()
+                    var_yes = input("Invalid input. Enter (y / n): ").strip().lower()
                 
-                # If you choice y, then sets all stats like in beginning
-                if var_yes == 'y':
-                    points = 10
-                    life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
-                    # Remove tributes if you buy tributes
+                # Choice y, then sets all stats like in beginning
+                if var_yes == 'y':             
+                    life, force, alliance = LIFE_DEFAULT , FORCE_DEFAULT, ALLIANCE_DEFAULT,  
+                    # Remove tributes
                     for tribute in district.tributes:
                         district.remove_tribute(tribute)
-        
-        # If you choice n, this function configure your district
+                    points, cant_tributes = 10, 4
+
+        if rows * columns < cant_tributes + 20:
+            print("You must creat a board more bigger.")
+            return                
+        # Distribute items
+        self.distribute_items_input(rows, columns, cant_tributes)
+        # Configure your district
         district.set_config(life, force, alliance, number_district, cant_tributes) 
         self.districts.append(district)
-        # Configure districts by random
+        # Configure other districts
         for i in range(6): 
-            if i != number_district: # I dont want that my district configure again
+            if i != number_district:
                 district = District()
                 district.cant_tributes = 4
                 district.set_config_by_default(i)
                 self.districts.append(district)
-
-        # distribute all tributes of districts in board       
+       
         for j in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[j]) 
-	
+            self.board.distribute_tributes(self.districts[j])     
         self.mode = GameMode.SIMULATION
         self.heuristic_of_game()
+    
+    # Distribute items on board according inputs.
+    def distribute_items_input(self, rows, columns, cant_tributes):
+        max_potions = (rows * columns) - cant_tributes - 20
 
+        print("\nPut items on board.")
+        while True:
+            try:
+                num_potions = int(input(f"How many potions do you want on board? Choice a number 0 between and {max_potions}: "))
+                if 0 <= num_potions <= max_potions:
+                    if num_potions == 0:
+                        break
+                    potion = Potion()
+                    potion.create_item(num_potions)
+                    self.board.distribute_items(potion)
+                    break
+                else:
+                    print("Invalid input:", num_potions)
+            except ValueError:
+                print("Invalid input:", num_potions)
+        
+        max_weapons = max_potions - num_potions
+        while True:
+            try:
+                num_weapons = int(input(f"How many weapons do you want on board? Choice a number between 0 and {max_weapons}: "))
+                if 0 <= num_weapons <= max_weapons:
+                    if num_weapons == 0:
+                        break
+                    weapon = Weapon()
+                    weapon.create_item(num_weapons)
+                    self.board.distribute_items(weapon)
+                    break
+                else:
+                    print("Invalid input:", num_weapons)
+            except ValueError:
+                print("Invalid input. Please enter a valid number (0 - n).")
 
     def one_iteration(self):
         for district in self.districts:
