@@ -167,8 +167,8 @@ class GameLogic:
         tribute.district = district.get_number_district()
         district.tributes.append(tribute)
         district.cant_tributes = district.cant_tributes + 1
-    
-    
+        self.neutrals.remove(tribute)
+
     def neutral_heuristic(self, neutral):
         if not (neutral.enemy is None):
             self.fight(neutral,neutral.enemy)
@@ -210,7 +210,6 @@ class GameLogic:
                             if tribute.alliance_to(cell.get_tribute()) == True:
                                 district = self.districts[tribute.district]
                                 self.alliance_neutral(cell.get_tribute(), district)
-                                self.neutrals.remove(cell.get_tribute())
                             else:
                                 tribute.enemy = cell.get_tribute()
                         else:
@@ -411,4 +410,11 @@ class GameLogic:
             for i in range(self.districts[j].cant_tributes):
                 pos = self.board.random_pos()
                 self.put_tribute(pos[0], pos[1], self.districts[j].tributes[i])
+
+    def table_to_string(self, behave_table):
+        rows = []
+        for row in behave_table:
+            row_str = "|".join(row)
+            rows.append(row_str)
+        return "\n".join(rows)
 
