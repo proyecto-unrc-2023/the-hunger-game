@@ -325,15 +325,16 @@ def test_end_game():
 
 
 def test_alliance_neutral_tribute():
-    tribute = Tribute()
     district = District()
-    district.set_config(50, 5, 5, 1, 2)
-    old_number_of_tributes = district.get_cant_tribute()
+    district.set_config(50, 6, 4, 0, 1)
     game = GameLogic()
-    game.alliance_neutral(tribute, district)
-    assert tribute.district is district.get_number_district()
-    assert old_number_of_tributes + 1 == district.get_cant_tribute()
-    assert district.tributes.__contains__(tribute)
+    game.new_game(2,2)
+    game.put_neutral(0, 0)
+    neutral = game.neutrals[0]
+    game.alliance_neutral(neutral, district)
+    assert neutral.district is district.get_number_district()
+    assert 1 + 1 == district.get_cant_tribute()
+    assert district.tributes.__contains__(neutral)
 
 
 def test_heuristic_of_game_simple_2_tribute_1_died(game2x2):

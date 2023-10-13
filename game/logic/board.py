@@ -30,6 +30,7 @@ class Board:
                 char = matrix[row][col].strip()
                 if char.startswith('n'):
                     tribute = Tribute()
+                    tribute.pos = (row, col)
                     tribute.name = char
                     new_board.get_element(row, col).put_tribute(tribute)
                     neutrals.append(tribute)

@@ -1,0 +1,1 @@
+//Un pie de página que puede contener información adicional, créditos o enlaces relacionados con la simulación.

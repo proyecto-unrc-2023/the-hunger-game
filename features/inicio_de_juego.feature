@@ -2,17 +2,6 @@
 
 Característica: Inicio de juego
 
-  Escenario: El usuario entra a jugar
-    Dado que ingresó a jugar
-    Cuando da un click en el botón “Jugar”
-    Entonces accede a la configuración de su distrito
-
-  Escenario: Inicio de juego
-    Dado que mi distrito está listo
-    Cuando doy click al botón “Comienzo de simulación”
-    Entonces empieza la simulación
-	  Y aparecen todos los tributos en el tablero
-	  Y aparecen los items en el tablero
 
   Escenario: Se genera el mapa y no hay 2 tributos en la misma celda
     Dado que empezó la simulación

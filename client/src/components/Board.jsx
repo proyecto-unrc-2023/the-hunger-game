@@ -1,7 +1,5 @@
-// Board.js
 import React from "react";
 import "./Board.css";
-import { Square } from './Square.jsx'
 import Cell from './Cell';
 
 const Board = ({ size, boardState }) => {
