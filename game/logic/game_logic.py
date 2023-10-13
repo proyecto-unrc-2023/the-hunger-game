@@ -21,7 +21,6 @@ class GameLogic:
         self.board = None
         self.districts = []
         self.neutrals = []
-        self.items = []
 
     # Starts a new game with the specified number of rows and columns.
     def new_game(self, rows, columns):
