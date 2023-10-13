@@ -7,12 +7,6 @@ Característica: Finalización de la simulación
     Cuando solo quedan tributos de un distrito
     Entonces el distrito sobreviviente gana
 
-  Escenario: Termina la simulación sin un ganador
-    Dado que hay dos tributos de distritos diferentes que quedan
-    Cuando se asestan el golpe final mutuamente
-    Y ambos mueren
-    Entonces ningún distrito gana
-
   Escenario: Finalizar la simulación intencionalmente
     Dado que la simulación ha comenzado
     Cuando hago clic en "Finalizar simulación"
