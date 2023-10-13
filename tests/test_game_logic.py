@@ -36,7 +36,6 @@ def game2x2():
     t1 = Tribute()
     district0.number_district = 0
     district1.number_district = 1
-
     game2x2.districts.append(district0)
     game2x2.districts.append(district1)
     t0.set_config_parameters(50, 20, 1, 0)
@@ -91,7 +90,6 @@ def test_remove_tribute2():
     game.put_tribute(0,1,t1)
     game.put_tribute(1,0,t2)
     game.remove_tribute(t1)
-    print(game.to_string())
 
 def test_tribute_vision_pos():
     game = GameLogic()
@@ -393,7 +391,7 @@ def test_heuristic_of_game_simple_2_tribute_1_neutral_fail_1_died():
     game.mode = GameMode.SIMULATION
     t0 = Tribute()
     t1 = Tribute()
-    t0.set_config_parameters(41, 10, -25, 0)
+    t0.set_config_parameters(50, 10, -25, 0)
     t1.set_config_parameters(40, 20, 1, 1)
     game.put_tribute(0, 0, t0)
     game.put_tribute(7, 7, t1)
@@ -525,3 +523,28 @@ def test_neutral_heuristic():
     neutral.enemy = None
     game.neutral_heuristic(neutral)
     assert neutral.pos != (0,1)
+    
+    
+def test_order_attack():
+    game = GameLogic()
+    game.new_game(2,2)
+    #config t0
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    game.put_tribute(0,0,t0)
+    #config t1
+    t1 = Tribute()
+    t1.set_config_parameters(50,5,3,1)
+    game.put_tribute(0,1,t1)
+    #config t2
+    t2 = Tribute()
+    t2.set_config_parameters(50,5,3,2)
+    game.put_tribute(1,1,t2)
+    game.order_attack()
+    assert game.order == [0,1,2]
+    game.all_iteration()
+    assert game.order == [1,2,0]
+    game.all_iteration()
+    assert game.order == [2,0,1]
+    game.all_iteration()
+    assert game.order == [0,1,2]
