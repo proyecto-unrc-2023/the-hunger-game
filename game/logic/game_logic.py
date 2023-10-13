@@ -357,19 +357,19 @@ class GameLogic:
         if rows * columns < cant_tributes + 20:
             print("You must creat a board more bigger.")
             return                
-        # Distribute items
-        self.distribute_items_input(rows, columns, cant_tributes)
-        # Configure your district
+        # Configure own district
         district.set_config(life, force, alliance, number_district, cant_tributes) 
         self.districts.append(district)
-        # Configure other districts
+        # Configure others districts
         for i in range(6): 
             if i != number_district:
                 district = District()
                 district.cant_tributes = 4
                 district.set_config_by_default(i)
                 self.districts.append(district)
-       
+        # distribute items
+        self.distribute_items_input(rows, columns, cant_tributes)
+        # distribute districts
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])     
         self.mode = GameMode.SIMULATION
@@ -409,7 +409,7 @@ class GameLogic:
                 else:
                     print("Invalid input:", num_weapons)
             except ValueError:
-                print("Invalid input. Please enter a valid number (0 - n).")
+                print("Invalid input:", num_weapons)
 
     def one_iteration(self):
         for district in self.districts:

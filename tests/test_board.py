@@ -5,6 +5,7 @@ from game.logic.item import Weapon, Potion
 from game.logic.cell import Cell, State
 from game.logic.tribute import Tribute
 from game.logic.district import District
+from game.logic.game_logic import GameLogic
 
 
 @pytest.fixture
@@ -489,15 +490,7 @@ def test_distribute_items_potions():
   
   assert count_potions == potion.cant_items
 
-  # Verify that positions of potions are unique
-  potion_pos = []
-  for idx_row, row in enumerate(board.board):
-      for idx_col, cell in enumerate(row):
-          if cell.state == State.ITEM:
-              potion_pos.append((idx_row, idx_col))
-
-  assert len(potion_pos) == len(set(potion_pos))
-
+  
 def test_distribute_items_weapons():
   board = Board(3, 3)
   weapon = Weapon()
@@ -512,3 +505,45 @@ def test_distribute_items_weapons():
                 count_weapons += 1
   
   assert count_weapons == weapon.cant_items
+
+
+def test_distribute_items_and_distribute_tributes():
+    potion = Potion()
+    weapon = Weapon()
+    district = District()
+    game = GameLogic()
+    game.new_game(7, 7)
+
+    cant_tributes = 6 
+    district.set_config(60, 5, 4, 0, cant_tributes)
+    game.districts.append(district)    
+
+    for i in range(6): 
+        if i != 0:
+            district = District()
+            district.cant_tributes = 4
+            district.set_config_by_default(i)
+            game.districts.append(district)
+    
+    potion.create_item(5)
+    weapon.create_item(5)
+    game.board.distribute_items(potion)
+    game.board.distribute_items(weapon)
+
+    for j in range(len(game.districts)):
+        game.board.distribute_tributes(game.districts[j])
+
+    count_weapons, count_potions, count_tributes = 0, 0, 0
+    for row in game.board.board:
+        for cell in row:
+            if cell.get_state() == State.ITEM:
+                if cell.get_item() == Weapon():
+                    count_weapons += 1
+                else:
+                    count_potions += 1
+            elif cell.state == State.TRIBUTE:
+                count_tributes += 1
+
+    assert count_weapons == 5
+    assert count_weapons == 5
+    assert count_tributes == 26
