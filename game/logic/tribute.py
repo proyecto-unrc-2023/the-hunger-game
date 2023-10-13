@@ -127,6 +127,6 @@ class Tribute:
         possible_moves = board.get_free_adjacents_positions(self.pos[0], self.pos[1])
         possible_moves.sort(key=calculate_distance)
         if not possible_moves:
-            raise ValueError(f'No FREE positions')
+            raise ValueError(f'No FREE positions, ignorar este error hasta que pueda solucionarlo')
 
         return possible_moves[0]
