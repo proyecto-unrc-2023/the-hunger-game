@@ -437,3 +437,29 @@ class GameLogic:
         print(self.order)
         
         return self.order
+
+    # This method is a copy of init_simulation, avoiding the part of
+    # configuring the district, assigns all default values and does NOT
+    # start the simulation
+    # IS ONLY FOR TEST, DON'T USE IN OTHER CONTEXT
+    def prepare_the_game(self, rows, columns):
+        self.new_game(rows, columns)
+        district = District()
+        life = LIFE_DEFAULT
+        force = FORCE_DEFAULT
+        alliance = ALLIANCE_DEFAULT
+        cant_tributes = 4
+        number_district = -1
+        district.set_config(life, force, alliance, number_district, cant_tributes)
+        self.districts.append(district)
+        # Configure districts by random
+        for i in range(6):
+            if i != number_district:
+                district = District()
+                district.cant_tributes = 4
+                district.set_config_by_default(i)
+                self.districts.append(district)
+
+        # distribute all tributes of districts in board
+        for j in range(len(self.districts)):
+            self.board.distribute_tributes(self.districts[j])
