@@ -1,7 +1,7 @@
 import pytest
 
 from game.logic.tribute import Tribute
-from game.logic.item import Item, Potion, Weapon, WEAPON_EFFECT, POTION_EFFECT
+from game.logic.item import Item, Poison, Potion, PotionForce, Weapon, WEAPON_EFFECT, POTION_EFFECT
 
 
 def test_create_potion_from_str():
@@ -28,6 +28,30 @@ def test_potion_apply_effect():
     potion1.apply_effect(tribute1)
     assert tribute1.life.__eq__(100)
 
+def test_potion_force_apply_effect():
+    tribute = Tribute()
+    potion = PotionForce()
+    potion.apply_effect(tribute)
+    assert tribute.force == 10
+    tribute1 = Tribute()
+    tribute1.force = 30
+    potion1 = PotionForce()
+    potion1.apply_effect(tribute1)
+    assert tribute1.force == 30
+    
+def test_poison_apply_effect():
+    tribute = Tribute()
+    posion = Poison()
+    posion.apply_effect(tribute)
+    assert tribute.life == 45
+    tribute1 = Tribute()
+    tribute1.life = 5
+    poison1 = Poison()
+    poison1.apply_effect(tribute1)
+    assert tribute1.life == 0
+    with pytest.raises(ValueError):
+        poison1.apply_effect(tribute1)
+    
 
 def test_weapon_apply_effect():
     tribute = Tribute()
