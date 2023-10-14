@@ -1,60 +1,21 @@
-from flask import url_for
 from behave import given, when, then
 
+from game.logic.game_logic import GameLogic
 
-@given("que hay dos distritos con sus respectivos tributos en el mapa")
+
+@given(u'que el tablero se encuentra en el siguiente estado')
 def step_impl(context):
-    pass
-  
-@when('solo quedan tributos de un distrito')
+    context.game = GameLogic()
+    string = context.game.table_to_string(context.table)
+    context.game.from_string(string)
+
+
+@when(u'se ejecute la ultima iteracion')
 def step_impl(context):
-    pass
+    context.game.one_iteration()
 
 
-@then('el distrito sobreviviente gana')
+@then(u'el unico distrito sobreviviente gana la partida')
 def step_impl(context):
-    pass
-
-
-@given('que hay dos tributos de distritos diferentes que quedan')
-def step_impl(context):
-    pass
-
-
-@when('se asestan el golpe final mutuamente')
-def step_impl(context):
-    pass
-
-
-@when('ambos mueren')
-def step_impl(context):
-    pass
-
-
-@then('ningún distrito gana')
-def step_impl(context):
-    pass
-
-@given('que la simulación ha comenzado')
-def step_impl(context):
-    pass
-
-
-@when('hago clic en "Finalizar simulación"')
-def step_impl(context):
-    pass
-
-
-@then('la simulación termina')
-def step_impl(context):
-    pass
-
-
-@then('se muestra el distrito ganador')
-def step_impl(context):
-    pass
-
-
-@then('se muestra la pantalla de inicio')
-def step_impl(context):
-    pass
+    context_district_winner = context.game.end_game()
+    assert context_district_winner.tributes[0].district == 0
