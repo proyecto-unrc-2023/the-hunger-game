@@ -1,70 +1,56 @@
-from flask import url_for
 from behave import given, when, then
 
-@given('que ingresó a jugar')
+from game.logic.game_logic import GameLogic
+
+
+@given(u'que el juego se creo')
 def step_impl(context):
-    pass
+    context.game = GameLogic()
 
 
-@when('da un click en el botón “Jugar”')
+@when(u'esta por comenzar la simulacion')
 def step_impl(context):
-    pass
+    context.game.prepare_the_game(10, 10)
 
 
-@then('accede a la configuración de su distrito')
+@then(u'no hay más de un tributo por celda')
 def step_impl(context):
-    pass
-  
-@given('que mi distrito está listo')
+    tributes_with_same_pos = False
+    all_tributes = []
+    for m in range(6):
+        for n in range(4):
+            all_tributes.append(context.game.districts[m].tributes[n])
+    cant_tributes = all_tributes.__len__()
+    for i in range(10):
+        for j in range(10):
+            tribute_with_position = (i, j)
+            counter = 0
+            for k in range(cant_tributes):
+                if (all_tributes[k]).pos == tribute_with_position:
+                    counter += 1
+        if counter > 1:
+            tributes_with_same_pos = True
+
+    assert tributes_with_same_pos is False
+
+
+@then(u'dos tributos del mismo distrito deben tener las mismas caracteristicas')
 def step_impl(context):
-    pass
+    tribute_zero = context.game.districts[0].tributes[0]
+    tribute_one = context.game.districts[0].tributes[1]
+    assert tribute_zero.force == tribute_one.force
+    assert tribute_zero.life == tribute_one.life
+    assert tribute_zero.alliance == tribute_one.alliance
+    assert tribute_zero.max_life == tribute_one.max_life
+    assert tribute_zero.district == tribute_one.district
 
 
-@when('doy click al botón “Comienzo de simulación”')
+@then(u'todos los distritos tienen al menos un tributo')
 def step_impl(context):
-    pass
-
-
-@then('empieza la simulación')
-def step_impl(context):
-    pass
-
-
-@then('aparecen todos los tributos en el tablero')
-def step_impl(context):
-    pass
-
-
-@then('aparecen los items en el tablero')
-def step_impl(context):
-    pass
-
-
-@given('que empezó la simulación')
-def step_impl(context):
-    pass
-
-
-@when('se generen los distritos')
-def step_impl(context):
-    pass
-
-
-@then('no hay más de un tributo por celda')
-def step_impl(context):
-    pass
-
-
-@given('que la simulación comenzó')
-def step_impl(context):
-    pass
-
-
-@when('dos tributos de un mismo distrito aparecen en el mapa')
-def step_impl(context):
-    pass
-
-
-@then('sus stats deben ser iguales')
-def step_impl(context):
-    pass
+    assert context.game.districts[0].cant_tributes > 0
+    assert context.game.districts[1].cant_tributes > 0
+    assert context.game.districts[2].cant_tributes > 0
+    assert context.game.districts[3].cant_tributes > 0
+    assert context.game.districts[4].cant_tributes > 0
+    assert context.game.districts[5].cant_tributes > 0
+    assert context.game.districts[6].cant_tributes > 0
