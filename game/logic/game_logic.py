@@ -22,6 +22,7 @@ class GameLogic:
         self.districts = []
         self.neutrals = []
         self.order = []
+
     # Starts a new game with the specified number of rows and columns.
     def new_game(self, rows, columns):
         self.board = Board(rows, columns)
@@ -257,7 +258,6 @@ class GameLogic:
             print("--------------------------------------------------------------")
             print(self.to_string())
 
-
     # This method create a new board, request by console stats of your district, 
     # configure five random districts and distributes tributes in board
     def init_simulation(self, rows, columns):
@@ -268,8 +268,7 @@ class GameLogic:
         cant_tributes, number_district = 4, 0
         print(f"Board is {rows} x {columns}.")
         print("\nBy default, your number of district is", number_district)
-        var_yes , points = 'y', 10
-        # Beginning a big while    
+        var_yes , points = 'y', 10    
         while var_yes == 'y': 
             print("\nYou have", points, "points available to distribute on:")
             print("1. Life")
@@ -348,7 +347,7 @@ class GameLogic:
                 
                 # Choice y, then sets all stats like in beginning
                 if var_yes == 'y':             
-                    life, force, alliance = LIFE_DEFAULT , FORCE_DEFAULT, ALLIANCE_DEFAULT,  
+                    life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
                     # Remove tributes
                     for tribute in district.tributes:
                         district.remove_tribute(tribute)
@@ -371,7 +370,7 @@ class GameLogic:
         self.distribute_items_input(rows, columns, cant_tributes)
         # distribute districts
         for j in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[j])     
+            self.board.distribute_tributes(self.districts[j])         
         self.mode = GameMode.SIMULATION
         self.heuristic_of_game()
     
