@@ -21,7 +21,7 @@ class GameLogic:
         self.board = None
         self.districts = []
         self.neutrals = []
-
+        self.order = []
     # Starts a new game with the specified number of rows and columns.
     def new_game(self, rows, columns):
         self.board = Board(rows, columns)
@@ -244,17 +244,17 @@ class GameLogic:
             if cant_of_districts_alive == 1:
                 return district_alive
 
+    
     def heuristic_of_game(self):
+        self.order_attack()
         if self.mode != GameMode.SIMULATION:
             raise ValueError(f'The state of the game is not SIMULATION')
         while self.end_game() == False:
-            for district in self.districts:
-                for tribute in district.tributes:
-                    self.heuristic_tribute_first_attempt(tribute)
+            self.all_iteration()
             if not (self.neutrals is None):
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
-            print("------------------------------------")
+            print("--------------------------------------------------------------")
             print(self.to_string())
 
 
@@ -433,3 +433,22 @@ class GameLogic:
             rows.append(row_str)
         return "\n".join(rows)
 
+
+    def order_attack(self):
+        for i in range(len(self.districts)):
+            self.order.append(i)
+        
+        return self.order 
+    
+    def all_iteration(self):
+        for i in range(len(self.districts)):
+            num_district = self.order[i]
+            for tribute in self.districts[num_district].tributes:
+                self.heuristic_tribute_first_attempt(tribute)
+        temp = self.order.pop(0)
+        print(self.order)
+        
+        self.order.append(temp)
+        print(self.order)
+        
+        return self.order
