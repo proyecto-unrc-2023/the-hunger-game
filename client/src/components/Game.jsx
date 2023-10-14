@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   TransformWrapper,
   TransformComponent,
@@ -6,27 +6,27 @@ import {
 } from "react-zoom-pan-pinch";
 import Board from "./Board.jsx";
 
+const ControlsZoom = () => {
+  const { zoomIn, zoomOut, resetTransform } = useControls();
+  return (
+    <>
+      <button onClick={() => zoomIn()}>🔍+</button>
+      <button onClick={() => zoomOut()}>🔍-</button>
+      <button onClick={() => resetTransform()}>↩️</button>
+    </>
+  );
+};
+
+const ControlsAdvance = memo(({ onPause, onFinish }) => {
+  return (
+    <>
+      <button onClick={onPause}>Pause⏯️</button>
+      <button onClick={onFinish}>Finish</button>
+    </>
+  );
+});
+
 const Game = () => {
-  const ControlsZoom = () => {
-    const { zoomIn, zoomOut, resetTransform } = useControls();
-    return (
-      <>
-        <button onClick={() => zoomIn()}>🔍+</button>
-        <button onClick={() => zoomOut()}>🔍-</button>
-        <button onClick={() => resetTransform()}>↩️</button>
-      </>
-    );
-  };
-
-  const ControlsAdvance = ({ onPause, onFinish }) => {
-    return (
-      <>
-        <button onClick={onPause} disabled={winner !== null}>Pause Start</button>
-        <button onClick={onFinish}>Finish</button>
-      </>
-    );
-  };
-
   const size = 20;
   // Tablero de prueba 1
   const testBoardState = Array.from({ length: size }, () => Array(size).fill('free'));
@@ -52,7 +52,7 @@ const Game = () => {
   const [boardState, setBoardState] = useState(testBoardState);
 
   //Estado de la simulación
-  const [isPaused, setPaused] = useState(false);
+  const [isPaused, setPaused] = useState(true);
 
   //Estado ganador
   const [winner, setWinner] = useState(null);
@@ -90,12 +90,11 @@ const Game = () => {
   }, [isPaused]);
 
   return (
-    <main className="board">
-      <h1>The Hunger Games</h1>
+    <main className="game">
       <TransformWrapper minScale={0.5}>
         <div className='button section'><ControlsZoom /></div>
         <TransformComponent>
-          <section className='game'>
+          <section className='board'>
             {winner ? (
               <div className="winner-message">Ha ganado el {winner}
               <Board size={size} boardState={emptyBoard} /></div>
@@ -110,5 +109,4 @@ const Game = () => {
     </main>
   );
 };
-
 export default Game;
