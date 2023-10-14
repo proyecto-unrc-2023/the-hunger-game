@@ -4,6 +4,7 @@ from game.logic.cell import State
 MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50
 FORCE_DEFAULT = 5
+MAX_FORCE = 30
 ALLIANCE_DEFAULT = 3
 class Tribute:
 

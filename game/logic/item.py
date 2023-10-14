@@ -2,9 +2,13 @@
 #  - to string
 #  - from string
 
-POTION_EFFECT = 10
-WEAPON_EFFECT = 5
+from game.logic.tribute import MAX_FORCE
 
+
+POTION_EFFECT = 10
+POTION_FORCE_EFFECT = 5
+WEAPON_EFFECT = 5
+POISON_EFFECT = 5
 
 class Item:
 
@@ -49,6 +53,36 @@ class Potion(Item):
             tribute.life += effect
         if tribute.life + POTION_EFFECT < tribute.max_life:
             tribute.life += POTION_EFFECT
+
+class PotionForce(Item):
+
+    def __str__(self):
+        return 'pf'
+
+    def __eq__(self, other):
+        return isinstance(other, Potion)
+
+    def apply_effect(self, tribute):
+        if tribute.force == MAX_FORCE:
+            tribute.force += 0
+        if tribute.force + POTION_FORCE_EFFECT > MAX_FORCE:
+            tribute.force = MAX_FORCE
+        if tribute.force + POTION_FORCE_EFFECT < MAX_FORCE:
+            tribute.force += POTION_FORCE_EFFECT
+
+class Poison(Item):
+
+    def __str__(self):
+        return 'po'
+
+    def __eq__(self, other):
+        return isinstance(other, Potion)
+
+    def apply_effect(self, tribute):
+        if tribute.life <= 0:
+            raise ValueError("Dead tribute triying take poison")
+        tribute.life -= POISON_EFFECT
+
 
 
 class Weapon(Item):
