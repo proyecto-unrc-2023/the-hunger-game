@@ -1,6 +1,3 @@
-# Object
-#  - to string
-#  - from string
 
 from game.logic.tribute import MAX_FORCE
 
@@ -14,6 +11,8 @@ class Item:
 
     def __init__(self):
         self.pos = None
+        self.cant_items = 0
+        self.items = []
 
     @staticmethod
     def from_string(object_str):
@@ -36,6 +35,8 @@ class Item:
     def apply_effect(tribute):
         raise NotImplementedError
 
+    def create_item(number_item):
+        raise NotImplementedError
 
 class Potion(Item):
 
@@ -53,6 +54,15 @@ class Potion(Item):
             tribute.life += effect
         if tribute.life + POTION_EFFECT < tribute.max_life:
             tribute.life += POTION_EFFECT
+
+    # Add an item potion in a list of items.
+    def create_item(self, number_item):
+        if number_item < 0:
+            raise ValueError(f'Invalid input number: {number_item}')
+        for i in range(number_item):
+            potion = Potion()
+            self.items.append(potion)
+            self.cant_items += 1 
 
 class PotionForce(Item):
 
@@ -84,7 +94,6 @@ class Poison(Item):
         tribute.life -= POISON_EFFECT
 
 
-
 class Weapon(Item):
 
     def __str__(self):
@@ -97,5 +106,14 @@ class Weapon(Item):
         if not tribute.weapon:
             tribute.force += WEAPON_EFFECT
             tribute.weapon = True
-        else:
-            raise ValueError("Tribute has a weapon already")
+        #else:
+        #    raise ValueError("Tribute has a weapon already")
+
+    # Add an item weapon in a list of items. 
+    def create_item(self, number_item):
+        if number_item < 0:
+            raise ValueError(f'Invalid input number: {number_item}')
+        for i in range(number_item):
+            weapon = Weapon()
+            self.items.append(weapon)
+            self.cant_items += 1

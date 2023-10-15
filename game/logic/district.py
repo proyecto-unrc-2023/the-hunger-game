@@ -1,6 +1,6 @@
 import random
 
-from game.logic.tribute import Tribute
+from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 
 class District:
 
@@ -34,7 +34,7 @@ class District:
 
     # Configure tributes of an district with random stats.
     def set_config_random(self, num_district):
-        self.number_district = num_district
+        self.number_district = num_district 
         for i in range(4):
             tribute = Tribute()
             tribute.life = 50
@@ -63,24 +63,11 @@ class District:
             raise ValueError(f'Is not an instance of Tribute: {tribute}')
 
         self.tributes.append(tribute)
-        self.cant_tributes = self.cant_tributes + 1
+        self.cant_tributes += 1
 
     # Remove one tribute in a list
     def remove_tribute(self, tribute):
         for tr in self.tributes:
             if tribute.name == tr.name:
                 self.tributes.remove(tr)
-                self.cant_tributes = self.cant_tributes - 1
-
-    # Add one more tribute in own district, if points not are less than four. So can buy a new tribute 
-    def buy_tribute(self, points):
-        if points < 4:
-            raise ValueError(f'The points that you have not enough for buy one tribute: {points}')
-        
-        tribute = Tribute()
-        price_tribute = 4
-        points -= price_tribute 
-        self.tributes.append(tribute)
-        self.cant_tributes += 1
-
-        return points
+                self.cant_tributes -= 1

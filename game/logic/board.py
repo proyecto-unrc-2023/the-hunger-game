@@ -138,6 +138,12 @@ class Board:
             pos = self.random_pos()
             self.put_tribute(pos[0], pos[1], district.tributes[i])
 
+    # Distribute items potions or items weapons on board.
+    def distribute_items(self, item):
+        for i in range(item.cant_items):
+            pos = self.random_pos()
+            self.put_item(pos[0], pos[1], item.items[i])
+
     # Generates a random and valid position on the board.
     def random_pos(self):
         while True:
@@ -146,7 +152,7 @@ class Board:
             element = self.get_element(x, y)
             if element.state != State.TRIBUTE and element.state != State.ITEM:
                 return x, y
-
+        
     # Converts a row of cells on the board into a string representation.
     @staticmethod
     def _row_to_string(row):

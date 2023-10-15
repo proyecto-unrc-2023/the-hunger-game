@@ -110,3 +110,34 @@ def test_weapon_set_pos():
 
     res = weapon.pos
     assert res.__eq__((2, 2))
+
+# testing for create_item(..)
+
+def test_create_item_potions_and_weapons():
+    potion = Potion()
+    number_potions = 8
+    potion.create_item(number_potions)
+    assert potion.cant_items == number_potions
+    number_potions += 5
+    potion.create_item(number_potions)
+    assert potion.cant_items == 21
+
+    weapon = Weapon()
+    number_weapons = 10
+    weapon.create_item(number_weapons)
+    assert weapon.cant_items == number_weapons
+    number_weapons += 8
+    weapon.create_item(number_weapons)
+    assert weapon.cant_items == 28
+
+
+def test_create_invalid_input():
+    potion = Potion()
+    invalid_num_potion = -1
+    with pytest.raises(ValueError):
+        potion.create_item(invalid_num_potion)
+    
+    weapon = Weapon()
+    invalid_num_weapon = -1
+    with pytest.raises(ValueError):
+        weapon.create_item(invalid_num_weapon)
