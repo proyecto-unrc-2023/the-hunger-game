@@ -525,8 +525,8 @@ def test_distribute_items_and_distribute_tributes():
             district.set_config_by_default(i)
             game.districts.append(district)
     
-    potion.create_item(5)
-    weapon.create_item(5)
+    potion.create_item(2)
+    weapon.create_item(7)
     game.board.distribute_items(potion)
     game.board.distribute_items(weapon)
 
@@ -544,6 +544,6 @@ def test_distribute_items_and_distribute_tributes():
             elif cell.state == State.TRIBUTE:
                 count_tributes += 1
 
-    assert count_weapons == 5
-    assert count_weapons == 5
+    assert count_potions == 2
+    assert count_weapons == 7
     assert count_tributes == 26

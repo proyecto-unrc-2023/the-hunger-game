@@ -103,7 +103,7 @@ class Weapon(Item):
         return isinstance(other, Weapon)
 
     def apply_effect(self, tribute):
-        #if not tribute.weapon:
+        if not tribute.weapon:
             tribute.force += WEAPON_EFFECT
             tribute.weapon = True
         #else:

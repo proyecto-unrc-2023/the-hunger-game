@@ -195,7 +195,7 @@ class GameLogic:
             else:
                 if cell.get_state() == State.ITEM:
                     # If it's an item, go to retrieve it.
-                    if (x,y) in self.board.get_adjacent_positions(Tx, Ty):
+                    if (x, y) in self.board.get_adjacent_positions(Tx, Ty):
                         tribute.move_to(x, y, self.board)
                         item = cell.get_item()
                         self.applies_effects(item, tribute)
@@ -372,6 +372,7 @@ class GameLogic:
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])         
         self.mode = GameMode.SIMULATION
+        print(self.to_string()) # first state of the board
         self.heuristic_of_game()
     
     # Distribute items on board according inputs.
@@ -409,6 +410,7 @@ class GameLogic:
                     print("Invalid input:", num_weapons)
             except ValueError:
                 print("Invalid input:", num_weapons)
+        
 
     def one_iteration(self):
         for district in self.districts:
