@@ -40,10 +40,7 @@
 
 .incrementable-bars {
   display: flex;
-  margin-top: 10px;
-  margin-bottom: 10px;
   align-items: center;
-  justify-content: flex-end;
 }
 
 .district-name {
@@ -51,43 +48,57 @@
 }
 
 .stats-settings-container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba(27, 27, 27, 0.863);
+  border-radius: 15px;
+  margin: 50px;
 }
 
 .incrementable-bar-atribute {
   display: inline-block;
-  width: auto; 
-  text-align: left; /* Alinea el texto a la izquierda dentro del contenedor */
+  width: 80px; 
+  text-align: right; /* Alinea el texto a la derecha dentro del contenedor */
 }
 
 
 .bars-container {
-  display: inline-block;
-  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px;
+  width: 500px;
 }
 
 .available-stats {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding-right: 30px;
+  padding: 30px;
 }
 
 .init-simulation-button {
-  padding: 10px 20px; 
-  border-radius: 10px; 
-  background: grey; 
-  color: #fff; 
-  font-size: 16px; 
+  width: 10em;
+  position: relative;
+  height: 3.5em;
+  border: 3px ridge #ff0000;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 1s;
+  border-radius: 0.3em;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .init-simulation-button.is-ready {
-  background-color: green;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+  background-color: black;
+  border: 3px ridge green;
 }
 
 .init-simulation-button.is-ready:hover {
-  transform: scale(1.05); /* El valor 1.05 aumenta el tamaño en un 5% */
-} 
-
+  box-shadow: inset 0px 0px 25px #15ff00;
+}

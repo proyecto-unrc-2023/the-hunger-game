@@ -1,7 +1,4 @@
 import React from 'react';
-import tileImage from './tile_0001.png';
-import tributeImage from './soldier_walk1.png';
-import potionImage from './genericItem_color_102.png';
 
 const Cell = ({ state }) => {
   const renderContent = () => {
@@ -9,24 +6,24 @@ const Cell = ({ state }) => {
       case 'free':
         return (
           <div className='board-free'>
-            <img src={tileImage} alt="Free Tile" />
+            <img src="/board-images/tile_0001.png" alt="Free Tile" />
           </div>
         );
       case 'tribute':
         return (
           <div className='board-free'>
-            <img src={tileImage} alt="Free Tile" />
+            <img src="/board-images/tile_0001.png" alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={tributeImage} alt="Tribute Tile" />
+              <img src="/board-images/soldier_walk1.png" alt="Tribute Tile" />
             </div>
           </div>
         );
       case 'item':
         return (
           <div className='board-free'>
-            <img src={tileImage} alt="Free Tile" />
+            <img src="/board-images/tile_0001.png" alt="Free Tile" />
             <div className='board-potion'>
-              <img src={potionImage} alt="Tribute Tile" />
+              <img src="/board-images/genericItem_color_102.png" alt="Tribute Tile" />
             </div>
           </div>
         );

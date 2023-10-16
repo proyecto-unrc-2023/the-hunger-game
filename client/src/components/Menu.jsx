@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Menu.css";
-import { Button, TextField } from '@mui/material';
 
 function IncrementButton({ onClick }) {
   return (
@@ -52,23 +51,24 @@ function IncrementableBar({ attribute, stats, onIncrement, onDecrement }) {
   );
 }
 
-function InitGameButton({ isReady }){
+function InitGameButton({ isReady, onClick }) {
   const initSimulationButtonClass = isReady ? 'init-simulation-button is-ready' : 'init-simulation-button';
-  return <button className={initSimulationButtonClass}>Iniciar Simulacion</button>
+  return <button className={initSimulationButtonClass} onClick={onClick}>Iniciar Simulacion</button>;
 }
 
-export default function StatsSettings() {
+export default function Menu({ onStartGame }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false).map((_, index) => index < 5));
   const [forceStats, setForceStats] = useState(Array(10).fill(false).map((_, index) => index < 2));
   const [allianceStats, setAllianceStats] = useState(Array(10).fill(false).map((_, index) => index < 2));
+  const [tributeStats, setTributeStats] = useState(Array(10).fill(false).map((_, index) => index < 4));
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
 
 
   const incrementLifeStat = () => {
     const indexLife = lifeStats.findIndex(isConsumed => !isConsumed);
     const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    if (indexLife != -1 && indexStatsBar != -1) {
+    if (indexLife !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newLifeStats = [...lifeStats];
       const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
@@ -82,7 +82,7 @@ export default function StatsSettings() {
   const decrementLifeStat = () => {
     const indexLifeStats = lifeStats.slice().reverse().findIndex(isConsumed => isConsumed);
     const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    if (indexLifeStats <= 4 && indexStatsBar != -1) {
+    if (indexLifeStats <= 4 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newLifeStats = [...lifeStats];
       const reversedLifeStatsIndex = lifeStats.length - 1 - indexLifeStats;
@@ -96,7 +96,7 @@ export default function StatsSettings() {
   const incrementForceStat = () => {
     const indexForce = forceStats.findIndex(isConsumed => !isConsumed);
     const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    if (indexForce != -1 && indexStatsBar != -1) {
+    if (indexForce !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newForceStats = [...forceStats];
       const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
@@ -110,7 +110,7 @@ export default function StatsSettings() {
   const decrementForceStat = () => {
     const indexForceStats = forceStats.slice().reverse().findIndex(isConsumed => isConsumed);
     const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    if (indexForceStats <= 7 && indexStatsBar != -1) {
+    if (indexForceStats <= 7 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newForceStats = [...forceStats];
       const reversedForceStatsIndex = forceStats.length - 1 - indexForceStats;
@@ -124,7 +124,7 @@ export default function StatsSettings() {
   const incrementAllianceStat = () => {
     const indexAlliance = allianceStats.findIndex(isConsumed => !isConsumed);
     const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    if (indexAlliance != -1 && indexStatsBar != -1) {
+    if (indexAlliance !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newAllianceStats = [...allianceStats];
       const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
@@ -138,7 +138,7 @@ export default function StatsSettings() {
   const decrementAllianceStat = () => {
     const indexAllianceStats = allianceStats.slice().reverse().findIndex(isConsumed => isConsumed);
     const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    if (indexAllianceStats <= 7 && indexStatsBar != -1) {
+    if (indexAllianceStats <= 7 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newAllianceStats = [...allianceStats];
       const reversedAllianceStatsIndex = allianceStats.length - 1 - indexAllianceStats;
@@ -146,6 +146,34 @@ export default function StatsSettings() {
       newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
       setStatsBar(newStatsBar);
       setAllianceStats(newAllianceStats);
+    }
+  };
+
+  const incrementTributeStat = () => {
+    const indexTribute = tributeStats.findIndex(isConsumed => !isConsumed);
+    const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
+    if (indexTribute !== -1 && indexStatsBar !== -1) {
+      const newStatsBar = [...statsBar];
+      const newTributeStats = [...tributeStats];
+      const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
+      newTributeStats[indexTribute] = true; // Consume un stat de alianza
+      newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
+      setTributeStats(newTributeStats);
+      setStatsBar(newStatsBar);
+    }
+  };
+
+  const decrementTributeStat = () => {
+    const indexTributeStats = tributeStats.slice().reverse().findIndex(isConsumed => isConsumed);
+    const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
+    if (indexTributeStats <= 7 && indexStatsBar !== -1) {
+      const newStatsBar = [...statsBar];
+      const newTributeStats = [...tributeStats];
+      const reversedTributeStatsIndex = tributeStats.length - 1 - indexTributeStats;
+      newTributeStats[reversedTributeStatsIndex] = false; // Deja de consumir un stat de alianza
+      newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
+      setStatsBar(newStatsBar);
+      setTributeStats(newTributeStats);
     }
   };
 
@@ -166,8 +194,9 @@ export default function StatsSettings() {
         <IncrementableBar attribute="Life:" stats={lifeStats} setStats={setLifeStats} onIncrement={incrementLifeStat} onDecrement={decrementLifeStat} />
         <IncrementableBar attribute="Force:" stats={forceStats} setStats={setForceStats} onIncrement={incrementForceStat} onDecrement={decrementForceStat} />
         <IncrementableBar attribute="Alliance:" stats={allianceStats} setStats={setAllianceStats} onIncrement={incrementAllianceStat} onDecrement={decrementAllianceStat} />
+        <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} />
       </div>
-      <InitGameButton isReady={isReady}/>
+      <InitGameButton isReady={isReady} onClick={onStartGame} />
     </div>
   );
 }
