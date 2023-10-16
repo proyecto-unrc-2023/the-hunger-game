@@ -1,0 +1,93 @@
+.stat {
+  width: 20px;
+  height: 40px;
+  margin: 2px;
+  background-color: #ffffff;
+  border: 1px solid #0000001c;
+  border-radius: 5px; /* Añade bordes redondeados */
+}
+
+.stat.is-consumed {
+  background-color: orangered;
+}
+
+.stats-bar {
+  display: flex;
+  margin: 5px;
+}
+
+.increment-button {
+  cursor: pointer;
+  margin: 5px;
+  display: inline-block
+}
+
+.increment-button :hover{
+  background-color: green;
+  transition: .3s ease background-color;
+}
+
+.decrement-button {
+  cursor: pointer;
+  margin: 5px;
+  display: inline-block
+}
+
+.decrement-button :hover{
+  background-color: red;
+  transition: .3s ease background-color;
+}
+
+.incrementable-bars {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.district-name {
+  margin: 10px;
+}
+
+.stats-settings-container {
+  display: grid;
+}
+
+.incrementable-bar-atribute {
+  display: inline-block;
+  width: auto; 
+  text-align: left; /* Alinea el texto a la izquierda dentro del contenedor */
+}
+
+
+.bars-container {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.available-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 30px;
+}
+
+.init-simulation-button {
+  padding: 10px 20px; 
+  border-radius: 10px; 
+  background: grey; 
+  color: #fff; 
+  font-size: 16px; 
+}
+
+.init-simulation-button.is-ready {
+  background-color: green;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.init-simulation-button.is-ready:hover {
+  transform: scale(1.05); /* El valor 1.05 aumenta el tamaño en un 5% */
+} 
+
