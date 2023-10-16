@@ -1,13 +1,11 @@
-
 from game.logic.tribute import MAX_FORCE
 
-
-POTION_EFFECT = 10
+POTION_LIFE_EFFECT = 10
 POTION_FORCE_EFFECT = 5
 WEAPON_EFFECT = 5
 POISON_EFFECT = 5
 
-class Item:
+class Item():
 
     def __init__(self):
         self.pos = None
@@ -20,23 +18,25 @@ class Item:
             return Potion()
         elif object_str == Weapon().__str__():
             return Weapon()
+        elif object_str == Poison().__str__():
+            return Poison()
         else:
             raise ValueError(f'Invalid object string: {object_str}')
 
     def __str__(self):
-        raise NotImplementedError
-
-    def set_pos(self, pos):
-        self.pos = pos
+        pass
 
     def get_pos(self):
         return self.pos
-
+    
+    def get_cant_items(self):
+        return self.cant_items
+    
     def apply_effect(tribute):
-        raise NotImplementedError
+        pass
 
     def create_item(number_item):
-        raise NotImplementedError
+        pass
 
 class Potion(Item):
 
@@ -49,11 +49,11 @@ class Potion(Item):
     def apply_effect(self, tribute):
         if tribute.life == tribute.max_life:
             tribute.life += 0
-        if tribute.life + POTION_EFFECT > tribute.max_life:
+        if tribute.life + POTION_LIFE_EFFECT > tribute.max_life:
             effect = tribute.max_life - tribute.life
             tribute.life += effect
-        if tribute.life + POTION_EFFECT < tribute.max_life:
-            tribute.life += POTION_EFFECT
+        if tribute.life + POTION_LIFE_EFFECT < tribute.max_life:
+            tribute.life += POTION_LIFE_EFFECT
 
     # Add an item potion in a list of items.
     def create_item(self, number_item):
@@ -70,7 +70,7 @@ class PotionForce(Item):
         return 'pf'
 
     def __eq__(self, other):
-        return isinstance(other, Potion)
+        return isinstance(other, PotionForce)
 
     def apply_effect(self, tribute):
         if tribute.force == MAX_FORCE:
@@ -86,11 +86,11 @@ class Poison(Item):
         return 'po'
 
     def __eq__(self, other):
-        return isinstance(other, Potion)
+        return isinstance(other, Poison)
 
     def apply_effect(self, tribute):
-        if tribute.life <= 0:
-            raise ValueError("Dead tribute triying take poison")
+        if tribute.is_dead():
+            raise ValueError("Dead tribute trying take a poison.")
         tribute.life -= POISON_EFFECT
 
 

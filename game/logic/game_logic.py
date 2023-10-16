@@ -3,8 +3,8 @@ from enum import Enum
 from game.logic.board import Board
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 from game.logic.cell import State
-from game.logic.item import Item, Weapon, Potion
-from game.logic.district import District
+from game.logic.item import Weapon, Potion
+from game.logic.district import District, TRIBUTES_DEFAULT
 
 
 class GameMode(Enum):
@@ -175,7 +175,6 @@ class GameLogic:
         else:
             neutral.move_to_random(self.board)    
         
-    
     # Implements a heuristic move for a tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
@@ -265,7 +264,7 @@ class GameLogic:
         # Is necesary create an instance of district here and set by default every stat.
         district = District()
         life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT 
-        cant_tributes, number_district = 4, 0
+        cant_tributes, number_district = TRIBUTES_DEFAULT, 0
         print(f"Board is {rows} x {columns}.")
         print("\nBy default, your number of district is", number_district)
         var_yes , points = 'y', 10    
@@ -351,7 +350,7 @@ class GameLogic:
                     # Remove tributes
                     for tribute in district.tributes:
                         district.remove_tribute(tribute)
-                    points, cant_tributes = 10, 4
+                    cant_tributes, points = TRIBUTES_DEFAULT, 10
 
         if rows * columns < cant_tributes + 20:
             print("You must creat a board more bigger.")
@@ -363,7 +362,7 @@ class GameLogic:
         for i in range(6): 
             if i != number_district:
                 district = District()
-                district.cant_tributes = 4
+                district.cant_tributes = TRIBUTES_DEFAULT
                 district.set_config_by_default(i)
                 self.districts.append(district)
         # distribute items

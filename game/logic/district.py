@@ -2,6 +2,8 @@ import random
 
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 
+TRIBUTES_DEFAULT = 4
+
 class District:
 
     # Constructor of District class where initializes all atributes
@@ -23,7 +25,6 @@ class District:
     def set_config(self, life, force, alliance, number_district, cant_tributes):        
         self.number_district = number_district
         self.cant_tributes = cant_tributes
-        
         letters = 'tabcdefghijklm'
         for i in range(cant_tributes):
             tribute = Tribute()
@@ -32,28 +33,19 @@ class District:
             tribute.configured = True
             self.tributes.append(tribute)
 
-    # Configure tributes of an district with random stats.
-    def set_config_random(self, num_district):
-        self.number_district = num_district 
-        for i in range(4):
-            tribute = Tribute()
-            tribute.life = 50
-            tribute.force = random.randint(5, 10)
-            tribute.alliance = random.randint(3, 10)
-            tribute.district = num_district
-            self.tributes.append(tribute)
-
-    # Create own district with minimal values.  
+    # Create a district of tributes with random force and alliance, were this stats never are high. 
     def set_config_by_default(self, num_district):
-        self.cant_tributes = 4
+        self.cant_tributes = TRIBUTES_DEFAULT
         self.number_district = num_district
         letters = 'tabcdefghijklm'
         for t in range(self.cant_tributes):
             tribute = Tribute()
             tribute.name = letters[t] + str(num_district)
-            tribute.life = 50
-            tribute.force = 5
-            tribute.alliance = 3
+            while True:
+                tribute.force = random.randint(5, 10)
+                tribute.alliance = random.randint(3, 10)
+                if tribute.force + tribute.alliance <= 15:
+                    break
             tribute.district = num_district
             self.tributes.append(tribute)
 
