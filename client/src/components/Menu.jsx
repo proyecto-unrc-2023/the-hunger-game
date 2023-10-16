@@ -156,12 +156,23 @@ export default function Menu({ onStartGame }) {
       const newStatsBar = [...statsBar];
       const newTributeStats = [...tributeStats];
       const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
-      newTributeStats[indexTribute] = true; // Consume un stat de alianza
-      newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
-      setTributeStats(newTributeStats);
-      setStatsBar(newStatsBar);
+      newTributeStats[indexTribute] = true; // Consume un stat de tributo
+  
+      // Verificar si hay al menos 4 elementos true en newStatsBar
+      const trueElementsCount = newStatsBar.filter(isConsumed => isConsumed).length;
+  
+      if (trueElementsCount >= 4) {
+        // Deja de consumir 4 stats disponibles
+        for (var i = 0; i < 4; i++) {
+          const newIndex = reversedStatsBarIndex - i;
+          newStatsBar[newIndex] = false;
+        }
+        setTributeStats(newTributeStats);
+        setStatsBar(newStatsBar);
+      }
     }
   };
+  
 
   const decrementTributeStat = () => {
     const indexTributeStats = tributeStats.slice().reverse().findIndex(isConsumed => isConsumed);
@@ -170,10 +181,20 @@ export default function Menu({ onStartGame }) {
       const newStatsBar = [...statsBar];
       const newTributeStats = [...tributeStats];
       const reversedTributeStatsIndex = tributeStats.length - 1 - indexTributeStats;
-      newTributeStats[reversedTributeStatsIndex] = false; // Deja de consumir un stat de alianza
-      newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
-      setStatsBar(newStatsBar);
-      setTributeStats(newTributeStats);
+      newTributeStats[reversedTributeStatsIndex] = false; // Deja de consumir un stat de tributo
+      
+      // Verificar que siempre haya al menos 4 elementos true en newTributeStats
+      const trueElementsCount = newTributeStats.filter(isConsumed => isConsumed).length;
+  
+      if (trueElementsCount >= 4) {
+        // Devuelve 4 stats a las disponibles
+        for (var i = 0; i < 4; i++) {
+          const newIndex = indexStatsBar + i;
+          newStatsBar[newIndex] = true;
+        }
+        setTributeStats(newTributeStats);
+        setStatsBar(newStatsBar);
+      }
     }
   };
 
