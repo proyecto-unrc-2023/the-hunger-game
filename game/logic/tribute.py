@@ -107,6 +107,13 @@ class Tribute:
         pos = board.random_choice(self)
         board.put_tribute(pos[0], pos[1], self)
 
+    def move_to_diff_pos_random(self, board, x, y):
+        board.remove_tribute(self)
+        pos = board.random_choice(self)
+        while pos == (x, y):
+            pos = board.random_choice(self)
+        board.put_tribute(pos[0], pos[1], self)
+
     # Moves a tribute to a specific position on the board.
     def move_to(self, x, y, board):
         board.remove_tribute(self)

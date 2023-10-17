@@ -144,19 +144,19 @@ def step_impl(context):
 
 @given(u't2 tiene en su rango de ataque a t0')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[2].tributes[0])
+    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[2].tributes[0],0)
     assert (str(tributes_in_range)).__eq__('t0')
 
 
 @given(u't1 tiene en su rango de ataque a t0')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[1].tributes[0])
+    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[1].tributes[0],0)
     assert (str(tributes_in_range)).__eq__('t0')
 
 
 @given(u't0 tiene en su rango de ataque a t2')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[0])
+    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[0],0)
     assert (str(tributes_in_range)).__eq__('t2')
 
 
@@ -191,8 +191,8 @@ def step_impl(context):
 
 @then(u'a0 y b0 tendrán en su rango de ataque a t1')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[0])
-    tributes_in_range1 = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[1])
+    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[0],0)
+    tributes_in_range1 = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[1],0)
     assert (str(tributes_in_range)).__eq__('t1')
     assert (str(tributes_in_range1)).__eq__('t1')
 
@@ -416,15 +416,27 @@ def step_impl(context):
 
 # -------------------------------------------------------------------------------
 
-
-@when(u'la posicion de t0 debe ser distinta a (2,2)')
+@given(u't0 tiene un arma')
 def step_impl(context):
-    pass
+    context.game.districts[0].tributes[0].weapon = True
+    assert context.game.districts[0].tributes[0].weapon
 
-
-@when(u'w estara (2,3)')
+@given(u't1 tiene un arma')
 def step_impl(context):
-    pass
+    context.game.districts[1].tributes[0].weapon = True
+    assert context.game.districts[1].tributes[0].weapon
+
+
+@then(u'la posicion de t0 debe ser distinta a (2,2) y a (2,3)')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].pos != (2, 2)
+    assert context.game.districts[0].tributes[0].pos != (2, 3)
+
+
+@then(u'w estara (2,3)')
+def step_impl(context):
+    assert context.game.board.get_element(2, 3).state == State.ITEM
+
 
 # -------------------------------------------------------------------------------
 
@@ -443,3 +455,16 @@ def step_impl(context):
 @then(u'vida de t0 sera 45')
 def step_impl(context):
     assert context.game.districts[0].tributes[0].life == 45
+
+
+@when(u'se ejecutan dos iteraciones')
+def step_impl(context):
+    context.game.one_iteration()
+    context.game.one_iteration()
+
+
+
+@then(u'la vida de t1 sera 45')
+def step_impl(context):
+    assert context.game.districts[1].tributes[0].life == 45
+
