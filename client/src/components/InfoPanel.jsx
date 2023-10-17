@@ -1,0 +1,1 @@
+//  Muestra información sobre el estado actual de la simulación, como el número de generaciones, la población actual, etc
