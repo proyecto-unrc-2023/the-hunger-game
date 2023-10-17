@@ -109,7 +109,7 @@ def step_impl(context):
 
 @given(u'la poción cura 10 de vida')
 def step_impl(context):
-    assert item.POTION_EFFECT == 10
+    assert item.POTION_LIFE_EFFECT == 10
 
 
 @given(u'la fuerza de t1 es de 5')

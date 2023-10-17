@@ -1,10 +1,9 @@
 import pytest
 
-from game.logic.cell import State, Cell
+from game.logic.cell import State
 from game.logic.district import District
 from game.logic.game_logic import GameLogic, GameMode
-from game.logic.board import Board
-from game.logic.item import Item, Potion, Weapon, WEAPON_EFFECT
+from game.logic.item import Potion, Weapon
 from game.logic.tribute import Tribute
 from game.logic.district import District
 
@@ -155,7 +154,6 @@ def test_get_adjacents_cells_complex():
     assert len([cell for cell in adjacent_cells if cell.get_pos() == (7, 7)]) == 0
     with pytest.raises(ValueError):
         game.board.get_adjacents_cells(-1, 1)
-
 
 
 def test_get_tribute_closenes_complex():
@@ -321,7 +319,6 @@ def test_end_game():
     # assert neutro.district == tribute.district
 
 
-
 def test_alliance_neutral_tribute():
     district = District()
     district.set_config(50, 6, 4, 0, 1)
@@ -420,7 +417,6 @@ def test_applies_effects_complex():
     game.heuristic_tribute_first_attempt(t1)
     assert t1.force == 10
 
-# test for init_simulation(..)
 
 def test_init_simulation_inputs_one(monkeypatch):
     game = GameLogic()

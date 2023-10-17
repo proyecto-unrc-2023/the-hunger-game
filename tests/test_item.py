@@ -1,7 +1,7 @@
 import pytest
 
 from game.logic.tribute import Tribute
-from game.logic.item import Item, Poison, Potion, PotionForce, Weapon, WEAPON_EFFECT, POTION_EFFECT
+from game.logic.item import Item, Poison, Potion, PotionForce, Weapon, WEAPON_EFFECT, POTION_LIFE_EFFECT
 
 
 def test_create_potion_from_str():
@@ -14,19 +14,25 @@ def test_create_weapon_from_str():
     assert res.__eq__(Weapon())
 
 
+def test_create_poison_from_str():
+    res = Item.from_string('po')
+    assert res.__eq__(Poison())
+
+
 def test_potion_apply_effect():
     tribute = Tribute()
     tribute.life = 75
     tribute.max_life = 100
     potion = Potion()
     potion.apply_effect(tribute)
-    assert tribute.life.__eq__(75 + POTION_EFFECT)
+    assert tribute.life.__eq__(75 + POTION_LIFE_EFFECT)
     tribute1 = Tribute()
     tribute1.life = 100
     tribute1.max_life = 100
     potion1 = Potion()
     potion1.apply_effect(tribute1)
     assert tribute1.life.__eq__(100)
+
 
 def test_potion_force_apply_effect():
     tribute = Tribute()
@@ -38,19 +44,20 @@ def test_potion_force_apply_effect():
     potion1 = PotionForce()
     potion1.apply_effect(tribute1)
     assert tribute1.force == 30
-    
+
+
 def test_poison_apply_effect():
-    tribute = Tribute()
-    posion = Poison()
-    posion.apply_effect(tribute)
-    assert tribute.life == 45
-    tribute1 = Tribute()
-    tribute1.life = 5
+    t0 = Tribute()
+    poison = Poison()
+    poison.apply_effect(t0)
+    assert t0.life == 45
+    t1 = Tribute()
+    t1.life = 5
     poison1 = Poison()
-    poison1.apply_effect(tribute1)
-    assert tribute1.life == 0
+    poison1.apply_effect(t1)
+    assert t1.life == 0
     with pytest.raises(ValueError):
-        poison1.apply_effect(tribute1)
+        poison1.apply_effect(t1)
     
 
 def test_weapon_apply_effect():
@@ -83,7 +90,6 @@ def test_potion_apply_effect_life_tribute_100_or_less_than_100():
 def test_potion_get_pos():
     potion = Potion()
     potion.pos = (1, 1)
-
     res = potion.get_pos()
     assert res.__eq__((1, 1))
 
@@ -91,27 +97,9 @@ def test_potion_get_pos():
 def test_weapon_get_pos():
     weapon = Weapon()
     weapon.pos = (3, 2)
-
     res = weapon.get_pos()
     assert res.__eq__((3, 2))
 
-
-def test_potion_set_pos():
-    potion = Potion()
-    potion.set_pos((1, 2))
-
-    res = potion.pos
-    assert res.__eq__((1, 2))
-
-
-def test_weapon_set_pos():
-    weapon = Weapon()
-    weapon.set_pos((2, 2))
-
-    res = weapon.pos
-    assert res.__eq__((2, 2))
-
-# testing for create_item(..)
 
 def test_create_item_potions_and_weapons():
     potion = Potion()

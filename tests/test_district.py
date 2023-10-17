@@ -1,8 +1,7 @@
 import pytest
 
 from game.logic.district import District
-from game.logic.tribute import Tribute
-
+from game.logic.tribute import Tribute, LIFE_DEFAULT
 
 def test_set_config_tributes():
     district = District()
@@ -14,17 +13,14 @@ def test_set_config_tributes():
         assert list_tributes[i].alliance == 6
         assert list_tributes[i].district == 0
 
-
-def test_set_config_random_tributes():
+def test_set_config_by_default_tributes():
     district = District()
-    district.set_config_random(3) # 3 is number_district
-    random_tributes = district.tributes
-    for i in range(len(random_tributes)):
-        assert random_tributes[i].life == 50
-        assert 5 <= random_tributes[i].force <= 10
-        assert 3 <= random_tributes[i].alliance <= 10
-        assert random_tributes[i].district == 3
-
+    num_district = 4
+    district.set_config_by_default(num_district)
+    for i in range(district.cant_tributes):
+        assert district.tributes[i].life == LIFE_DEFAULT
+        assert district.tributes[i].force + district.tributes[i].alliance <= 15
+        assert district.tributes[i].district == num_district
 
 def test_add_tribute_valid():
     district = District()
@@ -32,7 +28,6 @@ def test_add_tribute_valid():
     tribute = Tribute()
     district.add_tribute(tribute)
     assert tribute in district.tributes
-
 
 def test_add_tribute_invalid():
     district = District()
@@ -49,14 +44,12 @@ def test_remove_tribute():
     district.remove_tribute(t1)
     assert len(district.tributes) == 0
 
-
 def test_get_number_district():
     district = District()
     district.number_district = 1
     expect = district.number_district
     res = district.get_number_district()
     assert expect == res
-
 
 def test_get_cant_tribute():
     district = District()
