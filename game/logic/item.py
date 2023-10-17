@@ -38,6 +38,12 @@ class Item():
     def create_item(number_item):
         pass
 
+    def is_weapon(self):
+        return isinstance(self, Weapon)
+
+    def is_potion(self):
+        return isinstance(self, Potion)
+
 class Potion(Item):
 
     def __str__(self):
