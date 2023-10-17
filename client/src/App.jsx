@@ -1,8 +1,8 @@
-// App.jsx
 import React, { useState } from "react";
 import Menu from "./components/Menu.jsx";
 import Game from "./components/Game.jsx";
 import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
 
 const App = () => {
   const [gameStarted, setGameStarted] = useState(false);
@@ -19,6 +19,7 @@ const App = () => {
       ) : (
         <Game />
       )}
+      <Footer />
     </div>
   );
 };
