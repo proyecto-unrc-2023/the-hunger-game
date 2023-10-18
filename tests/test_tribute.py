@@ -127,3 +127,31 @@ def test_move_closer_to():
     (x, y) = tribute.move_closer_to(4, 4, board)
     tribute.move_to(x, y, board)
     assert tribute.pos == (4,4)
+    
+def test_neighbors():
+    board = Board(5, 5)
+    t1 = Tribute()
+    board.put_tribute(2, 2, t1)
+    neighbors = t1.get_neighbors_2_distance(board)
+    assert len(neighbors) == 16
+    t2 = Tribute()   
+    board.put_tribute(2, 4, t2)
+    neighbors = t1.get_neighbors_2_distance(board)
+    assert len(neighbors) == 15
+    
+    
+def test_calculate_flee():
+    board = Board(5,5)
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    board.put_tribute(0, 0, t0)
+    t1 = Tribute()
+    t1.set_config_parameters(50,5,3,1)
+    board.put_tribute(2, 2, t1)
+    pos = t1.calculate_flee(t0, board)
+    assert pos == (4,4)
+    t2 = Tribute()
+    t2.set_config_parameters(50,5,3,1)
+    board.put_tribute(4, 4, t2)
+    pos = t1.calculate_flee(t2, board)
+    assert pos == (0,1)
