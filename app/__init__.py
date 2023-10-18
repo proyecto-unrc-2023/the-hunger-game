@@ -7,9 +7,12 @@ def create_app(config_name='development'):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     config[config_name].init_app(app)
     
-    @app.route("/")
-    def hello_world():
-      return "<p>Hello, World!</p>"
-  
+    register_modules(app)
+
 
     return app
+def register_modules(app):
+    from app.apis import apis_bp
+
+    app.register_blueprint(apis_bp) 
+    
