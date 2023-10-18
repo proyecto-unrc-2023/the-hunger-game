@@ -247,10 +247,10 @@
       |  |  |  |  |  |  |  |  |
       Y t0 tiene un arma
       Y t1 tiene un arma
-      Cuando se ejecutan dos iteraciones
-      Entonces la posicion de t0 debe ser distinta a (2,2) y a (2,3)
+      Cuando se ejecuta una iteracion
+      Entonces la posicion de t0 sera (3,2)
       Y w estara (2,3)
-      #Y la vida de t1 sera 45
+      Y la vida de t0 sera 45
 
 
     Escenario: Tributo con mayor fuerza inflige mayor daño a otro tributo con menor fuerza en combate
@@ -267,4 +267,4 @@
       Y la fuerza de t0 es 10
       Cuando se ejecuta una iteracion
       Entonces la vida de t1 sera 40
-      Y vida de t0 sera 45
+      Y la vida de t0 sera 45

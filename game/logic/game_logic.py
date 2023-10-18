@@ -118,7 +118,7 @@ class GameLogic:
         return tribute_visionCells
 
     # Returns the closest occupied cell to the tribute.
-    def tribute_vision_cells_ocupped_order_by_closeness(self, tribute, pos):
+    def tribute_vision_cells_ocupped_order_by_closeness(self, tribute):
         def calculate_distance(cell):
             distance = ((cell.get_pos()[0] - tribute.pos[0]) ** 2 + (cell.get_pos()[1] - tribute.pos[1]) ** 2) ** 0.5
             if cell.get_state() == State.ITEM:
@@ -137,21 +137,27 @@ class GameLogic:
         occupied_cells = [
             cell
             for cell in vision_cells
-            if cell.get_state() == State.ITEM or (cell.get_state() == State.TRIBUTE and
-                                                  cell.get_tribute().district != tribute.district)
+            if cell.get_state() == State.ITEM or
+               (cell.get_state() == State.TRIBUTE and cell.get_tribute().district != tribute.district)
             # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
             # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
+
+        if tribute.weapon:
+            occupied_cells = [
+                cell
+                for cell in occupied_cells
+                if cell.state == State.ITEM and cell.get_item().is_weapon() is False
+                or cell.state == State.TRIBUTE
+
+            ]
 
         occupied_cells.sort(key=calculate_distance)
 
         if not occupied_cells:
             return False
 
-        if occupied_cells.__len__() <= pos:
-            return False
-
-        return occupied_cells[pos]
+        return occupied_cells[0]
 
     # Simulates combat between two tributes, moving 'tribute' towards 'tribute2'
     # and removing 'tribute2' if defeated.
@@ -181,42 +187,10 @@ class GameLogic:
         else:
             neutral.move_to_random(self.board)
 
-    def ignore_the_weapon(self, tribute):
-        Tx = tribute.pos[0]
-        Ty = tribute.pos[1]
-        pos = 1
-        cond = False
-        cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute, pos)
-        while cond is False and cell is not False:
-            if cell.item is not None:
-                if (cell.get_item()).is_weapon() or cell.get_state() == State.TRIBUTE:
-                    pos += 1
-                    cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute, pos)
-                else:
-                    cond = True
-            else:
-                cond = True
-
-        if cell is False:
-            cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute, 0)
-            x = cell.pos[0]
-            y = cell.pos[1]
-            tribute.move_to_diff_pos_random(self.board, x, y)
-        else:
-            x = cell.pos[0]
-            y = cell.pos[1]
-            if (x, y) in self.board.get_adjacent_positions(Tx, Ty) and cell.get_state == State.ITEM:
-                tribute.move_to(x, y, self.board)
-                item = cell.get_item()
-                self.applies_effects(item, tribute)
-            else:
-                pos = tribute.move_closer_to(x, y, self.board)
-                tribute.move_to(pos[0], pos[1], self.board)
-
     # Implements a heuristic move for a tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
-        cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute, 0)
+        cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute)
         # If there are no occupied cells nearby, move the tribute to a random cell on the game board.
         if cell == False:
             tribute.move_to_random(self.board)
@@ -232,9 +206,6 @@ class GameLogic:
             else:
                 # Check the state of the cell (ITEM or TRIBUTE).
                 if cell.get_state() == State.ITEM:
-                    if tribute.weapon and (cell.get_item()).is_weapon():
-                        self.ignore_the_weapon(tribute)
-                    else:
                         # If it's an item, go to retrieve it.
                         if (x, y) in self.board.get_adjacent_positions(Tx, Ty):
                             tribute.move_to(x, y, self.board)

@@ -263,9 +263,12 @@ class Board:
         if tribute.past_pos in free_adjacents_pos:
             free_adjacents_pos.remove(tribute.past_pos)
 
-        
+
         if not free_adjacents_pos:
             raise ValueError(f"No available free adjacent positions for Tribute {tribute}")
 
-        random_position = random.choice(free_adjacents_pos)
-        return random_position
+        pos = random.choice(free_adjacents_pos)
+        while self.board[pos[0]][pos[1]].get_state() == State.ITEM:
+            pos = random.choice(free_adjacents_pos)
+
+        return pos
