@@ -1,4 +1,5 @@
 from enum import Enum
+import math
 
 from game.logic.board import Board
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
@@ -225,10 +226,11 @@ class GameLogic:
             y = cell.pos[1]
             Tx = tribute.pos[0]
             Ty = tribute.pos[1]
-            # Check the state of the cell (ITEM or TRIBUTE).
+
             if not (tribute.enemy is None):
                 self.fight(tribute, tribute.enemy)
             else:
+                # Check the state of the cell (ITEM or TRIBUTE).
                 if cell.get_state() == State.ITEM:
                     if tribute.weapon and (cell.get_item()).is_weapon():
                         self.ignore_the_weapon(tribute)
@@ -254,15 +256,18 @@ class GameLogic:
                             pos = tribute.move_closer_to(x, y, self.board)
                             tribute.move_to(pos[0], pos[1], self.board)
                     else:
-                        pos = cell.get_tribute().pos
-                        # move to an adjacent position to it, and if already adjacent, attack.
-                        if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
-                            pos = tribute.move_closer_to(x, y, self.board)
-                            tribute.move_to(pos[0], pos[1], self.board)
+                        if tribute.cowardice > 0:
+                            self.get_away(tribute, cell.get_tribute())
                         else:
-                            cell_with_tribute = self.board.get_element(x, y)
-                            t2 = cell_with_tribute.get_tribute()
-                            self.fight(tribute, t2)
+                            pos = cell.get_tribute().pos
+                            # move to an adjacent position to it, and if already adjacent, attack.
+                            if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+                                pos = tribute.move_closer_to(x, y, self.board)
+                                tribute.move_to(pos[0], pos[1], self.board)
+                            else:
+                                cell_with_tribute = self.board.get_element(x, y)
+                                t2 = cell_with_tribute.get_tribute()
+                                self.fight(tribute, t2)
 
     # Check which district won (literally return a district)
     # Return false if still in play
@@ -520,3 +525,12 @@ class GameLogic:
         # distribute all tributes of districts in board
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])
+    
+    def get_away(self, tribute, enemy):
+        pos = tribute.calculate_flee(enemy, self.board)
+        if(pos != False):
+            self.remove_tribute(tribute)
+            self.put_tribute(pos[0], pos[1], tribute)
+            tribute.cowardice -= 0.5
+        else:
+            self.fight(tribute, enemy)

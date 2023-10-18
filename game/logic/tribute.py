@@ -1,3 +1,4 @@
+import math
 import random
 from game.logic.cell import State
 
@@ -6,7 +7,8 @@ LIFE_DEFAULT = 50
 FORCE_DEFAULT = 5
 MAX_FORCE = 30
 ALLIANCE_DEFAULT = 3
-
+COWARDICE_DEFAULT = 0
+MAX_COWARDICE = 5
 class Tribute:
 
     def __init__(self):
@@ -14,6 +16,7 @@ class Tribute:
         self.life = LIFE_DEFAULT
         self.force = FORCE_DEFAULT
         self.alliance = ALLIANCE_DEFAULT
+        self.cowardice = COWARDICE_DEFAULT
         self.district = None
         self.pos = None
         self.past_pos = None
@@ -138,3 +141,47 @@ class Tribute:
             raise ValueError(f'No FREE positions, ignorar este error hasta que pueda solucionarlo')
 
         return possible_moves[0]
+
+    def get_neighbors_2_distance(self, board):
+        (x, y) = self.pos
+        neighbors = []
+        
+        # Coordenadas a una distancia de 2 unidades en todas las direcciones
+        possible_neighbors = [
+            (x - 2, y - 2), (x - 2, y - 1), (x - 2, y), (x - 2, y + 1), (x - 2, y + 2),
+            (x - 1, y - 2), (x, y - 2), (x + 1, y - 2), (x + 2, y - 2),
+            (x + 2, y - 1), (x + 2, y), (x + 2, y + 1), (x + 2, y + 2),
+            (x - 1, y + 2), (x, y + 2), (x + 1, y + 2)
+        ]
+
+        for i, j in possible_neighbors:
+            if (0 <= i < board.rows) and (0 <= j < board.columns):
+                if(board.get_element(i,j).get_state() == State.FREE):
+                    neighbors.append((i, j))
+        
+        return neighbors
+
+    def calculate_flee(self, enemy, board):
+        tX, tY = self.pos
+        eX, eY = enemy.pos
+        neighbors = self.get_neighbors_2_distance(board)
+        if neighbors is None:
+            return False
+        x_escape = []
+        y_escape = []
+        if(eX > tX):
+            x_escape = [tX-2, tX-1, tX] 
+        else:
+            x_escape = [tX+2, tX+1, tX]
+        if(eY > tY):
+            y_escape = [tY-2, tY-1, tY] 
+        else:
+            y_escape = [tY+2, tY+1, tY]
+        
+        for x in x_escape:
+            for y in y_escape:
+                if (x,y) in neighbors:
+                    if (x,y) != (self.pos):
+                        return (x,y)
+        
+        return neighbors[0]

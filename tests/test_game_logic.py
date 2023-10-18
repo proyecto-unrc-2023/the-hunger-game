@@ -527,3 +527,55 @@ def test_order_attack():
     game.all_iteration()
     assert game.order == [2,0,1]
     game.all_iteration()
+    
+def test_get_away():
+    game = GameLogic()
+    game.new_game(5,5)
+    #config tributes
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    game.put_tribute(0, 0, t0)
+    t1 = Tribute()
+    t1.set_config_parameters(50,5,3,1)
+    game.put_tribute(0, 1, t1)
+    #first iteration, can escape down
+    game.heuristic_tribute_first_attempt(t0)
+    assert t1.life == 45
+    game.get_away(t1,t0)
+    assert t1.pos == (2,3)
+    #second, can escape left
+    game.remove_tribute(t0)
+    game.remove_tribute(t1) 
+    game.put_tribute(4, 3, t1)
+    game.put_tribute(4, 4, t0)
+    game.get_away(t1,t0)
+    assert t1.pos == (4,1)
+    #third, can escape up left
+    game.remove_tribute(t0)
+    game.remove_tribute(t1) 
+    game.put_tribute(4, 3, t0)
+    game.put_tribute(4, 4, t1)
+    game.get_away(t1,t0)
+    assert t1.pos == (2,2)
+    
+def test_heuristic_get_away():
+    game = GameLogic()
+    game.new_game(6,6)
+    #config tributes
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    game.put_tribute(0, 0, t0)
+    t1 = Tribute()
+    t1.cowardice = 1
+    t1.set_config_parameters(50,5,3,1)
+    game.put_tribute(0, 1, t1)
+    #first iteration, can escape down
+    game.one_iteration()
+    assert t1.pos == (2,3)
+    assert t1.life == 45
+    assert t1.cowardice == 0.5
+    game.one_iteration()
+    assert t1.pos == (4,5)
+    assert t0.pos == (1,1)
+    assert t1.cowardice == 0
+    
