@@ -118,7 +118,7 @@ class GameLogic:
         return tribute_visionCells
 
     # Returns the closest occupied cell to the tribute.
-    def tribute_vision_cells_ocupped_order_by_closeness(self, tribute):
+    def tribute_vision_closeness(self, tribute):
         def calculate_distance(cell):
             distance = ((cell.get_pos()[0] - tribute.pos[0]) ** 2 + (cell.get_pos()[1] - tribute.pos[1]) ** 2) ** 0.5
             if cell.get_state() == State.ITEM:
@@ -190,7 +190,7 @@ class GameLogic:
     # Implements a heuristic move for a tribute" in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
-        cell = self.tribute_vision_cells_ocupped_order_by_closeness(tribute)
+        cell = self.tribute_vision_closeness(tribute)
         # If there are no occupied cells nearby, move the tribute to a random cell on the game board.
         if cell == False:
             tribute.move_to_random(self.board)

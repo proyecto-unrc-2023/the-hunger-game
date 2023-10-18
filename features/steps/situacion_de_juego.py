@@ -144,19 +144,19 @@ def step_impl(context):
 
 @given(u't2 tiene en su rango de ataque a t0')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[2].tributes[0])
+    tributes_in_range = context.game.tribute_vision_closeness(context.game.districts[2].tributes[0])
     assert (str(tributes_in_range)).__eq__('t0')
 
 
 @given(u't1 tiene en su rango de ataque a t0')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[1].tributes[0])
+    tributes_in_range = context.game.tribute_vision_closeness(context.game.districts[1].tributes[0])
     assert (str(tributes_in_range)).__eq__('t0')
 
 
 @given(u't0 tiene en su rango de ataque a t2')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[0])
+    tributes_in_range = context.game.tribute_vision_closeness(context.game.districts[0].tributes[0])
     assert (str(tributes_in_range)).__eq__('t2')
 
 
@@ -191,8 +191,8 @@ def step_impl(context):
 
 @then(u'a0 y b0 tendrán en su rango de ataque a t1')
 def step_impl(context):
-    tributes_in_range = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[0])
-    tributes_in_range1 = context.game.tribute_vision_cells_ocupped_order_by_closeness(context.game.districts[0].tributes[1])
+    tributes_in_range = context.game.tribute_vision_closeness(context.game.districts[0].tributes[0])
+    tributes_in_range1 = context.game.tribute_vision_closeness(context.game.districts[0].tributes[1])
     assert (str(tributes_in_range)).__eq__('t1')
     assert (str(tributes_in_range1)).__eq__('t1')
 

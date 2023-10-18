@@ -171,23 +171,23 @@ def test_get_tribute_closenes_complex():
     game.board.put_item(2, 1, w)  # ABAJO
     game.board.put_item(1, 0, p)  # izquierda
     game.board.put_tribute(1, 2, neutro)  # derecha
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (2, 1)
+    assert game.tribute_vision_closeness(t1).pos == (2, 1)
     game.board.remove_item(w)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (1, 0)
+    assert game.tribute_vision_closeness(t1).pos == (1, 0)
     game.board.remove_item(p)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (1, 2)
+    assert game.tribute_vision_closeness(t1).pos == (1, 2)
     game.board.remove_tribute(neutro)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (0, 1)
+    assert game.tribute_vision_closeness(t1).pos == (0, 1)
     game.board.remove_tribute(t2)
-    result = game.tribute_vision_cells_ocupped_order_by_closeness(t1)
+    result = game.tribute_vision_closeness(t1)
     assert result == False
     t2.district = 1
     game.board.put_tribute(2,2, t2)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1) == False
+    assert game.tribute_vision_closeness(t1) == False
     w1 = Weapon()
     p1 = Potion()
     game.board.put_item(2, 1, w1)
-    assert game.tribute_vision_cells_ocupped_order_by_closeness(t1).pos == (2,1)
+    assert game.tribute_vision_closeness(t1).pos == (2,1)
     
 
 #####################
