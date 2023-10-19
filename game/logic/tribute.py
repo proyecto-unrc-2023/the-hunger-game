@@ -8,7 +8,7 @@ LIFE_DEFAULT = 50
 FORCE_DEFAULT = 5
 
 ALLIANCE_DEFAULT = 3
-
+RANGE_DEFAULT = 1
 COWARDICE_DEFAULT = 0
 MAX_COWARDICE = 5
 
@@ -27,6 +27,7 @@ class Tribute:
         self.max_life = MAX_LIFE_DEFAULT
         self.enemy = None
         self.configured = False
+        self.range = RANGE_DEFAULT
         
 
     @staticmethod
@@ -67,16 +68,11 @@ class Tribute:
 
     def attack_to(self, tribute, board):
         listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])
-        if (tribute.pos[0], tribute.pos[1]) in listadj:
-            if tribute.district != self.district:
+        if tribute.district != self.district:
                 tribute.life -= self.force
         else:
-            raise ValueError(f"Not possible attack")
+            raise ValueError(f"Not possible attack, same district")
 
-        if self.district is None:
-            return 't'
-        else:
-            return 't' + str(self.district)
 
     def set_config_parameters(self, life, force, alliance, district):
         self.life = life

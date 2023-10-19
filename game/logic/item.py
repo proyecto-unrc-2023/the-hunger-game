@@ -9,8 +9,12 @@ POTION_POISON = 5
 WEAPON_EFFECT = 5 # mas adelante borrarla, representa a SWORD_EFFECT
 
 SWORD_EFFECT = 5
-SPEAR_EFFECT = 1
+
+SPEAR_EFFECT = 3
+RANGE_SPEAR = 1
+
 BOW_EFFECT = 2
+RANGE_BOW = 2
 
 class Item():
 
@@ -140,6 +144,7 @@ class PotionPoison(Potion):
 
 class Weapon(Item):
 
+    
     def __str__(self):
         return 'w ' #sera reemplazado por pass
 
@@ -194,8 +199,9 @@ class Spear(Weapon):
     # Apply effect spear on tribute.
     def apply_effect(self, tribute):
         if not tribute.weapon:
-            tribute.force -= SPEAR_EFFECT
+            tribute.force += SPEAR_EFFECT
             tribute.weapon = True
+            tribute.range += RANGE_SPEAR
             if tribute.force < FORCE_DEFAULT:
                 tribute.force = FORCE_DEFAULT
         else:
@@ -222,8 +228,9 @@ class Bow(Weapon):
     # Apply effect bow on tribute.
     def apply_effect(self, tribute):
         if not tribute.weapon:
-            tribute.force -= BOW_EFFECT
+            tribute.force += BOW_EFFECT
             tribute.weapon = True
+            tribute.range += RANGE_BOW
             if tribute.force < FORCE_DEFAULT:
                 tribute.force = FORCE_DEFAULT
         else:

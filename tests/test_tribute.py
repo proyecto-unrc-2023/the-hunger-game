@@ -54,10 +54,6 @@ def test_attack_to():
 
     assert t2.life == (before_life - t1.force)
 
-    with pytest.raises(ValueError):
-        t1.attack_to(t3, board)
-
-
 def test_of_alliance_to():
     tribute1 = Tribute()
     tribute_neutral = Tribute()
