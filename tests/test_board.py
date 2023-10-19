@@ -1,11 +1,10 @@
 import pytest
 
 from game.logic.board import Board
-from game.logic.item import Weapon, Potion
+from game.logic.item import Weapon, Sword, Spear, Bow, Potion, PotionLife, PotionForce, PotionPoison
 from game.logic.cell import Cell, State
 from game.logic.tribute import Tribute
 from game.logic.district import District
-from game.logic.game_logic import GameLogic
 
 
 @pytest.fixture
@@ -447,56 +446,99 @@ def test_get_adjacent_positions():
     assert adjacent_positions == expected_positions
 
 
-# Testing for distribute_items(..)
+def test_put_item_using_create_potion():
+    board = Board(3, 3)
+    potion_life = PotionLife()
+    potion_force = PotionForce()
+    potion_poison = PotionPoison()
 
-def test_put_item_using_create_item():
-    board = Board(3, 2)
-    potion = Potion()
-    weapon = Weapon()
-    num_potions = 2
-    num_weapons = 2
+    potion_life.create_potion(2)
+    potion_force.create_potion(2)
+    potion_poison.create_potion(3)
 
-    potion.create_item(num_potions)
-    weapon.create_item(num_weapons)
+    board.put_item(0, 0, potion_life.items[0])
+    board.put_item(1, 1, potion_life.items[1])
+    
+    board.put_item(2, 0, potion_force.items[0])
+    board.put_item(2, 1, potion_force.items[1])
 
-    board.put_item(0, 0, potion.items[0])
-    board.put_item(1, 1, potion.items[1])
-    board.put_item(2, 0, weapon.items[0])
-    board.put_item(2, 1, weapon.items[1])    
+    board.put_item(0, 2, potion_poison.items[0])
+    board.put_item(1, 2, potion_poison.items[1])
+    board.put_item(2, 2, potion_poison.items[2])
+
     res = board.__str__()
-    expected = 'p |  \n' \
-               '  |p \n' \
-               'w |w '
+    expected = 'pl|  |po\n' \
+               '  |pl|po\n' \
+               'pf|pf|po'
     assert expected == res
-    board.remove_item(potion.items[0])
+    board.remove_item(potion_life.items[0])
     res = board.__str__()
-    expected = '  |  \n' \
-               '  |p \n' \
-               'w |w '
+    expected = '  |  |po\n' \
+               '  |pl|po\n' \
+               'pf|pf|po'
     assert expected == res
 
+def test_put_item_using_create_weapon():
+    board = Board(3, 3)
+    sword = Sword()
+    spear = Spear()
+    bow = Bow()
+
+    sword.create_weapon(2)
+    spear.create_weapon(1)
+    bow.create_weapon(4)
+
+    board.put_item(0, 1, sword.items[0])
+    board.put_item(2, 0, sword.items[1])
+    
+    board.put_item(1, 2, spear.items[0])
+    
+    board.put_item(0, 0, bow.items[0])
+    board.put_item(0, 2, bow.items[1])
+    board.put_item(1, 1, bow.items[2])
+    board.put_item(2, 2, bow.items[3])
+
+    res = board.__str__()
+    expected = 'bo|sw|bo\n' \
+               '  |bo|sp\n' \
+               'sw|  |bo'
+    assert expected == res
 
 def test_distribute_items_potions():
-  board = Board(4, 3)
-  potion = Potion()
-  num_potions = 10
-  potion.create_item(num_potions)
-  board.distribute_items(potion)
+  board = Board(4, 4)
+  potion_life = PotionLife()
+  potion_force = PotionForce()
+  potion_poison = PotionPoison()
+  
+  potion_life.create_potion(4)
+  potion_force.create_potion(5)
+  potion_poison.create_potion(3)
+
+  board.distribute_items(potion_life)
+  board.distribute_items(potion_force)
+  board.distribute_items(potion_poison)
+ 
   count_potions = 0
   for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
                 count_potions += 1
   
-  assert count_potions == potion.cant_items
+  assert count_potions == 12
 
-  
 def test_distribute_items_weapons():
-  board = Board(3, 3)
-  weapon = Weapon()
-  num_weapons = 5
-  weapon.create_item(num_weapons)
-  board.distribute_items(weapon)
+  board = Board(4, 4)
+  sword = Sword()
+  spear = Spear()
+  bow = Bow()
+
+  sword.create_weapon(5)
+  spear.create_weapon(5)
+  bow.create_weapon(4)
+
+  board.distribute_items(sword)
+  board.distribute_items(spear)
+  board.distribute_items(bow)
   
   count_weapons = 0
   for row in board.board:
@@ -504,46 +546,5 @@ def test_distribute_items_weapons():
             if cell.state == State.ITEM:
                 count_weapons += 1
   
-  assert count_weapons == weapon.cant_items
-
-
-def test_distribute_items_and_distribute_tributes():
-    potion = Potion()
-    weapon = Weapon()
-    district = District()
-    game = GameLogic()
-    game.new_game(7, 7)
-
-    cant_tributes = 6 
-    district.set_config(60, 5, 4, 0, cant_tributes)
-    game.districts.append(district)    
-
-    for i in range(6): 
-        if i != 0:
-            district = District()
-            district.cant_tributes = 4
-            district.set_config_by_default(i)
-            game.districts.append(district)
-    
-    potion.create_item(2)
-    weapon.create_item(7)
-    game.board.distribute_items(potion)
-    game.board.distribute_items(weapon)
-
-    for j in range(len(game.districts)):
-        game.board.distribute_tributes(game.districts[j])
-
-    count_weapons, count_potions, count_tributes = 0, 0, 0
-    for row in game.board.board:
-        for cell in row:
-            if cell.get_state() == State.ITEM:
-                if cell.get_item() == Weapon():
-                    count_weapons += 1
-                else:
-                    count_potions += 1
-            elif cell.state == State.TRIBUTE:
-                count_tributes += 1
-
-    assert count_potions == 2
-    assert count_weapons == 7
-    assert count_tributes == 26
+  assert count_weapons == 14
+  

@@ -1,9 +1,16 @@
-from game.logic.tribute import MAX_FORCE
+from game.logic.tribute import FORCE_DEFAULT
 
-POTION_LIFE_EFFECT = 10
-POTION_FORCE_EFFECT = 5
-WEAPON_EFFECT = 5
-POISON_EFFECT = 5
+POTION_LIFE_EFFECT = 10 # mas adelanta borrala, representa a POTION_LIFE
+
+POTION_LIFE = 10
+POTION_FORCE = 5
+POTION_POISON = 5
+
+WEAPON_EFFECT = 5 # mas adelante borrarla, representa a SWORD_EFFECT
+
+SWORD_EFFECT = 5
+SPEAR_EFFECT = 1
+BOW_EFFECT = 2
 
 class Item():
 
@@ -18,24 +25,20 @@ class Item():
             return Potion()
         elif object_str == Weapon().__str__():
             return Weapon()
-        elif object_str == Poison().__str__():
-            return Poison()
         else:
             raise ValueError(f'Invalid object string: {object_str}')
 
     def __str__(self):
         pass
 
-    def get_pos(self):
-        return self.pos
-    
     def get_cant_items(self):
         return self.cant_items
     
+    def get_pos(self):
+        return self.pos
+    
+    # Apply some efect on tribute.
     def apply_effect(tribute):
-        pass
-
-    def create_item(number_item):
         pass
 
     def is_weapon(self):
@@ -45,14 +48,14 @@ class Item():
         return isinstance(self, Potion)
 
 class Potion(Item):
-
+    
     def __str__(self):
-        return 'p '
+        return 'p ' #sera reemplazado por pass
 
     def __eq__(self, other):
         return isinstance(other, Potion)
 
-    def apply_effect(self, tribute):
+    def apply_effect(self, tribute): #el cuerpo sera reemplazado por pass
         if tribute.life == tribute.max_life:
             tribute.life += 0
         if tribute.life + POTION_LIFE_EFFECT > tribute.max_life:
@@ -60,66 +63,177 @@ class Potion(Item):
             tribute.life += effect
         if tribute.life + POTION_LIFE_EFFECT < tribute.max_life:
             tribute.life += POTION_LIFE_EFFECT
+     
+    def create_potion(self, num_potion):
+        pass
 
-    # Add an item potion in a list of items.
-    def create_item(self, number_item):
-        if number_item < 0:
-            raise ValueError(f'Invalid input number: {number_item}')
-        for i in range(number_item):
-            potion = Potion()
-            self.items.append(potion)
-            self.cant_items += 1 
-
-class PotionForce(Item):
-
+class PotionForce(Potion):
+    
+    # Potion force is pf
     def __str__(self):
         return 'pf'
 
     def __eq__(self, other):
         return isinstance(other, PotionForce)
 
+    # Apply effect of potion force to tribute. The force has no limit.
     def apply_effect(self, tribute):
-        if tribute.force == MAX_FORCE:
-            tribute.force += 0
-        if tribute.force + POTION_FORCE_EFFECT > MAX_FORCE:
-            tribute.force = MAX_FORCE
-        if tribute.force + POTION_FORCE_EFFECT < MAX_FORCE:
-            tribute.force += POTION_FORCE_EFFECT
+        tribute.force += POTION_FORCE
+    
+    # Create potions force
+    def create_potion(self, num_potion):
+        if num_potion < 0:
+            raise ValueError(f'Invalid input number: {num_potion}')
+        for i in range(num_potion):
+            potion_force = PotionForce()
+            self.items.append(potion_force)
+            self.cant_items += 1
 
-class Poison(Item):
+class PotionLife(Potion):
+    
+    # Potion life is pl
+    def __str__(self):
+        return 'pl'
+    
+    def __eq__(self, other):
+        return isinstance(other, PotionLife)
+    
+    # Apply effect of potion life to tribute.
+    def apply_effect(self, tribute):
+        if tribute.life == tribute.max_life or (tribute.life + POTION_LIFE > tribute.max_life):
+            tribute.life = tribute.max_life
+        if tribute.life + POTION_LIFE < tribute.max_life:
+            tribute.life += POTION_LIFE
 
+    # Create potions life.
+    def create_potion(self, num_potion):
+        if num_potion < 0:
+            raise ValueError(f'Invalid input number: {num_potion}')
+        for i in range(num_potion):
+            potion_life = PotionLife()
+            self.items.append(potion_life)
+            self.cant_items += 1
+
+class PotionPoison(Potion):
+     
+    # Potion poison is po
     def __str__(self):
         return 'po'
 
     def __eq__(self, other):
-        return isinstance(other, Poison)
+        return isinstance(other, PotionPoison)
 
+    # Apply effect poison to tribute.
     def apply_effect(self, tribute):
+        tribute.life -= POTION_POISON
         if tribute.is_dead():
-            raise ValueError("Dead tribute trying take a poison.")
-        tribute.life -= POISON_EFFECT
+            tribute.life = 0
 
+    # Create potions poison.
+    def create_potion(self, num_potion):
+        if num_potion < 0:
+            raise ValueError(f'Invalid input number: {num_potion}')
+        for i in range(num_potion):
+            potion_poison = PotionPoison()
+            self.items.append(potion_poison)
+            self.cant_items += 1
 
 class Weapon(Item):
 
     def __str__(self):
-        return 'w '
+        return 'w ' #sera reemplazado por pass
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
 
-    def apply_effect(self, tribute):
+    def apply_effect(self, tribute): #sera reemplazado por pass
         if not tribute.weapon:
             tribute.force += WEAPON_EFFECT
             tribute.weapon = True
-        #else:
-        #    raise ValueError("Tribute has a weapon already")
+        else:
+            raise ValueError("Tribute has a weapon already")
 
-    # Add an item weapon in a list of items. 
-    def create_item(self, number_item):
-        if number_item < 0:
-            raise ValueError(f'Invalid input number: {number_item}')
-        for i in range(number_item):
-            weapon = Weapon()
-            self.items.append(weapon)
+    def create_weapon(self, num_weapon):
+        pass
+
+class Sword(Weapon):
+
+    # Sword is sw
+    def __str__(self):
+        return 'sw'
+
+    def __eq__(self, other):
+        return isinstance(other, Sword)
+    
+    # Apply effect sword on tribute.
+    def apply_effect(self, tribute):
+        if not tribute.weapon:
+            tribute.force += SWORD_EFFECT
+            tribute.weapon = True
+        else:
+            raise ValueError("Tribute has a sword already")
+
+    # Create weapons sword.
+    def create_weapon(self, num_weapon):
+        if num_weapon < 0:
+            raise ValueError(f'Invalid input number: {num_weapon}')
+        for i in range(num_weapon):
+            sword = Sword()
+            self.items.append(sword)
+            self.cant_items += 1
+
+class Spear(Weapon):
+
+    # Spear is sp
+    def __str__(self):
+        return 'sp'
+
+    def __eq__(self, other):
+        return isinstance(other, Spear)
+    
+    # Apply effect spear on tribute.
+    def apply_effect(self, tribute):
+        if not tribute.weapon:
+            tribute.force -= SPEAR_EFFECT
+            tribute.weapon = True
+            if tribute.force < FORCE_DEFAULT:
+                tribute.force = FORCE_DEFAULT
+        else:
+            raise ValueError("Tribute has a spear already")
+
+    # Create weapons spear.
+    def create_weapon(self, num_weapon):
+        if num_weapon < 0:
+            raise ValueError(f'Invalid input number: {num_weapon}')
+        for i in range(num_weapon):
+            spear = Spear()
+            self.items.append(spear)
+            self.cant_items += 1
+
+class Bow(Weapon):
+    
+    # Bow is bo
+    def __str__(self):
+        return 'bo'
+
+    def __eq__(self, other):
+        return isinstance(other, Bow)
+    
+    # Apply effect bow on tribute.
+    def apply_effect(self, tribute):
+        if not tribute.weapon:
+            tribute.force -= BOW_EFFECT
+            tribute.weapon = True
+            if tribute.force < FORCE_DEFAULT:
+                tribute.force = FORCE_DEFAULT
+        else:
+            raise ValueError("Tribute has a bow already")
+
+    # Create weapons bow.
+    def create_weapon(self, num_weapon):
+        if num_weapon < 0:
+            raise ValueError(f'Invalid input number: {num_weapon}')
+        for i in range(num_weapon):
+            bow = Bow()
+            self.items.append(bow)
             self.cant_items += 1
