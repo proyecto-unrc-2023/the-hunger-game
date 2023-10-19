@@ -1,7 +1,7 @@
 import pytest
 
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT
-from game.logic.item import Item, Potion, PotionForce, PotionLife, PotionPoison, Weapon, Sword, Spear, Bow
+from game.logic.item import BOW_EFFECT, SPEAR_EFFECT, Item, Potion, PotionForce, PotionLife, PotionPoison, Weapon, Sword, Spear, Bow
 from game.logic.item import POTION_LIFE_EFFECT, POTION_FORCE, POTION_LIFE, POTION_POISON, SWORD_EFFECT
 
 def test_create_potion_from_str():
@@ -96,20 +96,22 @@ def test_apply_effect_weapon_sword_spear_bow():
     t1 = Tribute()
     spear = Spear()
     spear.apply_effect(t1)
-    assert t1.force == FORCE_DEFAULT
+    assert t1.range == 2 
+    assert t1.force == FORCE_DEFAULT + SPEAR_EFFECT
     assert t1.weapon == True
     with pytest.raises(ValueError):
         spear.apply_effect(t1)
     
-    t1.force = 10
+    t1.force = 5
     t1.weapon = False
     spear.apply_effect(t1)
-    assert t1.force == 9
+    assert t1.force == FORCE_DEFAULT + SPEAR_EFFECT
 
     t2 = Tribute()
     bow = Bow()
     bow.apply_effect(t2)
-    assert t2.force == FORCE_DEFAULT
+    assert t1.range == 3
+    assert t2.force == FORCE_DEFAULT + BOW_EFFECT
     assert t2.weapon == True
     with pytest.raises(ValueError):
         bow.apply_effect(t2)
@@ -117,7 +119,7 @@ def test_apply_effect_weapon_sword_spear_bow():
     t2.force = 15
     t2.weapon = False
     bow.apply_effect(t2)
-    assert t2.force == 13
+    assert t2.force == 15 + BOW_EFFECT
     
 # testing create_weapon
 def test_create_weapon_sword_spear_bow():

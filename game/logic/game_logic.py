@@ -164,14 +164,25 @@ class GameLogic:
     def fight(self, tribute, tribute2):
         x = tribute2.pos[0]
         y = tribute2.pos[1]
-        pos = tribute.move_closer_to(x, y, self.board)
-        if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
-            tribute.move_to(pos[0], pos[1], self.board)
-        else:
+        if(tribute.range == 3):
             tribute.attack_to(tribute2, self.board)
-            if tribute2.is_dead():
-                self.remove_tribute(tribute2)
-                tribute.enemy = None
+        elif(tribute.range == 2):
+            if ((x,y) in tribute.get_neighbors_2_distance() or 
+            (x,y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+                tribute.attack_to(tribute2, self.board)
+            else:
+                pos = tribute.move_closer_to(x, y, self.board)
+                tribute.move_to(pos[0], pos[1], self.board)
+        else:
+            if (x,y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
+                tribute.attack_to(tribute2, self.board)
+            else:
+                pos = tribute.move_closer_to(x, y, self.board)
+                tribute.move_to(pos[0], pos[1], self.board)
+                
+        if tribute2.is_dead():
+            self.remove_tribute(tribute2)
+            tribute.enemy = None
 
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance

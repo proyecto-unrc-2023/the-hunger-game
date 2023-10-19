@@ -234,7 +234,10 @@ def test_heuristic_tribute_complex():
     game.heuristic_tribute_first_attempt(tribute1)
     assert tribute.life == 45
     assert tribute1.life == 40
-    game.remove_tribute(tribute1)
+    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute_first_attempt(tribute)
     #random move
     game.heuristic_tribute_first_attempt(tribute)
     assert tribute.pos != (4,3)
@@ -578,4 +581,3 @@ def test_heuristic_get_away():
     assert t1.pos == (4,5)
     assert t0.pos == (1,1)
     assert t1.cowardice == 0
-    
