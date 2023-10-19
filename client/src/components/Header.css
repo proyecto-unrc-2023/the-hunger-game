@@ -1,6 +1,6 @@
-.app-header {
-  background-color: black;
-  color: #fff;
+.header {
+  background-color: var(--background-color);
+  color: var(--text-color);
   display: flex;
   flex-direction: space-between;
   align-items: center;
@@ -10,21 +10,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.logo{
-  margin: 30px;
-  display: block;
-  margin-right: auto;
+  justify-content: center; 
 }
 
 .logo-img{
   width: 80px; 
   height: auto;
+  margin: 2em;
+  display: block;
+  margin-right: auto;
+}
+
+.a-logo{
+  margin-right: auto;
 }
 
 .login {
-  margin: 30px;
+  margin: 2em;
   margin-left: auto;
 }
 
@@ -43,8 +45,7 @@
   background: white;
   color: black;
   font-family: inherit;
-  padding: 0.35em;
-  padding-left: 1.2em;
+  padding: 0.35em 3.3em 0.35em 1.2em;
   font-size: 17px;
   font-weight: 500;
   border-radius: 0.9em;
@@ -56,7 +57,6 @@
   overflow: hidden;
   position: relative;
   height: 2.8em;
-  padding-right: 3.3em;
 }
 
 .cssbuttons-io-button .icon {
@@ -112,8 +112,8 @@
 .bottom {
   clip-path: polygon(0% 60%, 200% 50%, 100% 100%, 0% 100%);
   color: transparent;
-  background: -webkit-linear-gradient(177deg, black 53%, var(--text-color) 65%);
-  background: linear-gradient(177deg, black 53%, var(--text-color) 65%);
+  background: -webkit-linear-gradient(177deg, var(--background-color) 53%, var(--text-color) 65%);
+  background: linear-gradient(177deg, var(--background-color) 53%, var(--text-color) 65%);
   background-clip: text;
   -webkit-background-clip: text;
   transform: translateX(-0.05em);

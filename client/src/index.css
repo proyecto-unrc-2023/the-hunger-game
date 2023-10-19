@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #00000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
 body {
   margin: 0;
   min-width: 320px;
@@ -31,7 +32,7 @@ body {
 
 .game button {
   padding: 8px 12px;
-  margin: 25px;
+  margin: 10px;
   background: transparent;
   border: 2px solid #eee;
   color: #eee;
@@ -58,5 +59,10 @@ body {
 
 .button-section {
   display: flex;
-  flex-direction: space-between;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.main {
+  align-items: center;
 }

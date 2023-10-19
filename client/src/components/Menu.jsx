@@ -49,11 +49,11 @@ function IncrementableBar({ attribute, stats, onIncrement, onDecrement }) {
       <DecrementButton onClick={handleDecrement} />
     </div>
   );
-}
+} 
 
 function InitGameButton({ isReady, onClick }) {
   const initSimulationButtonClass = isReady ? 'init-simulation-button is-ready' : 'init-simulation-button';
-  return <button className={initSimulationButtonClass} onClick={onClick}>Iniciar Simulacion</button>;
+  return <button className={initSimulationButtonClass} onClick={onClick}>Start Simulation</button>;
 }
 
 export default function Menu({ onStartGame }) {
@@ -198,6 +198,12 @@ export default function Menu({ onStartGame }) {
     }
   };
 
+  const handleStartGame = () => {
+    if (isReady) {
+      onStartGame();
+    }
+  };
+
   useEffect(() => {
     if (!statsBar.includes(true)) {
       setIsReady(true);
@@ -207,17 +213,19 @@ export default function Menu({ onStartGame }) {
   }, [statsBar]);
 
   return (
-    <div className="stats-settings-container">
-      <div>
-        <strong className="available-stats">Stats disponibles <StatsBar stats={statsBar} /></strong>
+    <div className="menu-container">
+      <div className="stats-settings-container">
+        <div>
+          <strong className="available-stats">Avaible Stats <StatsBar stats={statsBar} /></strong>
+        </div>
+        <div className="bars-container">
+          <IncrementableBar attribute="Life:" stats={lifeStats} setStats={setLifeStats} onIncrement={incrementLifeStat} onDecrement={decrementLifeStat} />
+          <IncrementableBar attribute="Force:" stats={forceStats} setStats={setForceStats} onIncrement={incrementForceStat} onDecrement={decrementForceStat} />
+          <IncrementableBar attribute="Alliance:" stats={allianceStats} setStats={setAllianceStats} onIncrement={incrementAllianceStat} onDecrement={decrementAllianceStat} />
+          <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} />
+        </div>
+        <InitGameButton isReady={isReady} onClick={handleStartGame} />
       </div>
-      <div className="bars-container">
-        <IncrementableBar attribute="Life:" stats={lifeStats} setStats={setLifeStats} onIncrement={incrementLifeStat} onDecrement={decrementLifeStat} />
-        <IncrementableBar attribute="Force:" stats={forceStats} setStats={setForceStats} onIncrement={incrementForceStat} onDecrement={decrementForceStat} />
-        <IncrementableBar attribute="Alliance:" stats={allianceStats} setStats={setAllianceStats} onIncrement={incrementAllianceStat} onDecrement={decrementAllianceStat} />
-        <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} />
-      </div>
-      <InitGameButton isReady={isReady} onClick={onStartGame} />
     </div>
   );
 }

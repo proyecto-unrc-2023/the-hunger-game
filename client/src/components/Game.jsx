@@ -34,16 +34,22 @@ const Game = () => {
   testBoardState[4][4] = 'tribute';
   testBoardState[9][17] = 'tribute';
   testBoardState[19][1] = 'tribute';
-  testBoardState[8][8] = 'item';
-  testBoardState[5][15] = 'item';
+  testBoardState[8][8] = 'potion';
+  testBoardState[5][15] = 'potion';
+  testBoardState[1][15] = 'bow';
+  testBoardState[7][13] = 'sword';
+  testBoardState[14][1] = 'sword';
 
   // Tablero de prueba 2
   const test2BoardState = Array.from({ length: size }, () => Array(size).fill('free'));
   test2BoardState[4][5] = 'tribute';
   test2BoardState[8][16] = 'tribute';
   test2BoardState[18][2] = 'tribute';
-  test2BoardState[8][8] = 'item';
-  test2BoardState[5][15] = 'item';
+  test2BoardState[8][8] = 'potion';
+  test2BoardState[5][15] = 'potion';
+  test2BoardState[1][15] = 'bow';
+  test2BoardState[7][13] = 'sword';
+  test2BoardState[14][1] = 'sword';
 
   // Tablero vacío
   const emptyBoard = Array.from({ length: size }, () => Array(size).fill('free'));
@@ -69,6 +75,20 @@ const Game = () => {
     setPaused(true);
     // Finaliza la simulación, deja el último tablero y da al ganador
   };
+
+  const [selectedCell, setSelectedCell] = useState(null);
+
+  // Función para manejar clics en las celdas
+  const handleCellClick = (row, col) => {
+    const clickedCell = boardState[row][col];
+    setSelectedCell({
+      row,
+      col,
+      type: clickedCell,
+      // Puedes agregar más información aquí según sea necesario
+    });
+  };
+
   // Configuración de tiempo y estados para la actualización de los tableros
   useEffect(() => {
     let time;
@@ -87,23 +107,25 @@ const Game = () => {
   
     // Limpiar el tiempo cuando el juego se pausa
     return () => clearInterval(time);
+    // esto para que no joda el warning jaja
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [isPaused]);
 
   return (
     <main className="game">
       <TransformWrapper minScale={0.5}>
-        <div className='button section'><ControlsZoom /></div>
+        <div className='button-section'><ControlsZoom /></div>
         <TransformComponent>
           <section className='board'>
             {winner ? (
               <div className="winner-message">Ha ganado el {winner}
               <Board size={size} boardState={emptyBoard} /></div>
-            ) : ( <Board size={size} boardState={boardState} />
+            ) : ( <Board size={size} boardState={boardState} onCellClick={handleCellClick}/>
             )}
           </section>
         </TransformComponent>
       </TransformWrapper>
-      <div className="button section">
+      <div className="button-section">
         <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
       </div>
     </main>
