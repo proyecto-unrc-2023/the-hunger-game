@@ -2,9 +2,17 @@ import React from 'react';
 import './Header.css';
 
 const Header = ({ districtChosed, districtsLive }) => {
+
+  const handleLogoClick = () => {
+    // Redirige a la página de inicio (recarga la página)
+    window.location.href = '/';
+  };
+
   return (
-    <header className='app-header'>
-      <div className='logo'><img src='./11-2-the-hunger-games-picture.png' className='logo-img'></img></div>
+    <header className='header'>
+      <a href="/" onClick={handleLogoClick} className='a-logo'>
+        <img src='./11-2-the-hunger-games-picture.png' className='logo-img' alt='logo'></img>
+      </a>
       <div className='top-header'>
       <section className="game-title">
         <div className="top">The Hunger Games</div>

@@ -3,20 +3,18 @@
 }
 
 .cell {
-  width: 30px;
-  height: 30px;
   border: 1px solid #000000;
   box-sizing: border-box;
   position: relative;
 }
 
-.board-free img {
-  width: 100%;
-  height: 100%;
+.board-free img, .cell{
+  width: 50px;
+  height: 50px;
 }
 
-.board-tribute img {
-  width: 70%;
+.board-tribute img{
+  width: 80%;
   height: auto;
   position: absolute;
   top: 50%;
@@ -24,11 +22,31 @@
   transform: translate(-50%, -50%);
 }
 
-.board-potion img {
-  width: 70%;
+.board-potion img{
+  width: 50%;
   height: auto;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.board-sword img{
+  width: 50%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  rotate: -30deg;
+}
+
+.board-bow img{
+  width: 50%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  rotate: 30deg;
 }

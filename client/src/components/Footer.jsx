@@ -3,11 +3,11 @@ import './Footer.css'; // Asegúrate de que la ruta del archivo CSS sea correcta
 
 export default function Footer() {
     return (
-        <div className='footer'>
+        <footer className='footer'>
             <div className='text-center p-3 center-content'>
                 <section className="game-title">
-                    <div className="top">    Te gustaria unirte? </div>
-                    <div className="bottom" aria-hidden="true">Te gustaria unirte? </div>
+                    <div className="top">    Would you like join? </div>
+                    <div className="bottom" aria-hidden="true">Would you like join? </div>
                 </section>
                 <button className="cssbuttons-io-button">
                     Register!
@@ -19,6 +19,6 @@ export default function Footer() {
                 </button>
             </div>
 
-        </div>
+        </footer>
     );
 }

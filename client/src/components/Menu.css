@@ -16,7 +16,7 @@
   margin: 5px;
 }
 
-.increment-button {
+.increment-button, .decrement-button {
   cursor: pointer;
   margin: 5px;
   display: inline-block
@@ -25,12 +25,6 @@
 .increment-button :hover{
   background-color: green;
   transition: .3s ease background-color;
-}
-
-.decrement-button {
-  cursor: pointer;
-  margin: 5px;
-  display: inline-block
 }
 
 .decrement-button :hover{
@@ -53,11 +47,15 @@
   align-items: center;
   padding: 10px;
   background-color: rgba(27, 27, 27, 0.863);
-  border-radius: 15px;
   margin: 50px;
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+  width: 500px;
 }
 
 .incrementable-bar-atribute {
+  color: black;
   display: inline-block;
   width: 80px; 
   text-align: right; /* Alinea el texto a la derecha dentro del contenedor */
@@ -73,6 +71,7 @@
 }
 
 .available-stats {
+  color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,7 +85,7 @@
   border: 3px ridge #ff0000;
   outline: none;
   background-color: transparent;
-  color: white;
+  color: rgb(0, 0, 0);
   transition: 1s;
   border-radius: 0.3em;
   font-size: 16px;
@@ -95,10 +94,17 @@
 }
 
 .init-simulation-button.is-ready {
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   border: 3px ridge green;
 }
 
 .init-simulation-button.is-ready:hover {
   box-shadow: inset 0px 0px 25px #15ff00;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5em;
 }
