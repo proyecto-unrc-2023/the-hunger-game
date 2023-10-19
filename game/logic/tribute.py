@@ -1,5 +1,8 @@
 import math
 import random
+
+from marshmallow import Schema, fields
+
 from game.logic.cell import State
 
 MAX_LIFE_DEFAULT = 50
@@ -63,7 +66,7 @@ class Tribute:
             return False
         if self.life != other.life:
             return False
-        
+
         return True
 
     def attack_to(self, tribute, board):
@@ -184,3 +187,12 @@ class Tribute:
                         return (x,y)
         
         return neighbors[0]
+    
+class TributeSchema(Schema):
+    name = fields.Str()
+    life = fields.Integer
+    force = fields.Integer
+    alliance = fields.Integer
+    cowardice = fields.Integer 
+    district = fields.Integer
+    pos = fields.Integer
