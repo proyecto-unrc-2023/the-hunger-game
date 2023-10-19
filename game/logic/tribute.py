@@ -4,11 +4,14 @@ from game.logic.cell import State
 
 MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50
+
 FORCE_DEFAULT = 5
-MAX_FORCE = 30
+
 ALLIANCE_DEFAULT = 3
+
 COWARDICE_DEFAULT = 0
 MAX_COWARDICE = 5
+
 class Tribute:
 
     def __init__(self):

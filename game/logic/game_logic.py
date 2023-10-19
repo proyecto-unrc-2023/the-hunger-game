@@ -4,7 +4,7 @@ import math
 from game.logic.board import Board
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
 from game.logic.cell import State
-from game.logic.item import Weapon, Potion
+from game.logic.item import Weapon, Sword, Potion, PotionLife
 from game.logic.district import District, TRIBUTES_DEFAULT
 
 
@@ -294,8 +294,7 @@ class GameLogic:
                 # Choice 1 Life
                 if choice == 1:
                     while True:
-                        life_points = int(
-                            input("How many points do you want to spend on Life?: "))  ##no muestra por consola esto
+                        life_points = int(input("How many points do you want to spend on Life?: "))
                         if 1 <= life_points <= points:
                             life = life + (5 * life_points)
                             points -= life_points
@@ -334,8 +333,7 @@ class GameLogic:
                 # Choice 4 Tributes
                 elif choice == 4:
                     while True:
-                        tributes_points = int(
-                            input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
+                        tributes_points = int(input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
                         if tributes_points in (4, 8):
                             required_points = tributes_points
                             num_tributes = tributes_points // 4
@@ -399,14 +397,13 @@ class GameLogic:
         print("\nPut items on board.")
         while True:
             try:
-                num_potions = int(
-                    input(f"How many potions do you want on board? Choice a number 0 between and {max_potions}: "))
+                num_potions = int(input(f"How many potions of life do you want on board? Choice a number 0 between and {max_potions}: "))
                 if 0 <= num_potions <= max_potions:
                     if num_potions == 0:
                         break
-                    potion = Potion()
-                    potion.create_item(num_potions)
-                    self.board.distribute_items(potion)
+                    potion_life = PotionLife()
+                    potion_life.create_potion(num_potions)
+                    self.board.distribute_items(potion_life)
                     break
                 else:
                     print("Invalid input:", num_potions)
@@ -416,14 +413,13 @@ class GameLogic:
         max_weapons = max_potions - num_potions
         while True:
             try:
-                num_weapons = int(
-                    input(f"How many weapons do you want on board? Choice a number between 0 and {max_weapons}: "))
+                num_weapons = int(input(f"How many swords do you want on board? Choice a number between 0 and {max_weapons}: "))
                 if 0 <= num_weapons <= max_weapons:
                     if num_weapons == 0:
                         break
-                    weapon = Weapon()
-                    weapon.create_item(num_weapons)
-                    self.board.distribute_items(weapon)
+                    sword = Sword()
+                    sword.create_weapon(num_weapons)
+                    self.board.distribute_items(sword)
                     break
                 else:
                     print("Invalid input:", num_weapons)
