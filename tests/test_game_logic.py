@@ -388,8 +388,8 @@ def test_heuristic_tribute_first_attempt_complex2():
 def test_end_game():
     district1 = District()
     district2 = District()
-    district1.set_config(50, 5, 3, 1, 2)
-    district2.set_config(50, 5, 3, 2, 2)
+    district1.set_config(50, 5, 3, 1, 2, 3)
+    district2.set_config(50, 5, 3, 2, 2, 3)
     game = GameLogic()
     game.districts.append(district1)
     assert game.end_game() is district1  # end_game returns the only district alive
@@ -403,7 +403,7 @@ def test_end_game():
 
 def test_alliance_neutral_tribute():
     district = District()
-    district.set_config(50, 6, 4, 0, 1)
+    district.set_config(50, 6, 4, 0, 1, 2)
     game = GameLogic()
     game.new_game(2,2)
     game.put_neutral(0, 0)
@@ -502,7 +502,7 @@ def test_applies_effects_complex():
 
 def test_init_simulation_inputs_one(monkeypatch):
     game = GameLogic()
-    user_inputs = iter(['1', '5', '4', '4', '2', '1', 'n', '10', '10']) # first is number_district, then choice, points,..., yes or no 
+    user_inputs = iter(['1', '5', '4', '4', '2', '1', 'n']) 
     
     def mock_input(prompt):
         return next(user_inputs)
@@ -519,7 +519,7 @@ def test_init_simulation_inputs_one(monkeypatch):
 
 def test_init_simulation_inputs_two(monkeypatch):
     game = GameLogic()
-    user_inputs = iter(['4', '8', '1', '1', '3', '1', 'n', '8', '8']) # first is number_district, then choice, points,..., yes or no 
+    user_inputs = iter(['3', '2', '5', '5', '2', '3', 'n'])
     
     def mock_input(prompt):
         return next(user_inputs)
@@ -531,7 +531,7 @@ def test_init_simulation_inputs_two(monkeypatch):
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
-        assert tribute_my_district.alliance == 4
+        assert tribute_my_district.alliance == 5
      
 
 def test_put_tribute():

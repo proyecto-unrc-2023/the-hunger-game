@@ -118,7 +118,6 @@ def test_2x2_board_from_string():
     assert t2.district == 2
     assert t3.district == 3
 
-
 def test_2x4_board_from_string():
     board_str = '  |  |  |  \n' \
                 '  |  |  |  '
@@ -173,7 +172,7 @@ def test_3x3_board_distribute_tribute():
                 ' | | '
     board = Board.from_string(board_str)[0]
     distrito1 = District()
-    distrito1.set_config(50, 5, 3, 0, 4)
+    distrito1.set_config(50, 5, 3, 0, 4, 0)
     board.distribute_tributes(distrito1)
     tributes_count = 0
     for row in board.board:
@@ -519,47 +518,59 @@ def test_put_item_using_create_weapon():
     assert expected == res
 
 
-def test_distribute_items_potions():
-    board = Board(4, 4)
-    potion_life = PotionLife()
-    potion_force = PotionForce()
-    potion_poison = PotionPoison()
+def test_distribute_items():
+  board = Board(6, 6)
+  # Create and distribute potions
+  potion_list = [PotionLife, PotionForce, PotionPoison]
+  for potion in potion_list:
+      p = potion()
+      p.create_potion(5)
+      board.distribute_items(p)
+  # Create and distribute weapons
+  weapon_list = [Sword, Spear, Bow]
+  for weapon in weapon_list:
+      w = weapon()
+      w.create_weapon(5)
+      board.distribute_items(w)
 
-    potion_life.create_potion(4)
-    potion_force.create_potion(5)
-    potion_poison.create_potion(3)
+  count_item = 0
+  for row in board.board:
+        for cell in row:
+            if cell.state == State.ITEM:
+                count_item += 1
+  
+  assert count_item == 30  
 
-    board.distribute_items(potion_life)
-    board.distribute_items(potion_force)
-    board.distribute_items(potion_poison)
 
-    count_potions = 0
+def test_create_and_distribute_item():
+    board = Board(6, 6)
+
+    item_list = [PotionLife, PotionForce, PotionPoison, Sword, Spear, Bow]
+    for item in item_list:
+        i = item()
+        board.create_and_distribute_item(i)
+
+    count_items = 0
     for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
-                count_potions += 1
+                count_items += 1
+      
+    assert count_items == 30
 
-    assert count_potions == 12
 
-
-def test_distribute_items_weapons():
-    board = Board(4, 4)
-    sword = Sword()
-    spear = Spear()
-    bow = Bow()
-
-    sword.create_weapon(5)
-    spear.create_weapon(5)
-    bow.create_weapon(4)
-
-    board.distribute_items(sword)
-    board.distribute_items(spear)
-    board.distribute_items(bow)
-
-    count_weapons = 0
+def test_distribute_potions_and_weapons_on_board():
+    board = Board(6, 6)
+    num_potions = 15
+    num_weapons = 15
+    board.distribute_potions()
+    board.distribute_weapons()
+    
+    count_items = 0
     for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
-                count_weapons += 1
-
-    assert count_weapons == 14
+                count_items += 1
+     
+    total_items = num_potions + num_weapons 
+    assert count_items == total_items
