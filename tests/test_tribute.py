@@ -128,11 +128,11 @@ def test_neighbors():
     board = Board(5, 5)
     t1 = Tribute()
     board.put_tribute(2, 2, t1)
-    neighbors = t1.get_neighbors_2_distance(board)
+    neighbors = t1.get_neighbors_2_distance_free(board)
     assert len(neighbors) == 16
     t2 = Tribute()   
     board.put_tribute(2, 4, t2)
-    neighbors = t1.get_neighbors_2_distance(board)
+    neighbors = t1.get_neighbors_2_distance_free(board)
     assert len(neighbors) == 15
     
     

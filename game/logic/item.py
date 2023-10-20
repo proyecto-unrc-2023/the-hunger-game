@@ -13,7 +13,7 @@ SWORD_EFFECT = 5
 SPEAR_EFFECT = 3
 RANGE_SPEAR = 1
 
-BOW_EFFECT = 2
+BOW_EFFECT = 1
 RANGE_BOW = 2
 
 class Item():
@@ -199,11 +199,9 @@ class Spear(Weapon):
     # Apply effect spear on tribute.
     def apply_effect(self, tribute):
         if not tribute.weapon:
-            tribute.force += SPEAR_EFFECT
             tribute.weapon = True
             tribute.range += RANGE_SPEAR
-            if tribute.force < FORCE_DEFAULT:
-                tribute.force = FORCE_DEFAULT
+            tribute.force += SPEAR_EFFECT
         else:
             raise ValueError("Tribute has a spear already")
 
@@ -231,8 +229,6 @@ class Bow(Weapon):
             tribute.force += BOW_EFFECT
             tribute.weapon = True
             tribute.range += RANGE_BOW
-            if tribute.force < FORCE_DEFAULT:
-                tribute.force = FORCE_DEFAULT
         else:
             raise ValueError("Tribute has a bow already")
 

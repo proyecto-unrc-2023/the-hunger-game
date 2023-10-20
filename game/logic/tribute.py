@@ -141,6 +141,20 @@ class Tribute:
 
         return possible_moves[0]
 
+    def get_neighbors_2_distance_free(self, board):
+        (x, y) = self.pos
+        neighbors = []
+        
+        # Coordenadas a una distancia de 2 unidades en todas las direcciones
+        possible_neighbors = self.get_neighbors_2_distance(board)
+        
+        for pos in possible_neighbors:
+            if (0 <= pos[0] < board.rows) and (0 <= pos[1] < board.columns):
+                if(board.get_element(pos[0],pos[1]).get_state() == State.FREE):
+                    neighbors.append((pos[0],pos[1]))
+        
+        return neighbors
+    
     def get_neighbors_2_distance(self, board):
         (x, y) = self.pos
         neighbors = []
@@ -152,18 +166,17 @@ class Tribute:
             (x + 2, y - 1), (x + 2, y), (x + 2, y + 1), (x + 2, y + 2),
             (x - 1, y + 2), (x, y + 2), (x + 1, y + 2)
         ]
-
+        
         for i, j in possible_neighbors:
             if (0 <= i < board.rows) and (0 <= j < board.columns):
-                if(board.get_element(i,j).get_state() == State.FREE):
-                    neighbors.append((i, j))
+                neighbors.append((i, j))
         
         return neighbors
 
     def calculate_flee(self, enemy, board):
         tX, tY = self.pos
         eX, eY = enemy.pos
-        neighbors = self.get_neighbors_2_distance(board)
+        neighbors = self.get_neighbors_2_distance_free(board)
         if neighbors is None:
             return False
         x_escape = []
