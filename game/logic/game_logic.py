@@ -167,7 +167,7 @@ class GameLogic:
         if(tribute.range == 3):
             tribute.attack_to(tribute2, self.board)
         elif(tribute.range == 2):
-            if ((x,y) in tribute.get_neighbors_2_distance() or 
+            if ((x,y) in tribute.get_neighbors_2_distance(self.board) or 
             (x,y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
                 tribute.attack_to(tribute2, self.board)
             else:
@@ -243,13 +243,9 @@ class GameLogic:
                         else:
                             pos = cell.get_tribute().pos
                             # move to an adjacent position to it, and if already adjacent, attack.
-                            if not (pos in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
-                                pos = tribute.move_closer_to(x, y, self.board)
-                                tribute.move_to(pos[0], pos[1], self.board)
-                            else:
-                                cell_with_tribute = self.board.get_element(x, y)
-                                t2 = cell_with_tribute.get_tribute()
-                                self.fight(tribute, t2)
+                            cell_with_tribute = self.board.get_element(x, y)
+                            t2 = cell_with_tribute.get_tribute()
+                            self.fight(tribute, t2)
 
     # Check which district won (literally return a district)
     # Return false if still in play

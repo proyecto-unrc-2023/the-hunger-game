@@ -3,7 +3,7 @@ import pytest
 from game.logic.cell import State
 from game.logic.district import District
 from game.logic.game_logic import GameLogic, GameMode
-from game.logic.item import Potion, Weapon
+from game.logic.item import Bow, Potion, PotionForce, PotionLife, PotionPoison, Spear, Sword, Weapon
 from game.logic.tribute import Tribute
 from game.logic.district import District
 
@@ -213,7 +213,86 @@ def test_fight_2_tributes_and_one_died():
     assert game.board.get_element(0, 1).get_state() == State.FREE
     assert not (t2 in game.districts[1].tributes)
 
-
+def test_heuristic_tribute_weapons_items():
+    game = GameLogic()
+    game.new_game(7, 7)
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    game.put_tribute(3, 3, t0)
+    sw = Sword()
+    game.put_item(2,2,sw)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.weapon
+    t0.weapon = False
+    t0.force = 5
+    sp = Spear()
+    game.put_item(3,3,sp)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.weapon
+    assert t0.range == 2
+    assert t0.force == 8
+    t0.weapon = False
+    t0.range = 1
+    t0.force = 5
+    bow = Bow()
+    game.put_item(2,2,bow)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.weapon
+    assert t0.range == 3
+    assert t0.force == 6
+    pp = PotionPoison()
+    game.put_item(3,3, pp)
+    game.heuristic_tribute_first_attempt(t0)
+    pl = PotionLife()
+    assert t0.life  == 45
+    game.put_item(3,4, pl)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.life == 50
+    pf = PotionForce()
+    game.put_item(3,5, pf)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.force == 11
+    
+def test_fitht_weapons():
+    game = GameLogic()
+    game.new_game(7, 7)
+    #config tributes
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    game.put_tribute(2, 2, t0)
+    t1 = Tribute()
+    t1.set_config_parameters(50,5,3,1)
+    game.put_tribute(6, 6, t1)
+    #Bow
+    bow = Bow()
+    game.put_item(3,3,bow)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.weapon
+    game.heuristic_tribute_first_attempt(t0)
+    assert t1.life == 44
+    #reset and Spear
+    t0.force = 5
+    t0.weapon = False
+    t0.range = 1
+    sp = Spear()
+    game.put_item(4,4,sp)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.weapon
+    assert t0.range == 2
+    game.heuristic_tribute_first_attempt(t0)
+    assert t1.life == 36
+    #reset and Sword
+    t0.force = 5
+    t0.weapon = False
+    t0.range = 1
+    sword = Sword()
+    game.put_item(5,5,sword)
+    game.heuristic_tribute_first_attempt(t0)
+    assert t0.weapon
+    assert t0.range == 1
+    game.heuristic_tribute_first_attempt(t0)
+    assert t1.life == 26
+    
 def test_heuristic_tribute_complex():
     game = GameLogic()
     game.new_game(7, 7)
