@@ -4,6 +4,7 @@ import random
 from marshmallow import Schema, fields
 
 from game.logic.cell import State
+from marshmallow import Schema, fields
 
 MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50

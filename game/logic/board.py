@@ -4,9 +4,23 @@ from game.logic.cell import Cell, State
 from game.logic.district import District
 from game.logic.item import Weapon, Potion
 from game.logic.tribute import Tribute
-
+from marshmallow import Schema, fields
 
 class Board:
+    
+    # Initializes an instance of the Board class with dimensions X and Y
+    def __init__(self, rows, columns):
+        self.rows = rows
+        self.columns = columns
+        self.board = []
+        for row in range(self.rows):
+            curr_row = []
+            for col in range(self.columns):
+                cell = Cell()
+                cell.pos = (row,col)
+                curr_row.append(cell)
+            self.board.append(curr_row)
+    
     # Converts a string representing a board into an instance of the Board class.  
     def from_string(board_str):
         rows = board_str.split('\n')
@@ -89,19 +103,6 @@ class Board:
                 curr_tribute = matrix[row][col]
                 new_board.put_tribute(row, col, Tribute.from_string(curr_tribute))
         return new_board
-
-    # Initializes an instance of the Board class with dimensions X and Y
-    def __init__(self, rows, columns):
-        self.rows = rows
-        self.columns = columns
-        self.board = []
-        for row in range(self.rows):
-            curr_row = []
-            for col in range(self.columns):
-                cell = Cell()
-                cell.pos = (row,col)
-                curr_row.append(cell)
-            self.board.append(curr_row)
 
     # Gets the cell at a specific position on the board.
     def get_element(self, row, column):
@@ -272,3 +273,8 @@ class Board:
             pos = random.choice(free_adjacents_pos)
 
         return pos
+
+class BoardSchema(Schema):
+    rows = fields.Integer
+    columns = fields.Integer
+    board = fields.Nested(CellSchema())

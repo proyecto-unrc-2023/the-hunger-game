@@ -1,4 +1,5 @@
 from game.logic.tribute import FORCE_DEFAULT
+from marshmallow import Schema, fields
 
 POTION_LIFE_EFFECT = 10 # mas adelanta borrala, representa a POTION_LIFE
 
@@ -240,3 +241,8 @@ class Bow(Weapon):
             bow = Bow()
             self.items.append(bow)
             self.cant_items += 1
+            
+
+class ItemSchema(Schema):
+    #name = fields.Function(self.__str__())
+    name = fields.Function(lambda obj: obj.__str__())

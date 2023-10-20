@@ -1,6 +1,7 @@
 import random
 
-from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
+from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, TributeSchema
+from marshmallow import Schema, fields
 
 TRIBUTES_DEFAULT = 4
 
@@ -63,3 +64,8 @@ class District:
             if tribute.name == tr.name:
                 self.tributes.remove(tr)
                 self.cant_tributes -= 1
+                
+class DistrictSchema(Schema):
+    number_district = fields.Integer
+    cant_tributes = fields.Integer
+    tributes = fields.Nested(TributeSchema, many=True)
