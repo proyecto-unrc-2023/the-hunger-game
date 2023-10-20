@@ -1,11 +1,12 @@
 from enum import Enum
 import math
 
-from game.logic.board import Board
-from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
+from game.logic.board import Board, BoardSchema
+from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, TributeSchema
 from game.logic.cell import State
 from game.logic.item import Weapon, Sword, Potion, PotionLife
-from game.logic.district import District, TRIBUTES_DEFAULT
+from game.logic.district import District, TRIBUTES_DEFAULT, DistrictSchema
+from marshmallow import Schema, fields
 
 
 class GameMode(Enum):
@@ -507,3 +508,10 @@ class GameLogic:
             tribute.cowardice -= 0.5
         else:
             self.fight(tribute, enemy)
+            
+class GameLogicSchema(Schema):
+    mode = fields.Str()
+    board = fields.Nested(BoardSchema)
+    districts = fields.Nested(DistrictSchema, many=True)
+    neutrals = fields.Nested(TributeSchema, many=True)
+

@@ -1,4 +1,5 @@
 from enum import Enum
+from marshmallow import Schema, fields
 
 
 class State(Enum):
@@ -80,3 +81,11 @@ class Cell:
             self.state = FREE
 
         self.item = None
+
+class CellSchema(Schema):
+    from game.logic.item import ItemSchema
+    from game.logic.tribute import TributeSchema
+    
+    state = fields.Str()
+    item = fields.Nested(ItemSchema)
+    tribute = fields.Nested(TributeSchema)
