@@ -1,9 +1,10 @@
 import random
 
-from game.logic.cell import Cell, State
+from game.logic.cell import Cell, CellSchema, State
 from game.logic.district import District
 from game.logic.item import Weapon, Potion, Spear, Sword, Bow, PotionPoison, PotionLife, PotionForce
 from game.logic.tribute import Tribute
+from marshmallow import Schema, fields
 
 
 class Board:
@@ -285,3 +286,8 @@ class Board:
             pos = random.choice(free_adjacents_pos)
 
         return pos
+
+class BoardSchema(Schema):
+    rows = fields.Integer()
+    columns = fields.Integer()
+    board = fields.Nested(CellSchema, many=True)
