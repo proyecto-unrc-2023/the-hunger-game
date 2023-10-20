@@ -29,14 +29,16 @@ def test_put_one_live_tribute(board: Board):
     assert board.get_element(1, 0).get_state() == State.TRIBUTE
     assert board.get_element(1, 1).get_state() == State.FREE
 
+
 def test_from_string():
     expected = '  |n0|t1\n' \
                'a1|b0|a0\n' \
                'a2|n1|b2'
     board_obj = Board.from_string(expected)[0]  # Crea el objeto Board a partir de la cadena
-    print(board_obj.get_element(0,1).get_tribute().name)
+    print(board_obj.get_element(0, 1).get_tribute().name)
     res = str(board_obj.__str__())  # Obtiene la representación de cadena del objeto Board
     assert expected == res
+
 
 def test_put_tribute_fails(board: Board):
     tribute = Tribute()
@@ -49,23 +51,24 @@ def test_empty_board_to_string(board: Board):
     tribute = Tribute()
     board.put_tribute(0, 1, tribute)
     t0 = Tribute()
-    t0.set_config_parameters(50,5,3,0)
+    t0.set_config_parameters(50, 5, 3, 0)
     t0.name = 't0'
-    board.put_tribute(1,1,t0)
+    board.put_tribute(1, 1, t0)
     res = board.__str__()
     expected = '  |t \n' \
                '  |t0'
     assert expected == res
     t1 = Tribute()
-    t1.set_config_parameters(50,5,3,1)
+    t1.set_config_parameters(50, 5, 3, 1)
     t1.name = 't1'
-    board.put_tribute(1,0,t1)
+    board.put_tribute(1, 0, t1)
     res = board.__str__()
     expected = '  |t \n' \
                't1|t0'
     assert expected == res
-    assert board.get_element(1,0).get_tribute() == t1
-               
+    assert board.get_element(1, 0).get_tribute() == t1
+
+
 def test_board_with_two_tributes_to_string(board: Board):
     tribute1 = Tribute()
     tribute2 = Tribute()
@@ -90,6 +93,7 @@ def test_4x4_board_with_two_tribute_to_string():
                '  |  |  |t '
     assert expected == res
 
+
 def test_2x2_board_to_string_with_tribute_weapon_potion():
     board = Board(2, 2)
     board.put_tribute(0, 1, Tribute())
@@ -106,14 +110,13 @@ def test_2x2_board_from_string():
                 't4|t1'
     board = Board.from_string(board_str)[0]
     assert board.__str__() == board_str
-    t1 = board.get_element(1,1).get_tribute()
-    t3 = board.get_element(0,0).get_tribute()
-    t2 = board.get_element(0,1).get_tribute()
+    t1 = board.get_element(1, 1).get_tribute()
+    t3 = board.get_element(0, 0).get_tribute()
+    t2 = board.get_element(0, 1).get_tribute()
     assert t1.life == 50
     assert t1.district == 1
     assert t2.district == 2
     assert t3.district == 3
-    
 
 
 def test_2x4_board_from_string():
@@ -181,21 +184,33 @@ def test_3x3_board_distribute_tribute():
 
 
 def test_2x2_board_put_item_weapon_from_string():
-    board_str = 'w |  \n' \
+    board_str = 'sp|  \n' \
                 '  |  '
     board = Board.from_string(board_str)[0]
     assert board.get_element(0, 0).get_state() == State.ITEM
-    weapon = board.get_element(0, 0).get_item()
-    assert weapon.__str__() == 'w '
+    spear = board.get_element(0, 0).get_item()
+    assert spear.__str__() == 'sp'
+    board2_str = 'sw|  \n' \
+                 '  |  '
+    board2_str = Board.from_string(board2_str)[0]
+    assert board2_str.get_element(0, 0).get_state() == State.ITEM
+    sword = board2_str.get_element(0, 0).get_item()
+    assert sword.__str__() == 'sw'
+    board3_str = 'wo|  \n' \
+                 '  |  '
+    board3_str = Board.from_string(board3_str)[0]
+    assert board3_str.get_element(0, 0).get_state() == State.ITEM
+    bow = board3_str.get_element(0, 0).get_item()
+    assert bow.__str__() == 'wo'
 
 
 def test_2x2_board_put_item_potion_from_string():
-    board_str = '  |p \n' \
+    board_str = '  |pf \n' \
                 '  |  '
     board = Board.from_string(board_str)[0]
     assert board.get_element(0, 1).get_state() == State.ITEM
     weapon = board.get_element(0, 1).get_item()
-    assert weapon.__str__() == 'p '
+    assert weapon.__str__() == 'pf'
 
 
 def test_2x2_board_put_item_and_remove_item(board: Board):
@@ -289,7 +304,6 @@ def test_get_adjacents_cells_with_invalid_coordinates(board: Board):
         board.get_adjacents_cells(x, y)
 
 
-
 def test_get_free_adjacents_empty_board(board: Board):
     x, y = 0, 0
     free_adjacents = board.get_free_adjacents_cells(x, y)
@@ -301,11 +315,10 @@ def test_3x3_board_get_free_adjacents_empty_board():
     x, y = 1, 1
     free_adjacents = board.get_free_adjacents_positions(x, y)
     expected_positions = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1), (2, 2)]
-    
+
     assert len(free_adjacents) == len(expected_positions)
     for pos in expected_positions:
         assert pos in free_adjacents
-
 
 
 def test_3x3_board_get_free_adjacents_some_adjacent_cells_occupied():
@@ -319,6 +332,7 @@ def test_3x3_board_get_free_adjacents_some_adjacent_cells_occupied():
     for cell in free_adjacents:
         assert (cell.get_state() == State.FREE or cell.get_state() == State.ITEM)
 
+
 def test_3x3_board_get_free_adjacents_cells_expected():
     board = Board(7, 7)
     x, y = 3, 3
@@ -326,15 +340,14 @@ def test_3x3_board_get_free_adjacents_cells_expected():
     board.get_element(2, 3).put_tribute(Tribute())
     board.get_element(2, 2).put_item(Weapon())
     free_adjacents = board.get_free_adjacents_cells(x, y)
-    
+
     expected_positions = [(2, 2), (2, 4), (3, 2), (3, 4), (4, 2), (4, 3), (4, 4)]
-    
+
     assert len(free_adjacents) == len(expected_positions)
-    
+
     for pos in expected_positions:
         cell = board.get_element(pos[0], pos[1])
         assert (cell.get_state() == State.FREE or cell.get_state() == State.ITEM)
-
 
 
 def test_get_free_adjacents_out_of_range(board: Board):
@@ -346,7 +359,7 @@ def test_get_free_adjacents_out_of_range(board: Board):
 def test_get_free_adjacents_positions_valid_position():
     board = Board(3, 3)
     x, y = 1, 1
-    board.put_item(2,2,Weapon())
+    board.put_item(2, 2, Weapon())
     free_positions = board.get_free_adjacents_positions(x, y)
     assert len(free_positions) == 8
     assert (0, 1) in free_positions
@@ -410,7 +423,7 @@ def test_fill_board_with_tributes_avoid_occupied_cells():
             assert (x, y) not in board.random_choice(tribute1)
     else:
         assert not tributes
-        
+
 
 def test_get_adjacent_positions():
     board = Board(4, 4)
@@ -458,7 +471,7 @@ def test_put_item_using_create_potion():
 
     board.put_item(0, 0, potion_life.items[0])
     board.put_item(1, 1, potion_life.items[1])
-    
+
     board.put_item(2, 0, potion_force.items[0])
     board.put_item(2, 1, potion_force.items[1])
 
@@ -478,6 +491,7 @@ def test_put_item_using_create_potion():
                'pf|pf|po'
     assert expected == res
 
+
 def test_put_item_using_create_weapon():
     board = Board(3, 3)
     sword = Sword()
@@ -490,61 +504,62 @@ def test_put_item_using_create_weapon():
 
     board.put_item(0, 1, sword.items[0])
     board.put_item(2, 0, sword.items[1])
-    
+
     board.put_item(1, 2, spear.items[0])
-    
+
     board.put_item(0, 0, bow.items[0])
     board.put_item(0, 2, bow.items[1])
     board.put_item(1, 1, bow.items[2])
     board.put_item(2, 2, bow.items[3])
 
     res = board.__str__()
-    expected = 'bo|sw|bo\n' \
-               '  |bo|sp\n' \
-               'sw|  |bo'
+    expected = 'wo|sw|wo\n' \
+               '  |wo|sp\n' \
+               'sw|  |wo'
     assert expected == res
 
-def test_distribute_items_potions():
-  board = Board(4, 4)
-  potion_life = PotionLife()
-  potion_force = PotionForce()
-  potion_poison = PotionPoison()
-  
-  potion_life.create_potion(4)
-  potion_force.create_potion(5)
-  potion_poison.create_potion(3)
 
-  board.distribute_items(potion_life)
-  board.distribute_items(potion_force)
-  board.distribute_items(potion_poison)
- 
-  count_potions = 0
-  for row in board.board:
+def test_distribute_items_potions():
+    board = Board(4, 4)
+    potion_life = PotionLife()
+    potion_force = PotionForce()
+    potion_poison = PotionPoison()
+
+    potion_life.create_potion(4)
+    potion_force.create_potion(5)
+    potion_poison.create_potion(3)
+
+    board.distribute_items(potion_life)
+    board.distribute_items(potion_force)
+    board.distribute_items(potion_poison)
+
+    count_potions = 0
+    for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
                 count_potions += 1
-  
-  assert count_potions == 12
+
+    assert count_potions == 12
+
 
 def test_distribute_items_weapons():
-  board = Board(4, 4)
-  sword = Sword()
-  spear = Spear()
-  bow = Bow()
+    board = Board(4, 4)
+    sword = Sword()
+    spear = Spear()
+    bow = Bow()
 
-  sword.create_weapon(5)
-  spear.create_weapon(5)
-  bow.create_weapon(4)
+    sword.create_weapon(5)
+    spear.create_weapon(5)
+    bow.create_weapon(4)
 
-  board.distribute_items(sword)
-  board.distribute_items(spear)
-  board.distribute_items(bow)
-  
-  count_weapons = 0
-  for row in board.board:
+    board.distribute_items(sword)
+    board.distribute_items(spear)
+    board.distribute_items(bow)
+
+    count_weapons = 0
+    for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
                 count_weapons += 1
-  
-  assert count_weapons == 14
-  
+
+    assert count_weapons == 14

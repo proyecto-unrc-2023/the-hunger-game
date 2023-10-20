@@ -2,7 +2,7 @@ import random
 
 from game.logic.cell import Cell, State
 from game.logic.district import District
-from game.logic.item import Weapon, Potion
+from game.logic.item import Weapon, Potion, Spear, Sword, Bow, PotionPoison, PotionLife, PotionForce
 from game.logic.tribute import Tribute
 
 
@@ -21,6 +21,7 @@ class Board:
         new_board = Board(n_rows, n_cols)
         districts = []
         neutrals = []
+        order = [0, 1, 2, 3, 4, 5]
         for i in range(6):
             district = District()
             districts.append(district)
@@ -71,24 +72,36 @@ class Board:
                     weapon = Weapon()
                     new_board.get_element(row, col).put_item(weapon)
                     weapon.pos = (row,col)
-                elif char == 'p':
-                    potion = Potion()
-                    new_board.get_element(row, col).put_item(potion)
-                    potion.pos = (row,col)
+                elif char == 'sp':
+                    spear = Spear()
+                    new_board.get_element(row, col).put_item(spear)
+                    spear.pos = (row,col)
+                elif char == 'sw':
+                    sword = Sword()
+                    new_board.get_element(row, col).put_item(sword)
+                    sword.pos = (row,col)
+                elif char == 'wo':
+                    bow = Bow()
+                    new_board.get_element(row, col).put_item(bow)
+                    bow.pos = (row,col)
+                elif char == 'po':
+                    potion_posion = PotionPoison()
+                    new_board.get_element(row, col).put_item(potion_posion)
+                    potion_posion.pos = (row,col)
+                elif char == 'pl':
+                    potion_life = PotionLife()
+                    new_board.get_element(row, col).put_item(potion_life)
+                    potion_life.pos = (row,col)
+                elif char == 'pf':
+                    potion_force = PotionForce()
+                    new_board.get_element(row, col).put_item(potion_force)
+                    potion_force.pos = (row,col)
+
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
-        return [new_board,districts,neutrals]
+        return [new_board,districts,neutrals,order]
 
-    # Creates a new instance of the Board class from a matrix of tributes.
-    # @staticmethod
-    def _from_string_matrix(rows, cols, matrix):
-        new_board = Board(rows, cols)
-        for row in range(rows):
-            for col in range(cols):
-                curr_tribute = matrix[row][col]
-                new_board.put_tribute(row, col, Tribute.from_string(curr_tribute))
-        return new_board
 
     # Initializes an instance of the Board class with dimensions X and Y
     def __init__(self, rows, columns):
@@ -176,11 +189,11 @@ class Board:
             if row_num < self.rows - 1:
                 res += '\n'
         return res
-    
+
     # Returns the position of the tribute.
     def get_pos(self, tribute):
         return tribute.pos
-    
+
     # Gets the cells adjacent to a specific position on the board.
     def get_adjacent_positions(self, row, column):
         adjacent_positions = []
