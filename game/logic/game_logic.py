@@ -34,6 +34,7 @@ class GameLogic:
         self.board = result[0]
         self.districts = result[1]
         self.neutrals = result[2]
+        self.order = result[3]
 
     def to_string(self):
         return self.board.__str__()
@@ -222,6 +223,8 @@ class GameLogic:
                             tribute.move_to(x, y, self.board)
                             item = cell.get_item()
                             self.applies_effects(item, tribute)
+                            if tribute.is_dead():
+                                self.remove_tribute(tribute)
                         else:
                             pos = tribute.move_closer_to(x, y, self.board)
                             tribute.move_to(pos[0], pos[1], self.board)
@@ -467,12 +470,7 @@ class GameLogic:
             for tribute in self.districts[num_district].tributes:
                 self.heuristic_tribute_first_attempt(tribute)
         temp = self.order.pop(0)
-        print(self.order)
-
         self.order.append(temp)
-        print(self.order)
-
-        return self.order
 
     # This method is a copy of init_simulation, avoiding the part of
     # configuring the district, assigns all default values and does NOT
@@ -504,7 +502,8 @@ class GameLogic:
         pos = tribute.calculate_flee(enemy, self.board)
         if(pos != False):
             self.remove_tribute(tribute)
-            self.put_tribute(pos[0], pos[1], tribute)
+            self.districts[tribute.district].add_tribute(tribute)
+            self.board.put_tribute(pos[0], pos[1], tribute)
             tribute.cowardice -= 0.5
         else:
             self.fight(tribute, enemy)

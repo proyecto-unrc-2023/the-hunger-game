@@ -9,12 +9,12 @@
       Y que la fuerza de t0, t1, t2, t3, n0, n1, n2 es 5
       Y luego que se muevan todos los tributos en el tablero, se mueven los neutros
 
-    Escenario: Dos tributos luchan y uno de ellos encuentra un item
+    Escenario: Dos tributos luchan y uno de ellos encuentra un item de curacion
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
       |  |  |t1|  |  |  |  |  |
-      |  |t0|p |  |  |  |  |  |
+      |  |t0|pl|  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
@@ -76,9 +76,81 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
+      Y t0 y t1 no tienen arma
       Cuando se ejecuta una iteracion
       Entonces la vida de t0 es 45
       Y la vida de t1 es 45
+
+    Escenario: Enfrentamiento entre 2 tributos
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |  |t0|sw|t1|  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |t2|t3|  |  |  |  |t4|t5|
+      Y t1 no tiene arma
+      Cuando se ejecuten 2 iteraciones
+      Entonces la vida de t0 es 40
+      Y t0 tiene una espada
+      Y la vida de t1 es 40
+
+
+    Escenario: Enfrentamiento entre 2 tributos
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |t0|sp|  |  |t1|  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y t1 no tiene arma
+      Cuando se ejecuten 2 iteraciones
+      Entonces t0 tiene una lanza
+      Y  la vida de t0 es 50
+      Y la vida de t1 es 42
+
+
+    Escenario: Enfrentamiento entre 2 tributos
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |t0|wo|  |  |t1|  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y t1 no tiene arma
+      Cuando se ejecuten 2 iteraciones
+      Entonces la vida de t0 es 50
+      Y t0 tiene un arco
+      Y la vida de t1 es 44
+
+
+
+    Escenario: Un tributo huye de un combate
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |  |t0|  |  |t1|  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y t0 tiene un punto de cobardia disponible
+      Cuando se ejecuta una iteracion
+      Entonces t0 usará medio punto de cobardia
+      Y la pocision de t0 será (3, 0)
 
     Escenario: Un tributo se alia con un tributo neutro
       Dado que el tablero de juego es el siguiente
@@ -172,7 +244,7 @@
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      |  |t0|p |  |  |  |  |  |
+      |  |t0|pl|  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
@@ -181,15 +253,47 @@
       Y la vida maxima de t0 es 60
       Cuando se ejecuta una iteracion
       Entonces t0 estara en (2,2)
-      Y p desaparece del mapa
-      Y la vida de t0 sera 55
+      Y pl desaparece del mapa
+      Y la vida de t0 sera 60
 
-    Escenario: Tributo encuentra un item de curación y no lo utiliza
+    Escenario: Tributo encuentra una pocion de fuerza y lo utiliza
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |t0|pf|  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Cuando se ejecuta una iteracion
+      Entonces t0 estara en (2,2)
+      Y pf desaparece del mapa
+      Y la fuerza de t0 sera 10
+
+    Escenario: Tributo encuentra una pocion de veneno y lo utiliza
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |t0|po|  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Cuando se ejecuta una iteracion
+      Entonces t0 estara en (2,2)
+      Y po desaparece del mapa
+      Y la vida de t0 sera 45
+
+    Escenario: Tributo encuentra una pocion de curación y no lo utiliza
       Dado que el tablero de juego es el siguiente
         |0 |1 |2 |3 |4 |5 |6 |7 |
         |  |  |  |  |  |  |  |  |
         |  |  |t0|  |  |  |  |  |
-        |  |  |p |  |  |  |  |  |
+        |  |  |pl|  |  |  |  |  |
         |  |  |  |  |  |  |  |  |
         |  |  |  |  |  |  |  |  |
         |  |  |  |  |  |  |  |  |
@@ -198,10 +302,10 @@
       Y la vida maxima de t0 es 50
       Cuando se ejecuta una iteracion
       Entonces t0 estara en (2,2)
-      Y p desaparece del mapa
+      Y pl desaparece del mapa
       Y la vida de t0 sera 50
 
-    Escenario: Tributo encuentra una espada y la recoge
+    Escenario: Tributo encuentra un arma y la recoge
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -218,7 +322,7 @@
       Y t0 estara en (2,3)
 
 
-    Escenario: Tributo encuentra una espada y no la recoge
+    Escenario: Tributo encuentra una arma y no la recoge
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -234,7 +338,7 @@
       Entonces la posicion de t0 debe ser distinta a (2,2) y a (2,3)
       Y w estara (2,3)
 
-    Escenario: Tributo ignora la espada y pelea
+    Escenario: Tributo ignora el arma y pelea
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -268,3 +372,116 @@
       Cuando se ejecuta una iteracion
       Entonces la vida de t1 sera 40
       Y la vida de t0 sera 45
+
+    Escenario: Se producen dos luchas al mismo tiempo
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |t0|sw|t1|  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |po|  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |t2|t3|
+      Cuando se ejecute el juego
+      Entonces el distrito 0 es el ganador
+      Y t0 tiene una espada
+
+
+    Escenario: Se producen dos luchas al mismo tiempo
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |t0|wo|  |  |t1|  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y la vida de t1 es 5
+      Cuando se ejecuten 2 iteraciones
+      Entonces t1 esta muerto
+      Y t0 tiene un arco
+
+    Escenario: Se producen dos luchas al mismo tiempo
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |t0|sp|  |t1|  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y la vida de t1 es 5
+      Cuando se ejecuten 2 iteraciones
+      Entonces t1 esta muerto
+      Y t0 tiene una lanza
+
+    Escenario: Se producen dos luchas al mismo tiempo
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |t0|sw|t1|  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y la vida de t1 es 5
+      Cuando se ejecuten 2 iteraciones
+      Entonces t1 esta muerto
+      Y t0 tiene una espada
+
+    Escenario: Se producen dos luchas al mismo tiempo
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |t0|po|  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y la vida de t0 es 5
+      Cuando se ejecuta una iteracion
+      Entonces t0 esta muerto
+
+    Escenario: Un tributo no logra aliarse con un tributo neutro y el tributo muere
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |  |  |  |  |  |  |  |  |
+      |  |t0|n0|  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      Y t0 tiene un valor de alianza 1
+      Y t0 le ofrece una alianza a n0
+      Y la vida de t0 es 5
+      Cuando n0 rechace la alianza de t0
+      Y se ejecuta una iteracion
+      Entonces el tributo n0 no forma parte del distrito 0
+      Y t0 esta muerto
+
+    Escenario: Se producen dos luchas al mismo tiempo
+      Dado que el tablero de juego es el siguiente
+      |0 |1 |2 |3 |4 |5 |6 |7 |
+      |t0|sw|  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |  |
+      |  |  |  |  |  |  |  |t1|
+      Cuando se ejecute el juego
+      Entonces el distrito 0 es el ganador
+      Y t0 tiene una espada

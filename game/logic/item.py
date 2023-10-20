@@ -106,7 +106,7 @@ class PotionLife(Potion):
     def apply_effect(self, tribute):
         if tribute.life == tribute.max_life or (tribute.life + POTION_LIFE > tribute.max_life):
             tribute.life = tribute.max_life
-        if tribute.life + POTION_LIFE < tribute.max_life:
+        if tribute.life + POTION_LIFE <= tribute.max_life:
             tribute.life += POTION_LIFE
 
     # Create potions life.
@@ -218,7 +218,7 @@ class Bow(Weapon):
     
     # Bow is bo
     def __str__(self):
-        return 'bo'
+        return 'wo'
 
     def __eq__(self, other):
         return isinstance(other, Bow)
