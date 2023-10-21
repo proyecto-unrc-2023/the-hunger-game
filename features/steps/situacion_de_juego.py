@@ -3,11 +3,14 @@ from behave import given, when, then
 from game.logic import item
 from game.logic.cell import State
 from game.logic.game_logic import GameLogic, GameMode
-from game.logic.item import Potion, PotionLife
+from game.logic.item import PotionLife
 from game.logic.tribute import Tribute
 
 
-@given(u'que el juego se ha iniciado')
+# BACKGROUND
+
+
+@given(u'que el juego se ha creado')
 def step_impl(context):
     context.game = GameLogic()
 
@@ -41,6 +44,8 @@ def step_impl(context):
     assert context.t1.max_life == 50
     assert context.t2.max_life == 50
     assert context.t3.max_life == 50
+    assert context.a0.max_life == 50
+    assert context.b0.max_life == 50
 
 
 @given(u'que la vida de n0, n1, n2 es 50 y no pertenecen a ningun distrito')
@@ -56,7 +61,7 @@ def step_impl(context):
     assert context.n2.life == 50
 
 
-@given(u'que la fuerza de t0, t1, t2, t3, n0, n1, n2 es 5')
+@given(u'que la fuerza de todos los tributos es 5')
 def step_impl(context):
     context.n0.force = 5
     context.n1.force = 5
@@ -68,6 +73,8 @@ def step_impl(context):
     assert context.n0.force == 5
     assert context.n1.force == 5
     assert context.n2.force == 5
+    assert context.a0.force == 5
+    assert context.b0.force == 5
 
 
 @given(u'luego que se muevan todos los tributos en el tablero, se mueven los neutros')
@@ -86,8 +93,8 @@ def step_impl(context):
 
 
 @given(
-    u'todos los tributos que compartan el mismo valor numerico (a1,b1) pertenecen al mismo distrito (Excepcion para '
-    u'la n)')
+    u'todos los tributos que compartan el mismo valor numerico (por ejemplo a1,b1) pertenecen al mismo distrito ('
+    u'Excepcion para la n)')
 def step_impl(context):
     context.expected = '  |n0|t1\n' \
                        'a1|b0|a0\n' \
@@ -106,16 +113,33 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
+# DIFERENTES FORMAS DE ITERAR EL JUEGO
+
+
+@when(u'se ejecuta una iteracion')
+def step_impl(context):
+    context.game.one_iteration()
+
+
+@when(u'se ejecuten 2 iteraciones')
+def step_impl(context):
+    context.game.one_iteration()
+    context.game.one_iteration()
+
+
+@when(u'se ejecute el juego')
+def step_impl(context):
+    context.game.mode = GameMode.SIMULATION
+    context.game.heuristic_of_game()
+
+
+# -------------------------------------------------------------------------------
+# Dos tributos luchan y uno de ellos encuentra un item de curacion
 
 
 @given(u'la poción cura 10 de vida')
 def step_impl(context):
     assert item.POTION_LIFE_EFFECT == 10
-
-
-@given(u'la fuerza de t1 es de 5')
-def step_impl(context):
-    assert context.t1.force == 5
 
 
 @given(u'la pocion esta en la posicion (2,2)')
@@ -141,6 +165,7 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
+# Tres tributos luchan
 
 
 @given(u't2 tiene en su rango de ataque a t0')
@@ -161,9 +186,9 @@ def step_impl(context):
     assert (str(tributes_in_range)).__eq__('t2')
 
 
-@when(u'se ejecuta una iteracion')
+@then(u'la vida de t0 es 40')
 def step_impl(context):
-    context.game.one_iteration()
+    assert context.game.districts[0].tributes[0].life == 40
 
 
 @then(u'la vida de t1 es 50')
@@ -176,18 +201,8 @@ def step_impl(context):
     assert context.game.districts[2].tributes[0].life == 45
 
 
-@then(u'la vida de t0 es 40')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].life == 40
-
-
 # -------------------------------------------------------------------------------
-
-
-@when(u'se ejecuten 2 iteraciones')
-def step_impl(context):
-    context.game.one_iteration()
-    context.game.one_iteration()
+# Dos tributos luchan y llega un aliado
 
 
 @then(u'a0 y b0 tendrán en su rango de ataque a t1')
@@ -198,22 +213,28 @@ def step_impl(context):
     assert (str(tributes_in_range1)).__eq__('t1')
 
 
-@then(u'la vida de a0 será 50')
+@then(u'la vida de a0 es 50')
 def step_impl(context):
     assert context.game.districts[0].tributes[0].life == 50
 
 
-@then(u'la vida de b0 será 40')
+@then(u'la vida de b0 es 40')
 def step_impl(context):
     assert context.game.districts[0].tributes[1].life == 40
 
 
-@then(u'la vida de t1 será 35')
+@then(u'la vida de t1 es 35')
 def step_impl(context):
     assert context.game.districts[1].tributes[0].life == 35
 
 
 # -------------------------------------------------------------------------------
+# Enfrentamiento entre 2 tributos
+
+@given(u't0 y t1 no tienen arma')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].weapon is False
+    assert context.game.districts[1].tributes[0].weapon is False
 
 
 @then(u'la vida de t0 es 45')
@@ -226,8 +247,127 @@ def step_impl(context):
     assert context.game.districts[1].tributes[0].life == 45
 
 
-# -------------------------------------------------------------------------------
+@given(u't1 no tiene arma')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].weapon is False
 
+
+@then(u'la vida de t1 es 40')
+def step_impl(context):
+    assert context.game.districts[1].tributes[0].life == 40
+
+
+@then(u'la vida de t0 es 50')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].life == 50
+
+
+@then(u'la vida de t0 es 60')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].life == 60
+
+
+@then(u't0 tiene una espada')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].range == 1
+
+
+@then(u't0 tiene una lanza')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].range == 2
+
+
+@then(u't0 tiene un arco')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].range == 3
+
+
+@then(u'la vida de t1 es 42')
+def step_impl(context):
+    assert context.game.districts[1].tributes[0].life == 42
+
+
+@then(u'la vida de t1 es 44')
+def step_impl(context):
+    assert context.game.districts[1].tributes[0].life == 44
+
+
+# -------------------------------------------------------------------------------
+# Un tributo huye de un combate
+
+
+@given(u't0 tiene un punto de cobardia disponible')
+def step_impl(context):
+    context.game.districts[0].tributes[0].cowardice = 1
+    assert context.game.districts[0].tributes[0].cowardice == 1
+
+
+@then(u't0 usará medio punto de cobardia')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].cowardice == 0.5
+
+
+@then(u'la pocision de t0 es (3, 0)')
+def step_impl(context):
+    assert context.game.districts[0].tributes[0].pos == (3, 0)
+
+
+# -------------------------------------------------------------------------------
+# Tributo con mayor fuerza inflige mayor daño a otro tributo con menor fuerza en combate
+
+@given(u'la fuerza de t0 es 10')
+def step_impl(context):
+    context.game.districts[0].tributes[0].force = 10
+    assert context.game.districts[0].tributes[0].force == 10
+
+
+# -------------------------------------------------------------------------------
+# Se producen dos luchas al mismo tiempo
+
+
+@then(u'el distrito 0 es el ganador')
+def step_impl(context):
+    print(context.game.board)
+    assert context.game.districts[1].tributes.__len__() == 0
+    assert context.game.districts[0].tributes.__len__() == 1
+    assert context.game.districts[2].tributes.__len__() == 0
+    assert context.game.districts[3].tributes.__len__() == 0
+
+
+# -------------------------------------------------------------------------------
+# Dos tributos luchan a muerte y uno de ellos tiene un arco
+# Dos tributos luchan a muerte y uno de ellos tiene una lanza
+# Dos tributos luchan a muerte y uno de ellos tiene una espada
+
+
+@given(u'la vida de t1 es 5')
+def step_impl(context):
+    context.game.districts[1].tributes[0].life = 5
+    assert context.game.districts[1].tributes[0].life == 5
+
+
+@then(u't1 esta muerto')
+def step_impl(context):
+    assert context.game.districts[1].tributes.__len__() == 0
+
+
+# -------------------------------------------------------------------------------
+# Un tributo muere por el efecto de la posion de veneno
+
+
+@given(u'la vida de t0 es 5')
+def step_impl(context):
+    context.game.districts[0].tributes[0].life = 5
+    assert context.game.districts[0].tributes[0].life == 5
+
+
+@then(u't0 esta muerto')
+def step_impl(context):
+    assert context.game.districts[0].tributes.__len__() == 0
+
+
+# -------------------------------------------------------------------------------
+# Un tributo se alia con un tributo neutro
 
 @given(u't0 tiene un valor de alianza 25')
 def step_impl(context):
@@ -264,7 +404,7 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
-
+# Un tributo no logra aliarse con un tributo neutro y el tributo muere
 
 @given(u't0 tiene un valor de alianza 1')
 def step_impl(context):
@@ -288,15 +428,12 @@ def step_impl(context):
 def step_impl(context):
     assert context.game.neutrals[0].enemy == context.game.districts[0].tributes[0]
 
+
 # -------------------------------------------------------------------------------
+# Dos tributos del mismo distrito se encuentran en el mapa y se ignoran
 
 
-@then(u'la vida de a0 sera 50')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].life == 50
-
-
-@then(u'la vida de b0 sera 50')
+@then(u'la vida de b0 es 50')
 def step_impl(context):
     assert context.game.districts[0].tributes[1].life == 50
 
@@ -312,6 +449,7 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
+# Muerte de un tributo en batalla
 
 
 @given(u't1 tiene 5 de vida')
@@ -341,7 +479,7 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
-
+# Dos tributos neutros se encuentran en el mapa y se ignoran
 
 @when(u'los neutrales iteren')
 def step_impl(context):
@@ -366,7 +504,7 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
-
+# Tributo encuentra un item de curacion y la utiliza
 
 @given(u'la vida maxima de t0 es 60')
 def step_impl(context):
@@ -374,29 +512,44 @@ def step_impl(context):
     assert context.game.districts[0].tributes[0].max_life == 60
 
 
-@then(u'la vida de t0 sera 60')
+@then(u'pl desaparece del mapa')
 def step_impl(context):
-    assert context.game.districts[0].tributes[0].life == 60
+    assert context.game.board.get_element(3, 2).state != State.ITEM
+
 
 # -------------------------------------------------------------------------------
+# Tributo encuentra una pocion de curación y no le aplica su efecto
 
 @given(u'la vida maxima de t0 es 50')
 def step_impl(context):
     assert context.game.districts[0].tributes[0].max_life == 50
 
 
-@then(u'la vida de t0 sera 50')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].life == 50
-
-
 # -------------------------------------------------------------------------------
+# Tributo encuentra una pocion de fuerza y la utiliza
 
 
-@then(u'la fuerza de t0 sera 10')
+@then(u'pf desaparece del mapa')
+def step_impl(context):
+    assert context.game.board.get_element(3, 2).state != State.ITEM
+
+
+@then(u'la fuerza de t0 es 10')
 def step_impl(context):
     assert context.game.districts[0].tributes[0].force == 10
 
+
+# -------------------------------------------------------------------------------
+# Tributo encuentra una pocion de veneno y la utiliza
+
+
+@then(u'po desaparece del mapa')
+def step_impl(context):
+    assert context.game.board.get_element(3, 2).state != State.ITEM
+
+
+# -------------------------------------------------------------------------------
+# Tributo que no tiene arma encuentra una arma y la recoge
 
 @then(u'w desaparece del mapa')
 def step_impl(context):
@@ -409,6 +562,8 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
+# Tributo que tiene arma encuentra una arma y NO la recoge
+# Tributo ignora el arma y pelea con otro tributo
 
 @given(u't0 tiene un arma')
 def step_impl(context):
@@ -422,6 +577,11 @@ def step_impl(context):
     assert context.game.districts[1].tributes[0].weapon
 
 
+@then(u'la posicion de t0 es (3,2)')
+def step_impl(context):
+    assert context.game.board.get_element(3, 2).state == State.TRIBUTE
+
+
 @then(u'la posicion de t0 debe ser distinta a (2,2) y a (2,3)')
 def step_impl(context):
     assert context.game.districts[0].tributes[0].pos != (2, 2)
@@ -431,144 +591,3 @@ def step_impl(context):
 @then(u'w estara (2,3)')
 def step_impl(context):
     assert context.game.board.get_element(2, 3).state == State.ITEM
-
-
-# -------------------------------------------------------------------------------
-
-
-@given(u'la fuerza de t0 es 10')
-def step_impl(context):
-    context.game.districts[0].tributes[0].force = 10
-    assert context.game.districts[0].tributes[0].force == 10
-
-
-@then(u'la vida de t1 sera 40')
-def step_impl(context):
-    assert context.game.districts[1].tributes[0].life == 40
-
-
-@then(u'la vida de t0 sera 45')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].life == 45
-
-
-@then(u'la posicion de t0 sera (3,2)')
-def step_impl(context):
-    assert context.game.board.get_element(3, 2).state == State.TRIBUTE
-
-
-# Esto dsp lo acomodo (o no)
-
-
-@given(u't0 y t1 no tienen arma')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].weapon is False
-    assert context.game.districts[1].tributes[0].weapon is False
-
-
-@given(u't1 no tiene arma')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].weapon is False
-
-
-@given(u't0 tiene un punto de cobardia disponible')
-def step_impl(context):
-    context.game.districts[0].tributes[0].cowardice = 1
-    assert context.game.districts[0].tributes[0].cowardice == 1
-
-
-@then(u'la vida de t1 es 40')
-def step_impl(context):
-    assert context.game.districts[1].tributes[0].life == 40
-
-
-@then(u'la vida de t0 es 50')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].life == 50
-
-
-@then(u't0 tiene una lanza')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].range == 2
-
-
-@then(u't0 tiene un arco')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].range == 3
-
-
-@then(u'la vida de t1 es 42')
-def step_impl(context):
-    assert context.game.districts[1].tributes[0].life == 42
-
-
-@then(u'la vida de t1 es 44')
-def step_impl(context):
-    assert context.game.districts[1].tributes[0].life == 44
-
-
-@then(u't0 usará medio punto de cobardia')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].cowardice == 0.5
-
-
-@then(u'la pocision de t0 será (3, 0)')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].pos == (3,0)
-
-
-@then(u'pl desaparece del mapa')
-def step_impl(context):
-    assert context.game.board.get_element(3, 2).state != State.ITEM
-
-
-@then(u'pf desaparece del mapa')
-def step_impl(context):
-    assert context.game.board.get_element(3, 2).state != State.ITEM
-
-
-@then(u'po desaparece del mapa')
-def step_impl(context):
-    assert context.game.board.get_element(3, 2).state != State.ITEM
-
-
-@when(u'se ejecute el juego')
-def step_impl(context):
-    context.game.mode = GameMode.SIMULATION
-    context.game.heuristic_of_game()
-
-
-@then(u'el distrito 0 es el ganador')
-def step_impl(context):
-    print(context.game.board)
-    assert context.game.districts[1].tributes.__len__() == 0
-    assert context.game.districts[0].tributes.__len__() == 1
-    assert context.game.districts[2].tributes.__len__() == 0
-    assert context.game.districts[3].tributes.__len__() == 0
-
-
-@then(u't0 tiene una espada')
-def step_impl(context):
-    assert context.game.districts[0].tributes[0].range == 1
-
-
-@given(u'la vida de t1 es 5')
-def step_impl(context):
-    context.game.districts[1].tributes[0].life = 5
-    assert context.game.districts[1].tributes[0].life == 5
-
-
-@then(u't1 esta muerto')
-def step_impl(context):
-    assert context.game.districts[1].tributes.__len__() == 0
-
-
-@given(u'la vida de t0 es 5')
-def step_impl(context):
-    context.game.districts[0].tributes[0].life = 5
-    assert context.game.districts[0].tributes[0].life == 5
-
-
-@then(u't0 esta muerto')
-def step_impl(context):
-    assert context.game.districts[0].tributes.__len__() == 0
