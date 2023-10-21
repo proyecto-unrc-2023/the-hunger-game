@@ -118,6 +118,7 @@ def test_2x2_board_from_string():
     assert t2.district == 2
     assert t3.district == 3
 
+
 def test_2x4_board_from_string():
     board_str = '  |  |  |  \n' \
                 '  |  |  |  '
@@ -519,27 +520,27 @@ def test_put_item_using_create_weapon():
 
 
 def test_distribute_items():
-  board = Board(6, 6)
-  # Create and distribute potions
-  potion_list = [PotionLife, PotionForce, PotionPoison]
-  for potion in potion_list:
-      p = potion()
-      p.create_potion(5)
-      board.distribute_items(p)
-  # Create and distribute weapons
-  weapon_list = [Sword, Spear, Bow]
-  for weapon in weapon_list:
-      w = weapon()
-      w.create_weapon(5)
-      board.distribute_items(w)
+    board = Board(6, 6)
+    # Create and distribute potions
+    potion_list = [PotionLife, PotionForce, PotionPoison]
+    for potion in potion_list:
+        p = potion()
+        p.create_potion(5)
+        board.distribute_items(p)
+    # Create and distribute weapons
+    weapon_list = [Sword, Spear, Bow]
+    for weapon in weapon_list:
+        w = weapon()
+        w.create_weapon(5)
+        board.distribute_items(w)
 
-  count_item = 0
-  for row in board.board:
+    count_item = 0
+    for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
                 count_item += 1
-  
-  assert count_item == 30  
+
+    assert count_item == 30
 
 
 def test_create_and_distribute_item():
@@ -555,7 +556,7 @@ def test_create_and_distribute_item():
         for cell in row:
             if cell.state == State.ITEM:
                 count_items += 1
-      
+
     assert count_items == 30
 
 
@@ -565,12 +566,12 @@ def test_distribute_potions_and_weapons_on_board():
     num_weapons = 15
     board.distribute_potions()
     board.distribute_weapons()
-    
+
     count_items = 0
     for row in board.board:
         for cell in row:
             if cell.state == State.ITEM:
                 count_items += 1
-     
-    total_items = num_potions + num_weapons 
+
+    total_items = num_potions + num_weapons
     assert count_items == total_items

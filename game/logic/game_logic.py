@@ -1,5 +1,4 @@
 from enum import Enum
-import math
 
 from game.logic.board import Board, BoardSchema
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT, TributeSchema
@@ -7,6 +6,7 @@ from game.logic.cell import State
 from game.logic.item import Weapon
 from game.logic.district import District, TRIBUTES_DEFAULT, DistrictSchema
 from marshmallow import Schema, fields
+
 
 class GameMode(Enum):
     NOT_STARTED = 1
@@ -67,7 +67,7 @@ class GameLogic:
 
         self.board.remove_tribute(tribute)
 
-    # Places a Item at a specific position on the board.
+    # Places an Item at a specific position on the board.
     def put_item(self, row, column, item):
         self.board.put_item(row, column, item)
 
@@ -83,41 +83,6 @@ class GameLogic:
         self.neutrals.append(neutral)
         neutral.name = 'n' + str(len(self.neutrals) - 1)
 
-    # Returns the positions visible to an tribute within an certain range.
-    def tribute_vision_pos(self, tribute):
-        visible_positions = []
-        row = tribute.pos[0]
-        column = tribute.pos[1]
-
-        # Checks adjacent cells within a 3 radius.
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1),
-                       (-2, 0), (2, 0), (0, -2), (0, 2), (-2, -1), (-2, 1), (-1, -2), (-1, 2),
-                       (-2, -2), (-2, 2), (1, -2), (1, 2), (2, -1), (2, 1), (2, -2), (2, 2),
-                       (-3, 0), (3, 0), (0, -3), (0, 3), (-3, -2), (-3, -1), (-3, 1), (-3, 2),
-                       (-2, -3), (-2, 3), (-1, -3), (-1, 3), (-3, -3), (-3, 3), (1, -3), (1, 3),
-                       (2, -3), (2, 3), (3, -2), (3, -1), (3, 2), (3, 1), (3, -3), (3, 3)]:
-            new_row, new_column = row + dr, column + dc
-
-            if 0 <= new_row < self.board.rows and 0 <= new_column < self.board.columns:
-                visible_positions.append((new_row, new_column))
-
-        return visible_positions
-
-    # Returns the list of visible cells for a tribute.
-    def tribute_vision_cells(self, tribute):
-        if not (0 <= tribute.pos[0] < self.board.rows) or not (0 <= tribute.pos[1] < self.board.columns):
-            raise ValueError(f"Coordinates ({tribute.pos[0]}, {tribute.pos[1]}) are out of bounds")
-
-        list_pos = self.tribute_vision_pos(tribute)
-        tribute_visionCells = []
-
-        for pos in list_pos:
-            x, y = pos
-            if 0 <= x < self.board.rows and 0 <= y < self.board.columns:
-                tribute_visionCells.append(self.board.get_element(x, y))
-
-        return tribute_visionCells
-
     # Returns the closest occupied cell to the tribute.
     def tribute_vision_closeness(self, tribute):
         def calculate_distance(cell):
@@ -128,18 +93,18 @@ class GameLogic:
                 else:
                     distance -= 0.8
             elif cell.get_state() == State.TRIBUTE:
-                if cell.get_tribute().district == None:
+                if cell.get_tribute().district is None:
                     distance -= 0.001
 
             return distance
 
-        vision_cells = self.tribute_vision_cells(tribute)
+        vision_cells = tribute.tribute_vision_cells(self.board)
 
         occupied_cells = [
             cell
             for cell in vision_cells
             if cell.get_state() == State.ITEM or
-               (cell.get_state() == State.TRIBUTE and cell.get_tribute().district != tribute.district)
+            (cell.get_state() == State.TRIBUTE and cell.get_tribute().district != tribute.district)
             # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
             # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
@@ -164,22 +129,22 @@ class GameLogic:
     def fight(self, tribute, tribute2):
         x = tribute2.pos[0]
         y = tribute2.pos[1]
-        if(tribute.range == 3):
+        if tribute.range == 3:
             tribute.attack_to(tribute2, self.board)
-        elif(tribute.range == 2):
-            if ((x,y) in tribute.get_neighbors_2_distance(self.board) or 
-            (x,y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
+        elif tribute.range == 2:
+            if ((x, y) in tribute.get_neighbors_2_distance(self.board) or
+                    (x, y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1])):
                 tribute.attack_to(tribute2, self.board)
             else:
                 pos = tribute.move_closer_to(x, y, self.board)
                 tribute.move_to(pos[0], pos[1], self.board)
         else:
-            if (x,y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
+            if (x, y) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
                 tribute.attack_to(tribute2, self.board)
             else:
                 pos = tribute.move_closer_to(x, y, self.board)
                 tribute.move_to(pos[0], pos[1], self.board)
-                
+
         if tribute2.is_dead():
             self.remove_tribute(tribute2)
             tribute.enemy = None
@@ -198,40 +163,40 @@ class GameLogic:
         else:
             neutral.move_to_random(self.board)
 
-    # Implements a heuristic move for a tribute" in a game or simulation.
+    # Implements a heuristic move for a tribute in a game or simulation.
     def heuristic_tribute_first_attempt(self, tribute):
         # Find a nearby occupied cell ordered by closeness to the tribute.
         cell = self.tribute_vision_closeness(tribute)
         # If there are no occupied cells nearby, move the tribute to a random cell on the game board.
-        if cell == False:
+        if cell is False:
             tribute.move_to_random(self.board)
         else:
             # Get the position of the occupied cell in the vision.
             x = cell.pos[0]
             y = cell.pos[1]
-            Tx = tribute.pos[0]
-            Ty = tribute.pos[1]
+            pos_x_t = tribute.pos[0]
+            pos_y_t = tribute.pos[1]
 
             if not (tribute.enemy is None):
                 self.fight(tribute, tribute.enemy)
             else:
                 # Check the state of the cell (ITEM or TRIBUTE).
                 if cell.get_state() == State.ITEM:
-                        # If it's an item, go to retrieve it.
-                        if (x, y) in self.board.get_adjacent_positions(Tx, Ty):
-                            tribute.move_to(x, y, self.board)
-                            item = cell.get_item()
-                            self.applies_effects(item, tribute)
-                            if tribute.is_dead():
-                                self.remove_tribute(tribute)
-                        else:
-                            pos = tribute.move_closer_to(x, y, self.board)
-                            tribute.move_to(pos[0], pos[1], self.board)
+                    # If it's an item, go to retrieve it.
+                    if (x, y) in self.board.get_adjacent_positions(pos_x_t, pos_y_t):
+                        tribute.move_to(x, y, self.board)
+                        item = cell.get_item()
+                        self.applies_effects(item, tribute)
+                        if tribute.is_dead():
+                            self.remove_tribute(tribute)
+                    else:
+                        pos = tribute.move_closer_to(x, y, self.board)
+                        tribute.move_to(pos[0], pos[1], self.board)
                 elif cell.get_state() == State.TRIBUTE:
-                    # If it's a tribute,check if its a neutral or not
-                    if cell.get_tribute().district == None:
-                        if cell.get_tribute().pos in self.board.get_adjacent_positions(Tx, Ty):
-                            if tribute.alliance_to(cell.get_tribute()) == True:
+                    # If it's a tribute,check if it's a neutral or not
+                    if cell.get_tribute().district is None:
+                        if cell.get_tribute().pos in self.board.get_adjacent_positions(pos_x_t, pos_y_t):
+                            if tribute.alliance_to(cell.get_tribute()) is True:
                                 district = self.districts[tribute.district]
                                 self.alliance_neutral(cell.get_tribute(), district)
                             else:
@@ -243,7 +208,6 @@ class GameLogic:
                         if tribute.cowardice > 0:
                             self.get_away(tribute, cell.get_tribute())
                         else:
-                            pos = cell.get_tribute().pos
                             # move to an adjacent position to it, and if already adjacent, attack.
                             cell_with_tribute = self.board.get_element(x, y)
                             t2 = cell_with_tribute.get_tribute()
@@ -273,12 +237,12 @@ class GameLogic:
         self.order_attack()
         if self.mode != GameMode.SIMULATION:
             raise ValueError(f'The state of the game is not SIMULATION')
-        while self.end_game() == False:
+        while self.end_game() is False:
             self.all_iteration()
             if not (self.neutrals is None):
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
-            line = '-' * (self.board.columns * 3 - 3) 
+            line = '-' * (self.board.columns * 3 - 3)
             print(line)
             print(self.to_string())
 
@@ -286,7 +250,7 @@ class GameLogic:
     # configure five random districts, distributes items and tributes in board
     def init_simulation(self, rows, columns):
         self.new_game(rows, columns)
-        # Is necesary create an instance of district here and set by default every stat.
+        # Is necessary create an instance of district here and set by default every stat.
         district = District()
         life, force, alliance, cowardice = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT
         cant_tributes, number_district = TRIBUTES_DEFAULT, 0
@@ -344,7 +308,8 @@ class GameLogic:
                 # Choice 4 Tributes
                 elif choice == 4:
                     while True:
-                        tributes_points = int(input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
+                        tributes_points = int(
+                            input("How many points do you want to spend on Tributes? Each tribute costs 4 points: "))
                         if tributes_points in (4, 8):
                             required_points = tributes_points
                             num_tributes = tributes_points // 4
@@ -361,14 +326,14 @@ class GameLogic:
                 # Choice 5 Cowardice            
                 elif choice == 5:
                     while True:
-                        cowardice_points = int(input("How many points do you want to spend on Cobardice?: "))
+                        cowardice_points = int(input("How many points do you want to spend on Cowardice?: "))
                         if cowardice == 5:
                             print("Cowardice is at 5. You can't spend more points on it.")
                             break
                         if 1 <= cowardice_points <= points and cowardice_points <= 5:
                             cowardice += cowardice_points
                             points -= cowardice_points
-                            print("Cowardice insreased by:", cowardice)
+                            print("Cowardice increased by:", cowardice)
                             break
                         elif 5 < cowardice_points <= 10:
                             print("The limit for spending points on cowardice is 5.")
@@ -377,7 +342,7 @@ class GameLogic:
                             print("Invalid input. You have", points, "points.")
                 else:
                     print("Invalid option. Please choose a number between 1 and 4.")
-            
+
             except ValueError:
                 print("Invalid input. Please enter a valid number (1 - 5).")
             # If you spent all points then it asks if you want to reconfigure the district
@@ -408,18 +373,18 @@ class GameLogic:
             if i != number_district:
                 district = District()
                 district.cant_tributes = TRIBUTES_DEFAULT
-                district.set_config_by_default(i) # valor cowardice aqui?
+                district.set_config_by_default(i)  # valor cowardice aqui?
                 self.districts.append(district)
         # Distribute potions and weapons
         self.board.distribute_potions()
         self.board.distribute_weapons()
-        
+
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])
-        
+
         self.mode = GameMode.SIMULATION
         print(self.to_string())
-        self.heuristic_of_game() 
+        self.heuristic_of_game()
 
     def one_iteration(self):
         for district in self.districts:
@@ -436,7 +401,8 @@ class GameLogic:
                 pos = self.board.random_pos()
                 self.put_tribute(pos[0], pos[1], self.districts[j].tributes[i])
 
-    def table_to_string(self, behave_table):
+    @staticmethod
+    def table_to_string(behave_table):
         rows = []
         for row in behave_table:
             row_str = "|".join(row)
@@ -464,9 +430,9 @@ class GameLogic:
     def prepare_the_game(self, rows, columns):
         self.new_game(rows, columns)
         district = District()
-        life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT 
-        cant_tributes, cowardice = TRIBUTES_DEFAULT, COWARDICE_DEFAULT 
-        number_district = 0 
+        life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
+        cant_tributes, cowardice = TRIBUTES_DEFAULT, COWARDICE_DEFAULT
+        number_district = 0
         district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.append(district)
         # Configure districts by random
@@ -480,20 +446,20 @@ class GameLogic:
         # distribute all tributes of districts in board
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])
-    
+
     def get_away(self, tribute, enemy):
         pos = tribute.calculate_flee(enemy, self.board)
-        if(pos != False):
+        if pos is not False:
             self.remove_tribute(tribute)
             self.districts[tribute.district].add_tribute(tribute)
             self.board.put_tribute(pos[0], pos[1], tribute)
             tribute.cowardice -= 0.5
         else:
             self.fight(tribute, enemy)
-            
+
+
 class GameLogicSchema(Schema):
     mode = fields.Str()
     board = fields.Nested(BoardSchema)
     districts = fields.Nested(DistrictSchema, many=True)
     neutrals = fields.Nested(TributeSchema, many=True)
-

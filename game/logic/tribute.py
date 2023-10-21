@@ -15,6 +15,7 @@ RANGE_DEFAULT = 1
 COWARDICE_DEFAULT = 0
 MAX_COWARDICE = 5
 
+
 class Tribute:
 
     def __init__(self):
@@ -31,7 +32,6 @@ class Tribute:
         self.enemy = None
         self.configured = False
         self.range = RANGE_DEFAULT
-        
 
     @staticmethod
     def from_string(tribute_str):
@@ -72,10 +72,9 @@ class Tribute:
     def attack_to(self, tribute, board):
         listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])
         if tribute.district != self.district:
-                tribute.life -= self.force
+            tribute.life -= self.force
         else:
             raise ValueError(f"Not possible attack, same district")
-
 
     def set_config_parameters(self, life, force, alliance, district):
         self.life = life
@@ -147,21 +146,21 @@ class Tribute:
     def get_neighbors_2_distance_free(self, board):
         (x, y) = self.pos
         neighbors = []
-        
+
         # Coordenadas a una distancia de 2 unidades en todas las direcciones
         possible_neighbors = self.get_neighbors_2_distance(board)
-        
+
         for pos in possible_neighbors:
             if (0 <= pos[0] < board.rows) and (0 <= pos[1] < board.columns):
-                if(board.get_element(pos[0],pos[1]).get_state() == State.FREE):
-                    neighbors.append((pos[0],pos[1]))
-        
+                if (board.get_element(pos[0], pos[1]).get_state() == State.FREE):
+                    neighbors.append((pos[0], pos[1]))
+
         return neighbors
-    
+
     def get_neighbors_2_distance(self, board):
         (x, y) = self.pos
         neighbors = []
-        
+
         # Coordenadas a una distancia de 2 unidades en todas las direcciones
         possible_neighbors = [
             (x - 2, y - 2), (x - 2, y - 1), (x - 2, y), (x - 2, y + 1), (x - 2, y + 2),
@@ -169,11 +168,11 @@ class Tribute:
             (x + 2, y - 1), (x + 2, y), (x + 2, y + 1), (x + 2, y + 2),
             (x - 1, y + 2), (x, y + 2), (x + 1, y + 2)
         ]
-        
+
         for i, j in possible_neighbors:
             if (0 <= i < board.rows) and (0 <= j < board.columns):
                 neighbors.append((i, j))
-        
+
         return neighbors
 
     def calculate_flee(self, enemy, board):
@@ -184,28 +183,64 @@ class Tribute:
             return False
         x_escape = []
         y_escape = []
-        if(eX > tX):
-            x_escape = [tX-2, tX-1, tX] 
+        if (eX > tX):
+            x_escape = [tX - 2, tX - 1, tX]
         else:
-            x_escape = [tX+2, tX+1, tX]
-        if(eY > tY):
-            y_escape = [tY-2, tY-1, tY] 
+            x_escape = [tX + 2, tX + 1, tX]
+        if (eY > tY):
+            y_escape = [tY - 2, tY - 1, tY]
         else:
-            y_escape = [tY+2, tY+1, tY]
-        
+            y_escape = [tY + 2, tY + 1, tY]
+
         for x in x_escape:
             for y in y_escape:
-                if (x,y) in neighbors:
-                    if (x,y) != (self.pos):
-                        return (x,y)
-        
+                if (x, y) in neighbors:
+                    if (x, y) != (self.pos):
+                        return (x, y)
+
         return neighbors[0]
-    
+
+    # Returns the positions visible to an tribute within an certain range.
+    def tribute_vision_pos(self, board):
+        visible_positions = []
+        row = self.pos[0]
+        column = self.pos[1]
+
+        # Checks adjacent cells within a 3 radius.
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1),
+                       (-2, 0), (2, 0), (0, -2), (0, 2), (-2, -1), (-2, 1), (-1, -2), (-1, 2),
+                       (-2, -2), (-2, 2), (1, -2), (1, 2), (2, -1), (2, 1), (2, -2), (2, 2),
+                       (-3, 0), (3, 0), (0, -3), (0, 3), (-3, -2), (-3, -1), (-3, 1), (-3, 2),
+                       (-2, -3), (-2, 3), (-1, -3), (-1, 3), (-3, -3), (-3, 3), (1, -3), (1, 3),
+                       (2, -3), (2, 3), (3, -2), (3, -1), (3, 2), (3, 1), (3, -3), (3, 3)]:
+            new_row, new_column = row + dr, column + dc
+
+            if 0 <= new_row < board.rows and 0 <= new_column < board.columns:
+                visible_positions.append((new_row, new_column))
+
+        return visible_positions
+
+    # Returns the list of visible cells for a tribute.
+    def tribute_vision_cells(self, board):
+        if not (0 <= self.pos[0] < board.rows) or not (0 <= self.pos[1] < board.columns):
+            raise ValueError(f"Coordinates ({self.pos[0]}, {self.pos[1]}) are out of bounds")
+
+        list_pos = self.tribute_vision_pos(board)
+        tribute_vision_cells = []
+
+        for pos in list_pos:
+            x, y = pos
+            if 0 <= x < board.rows and 0 <= y < board.columns:
+                tribute_vision_cells.append(board.get_element(x, y))
+
+        return tribute_vision_cells
+
+
 class TributeSchema(Schema):
     name = fields.Str()
     life = fields.Integer
     force = fields.Integer
     alliance = fields.Integer
-    cowardice = fields.Integer 
+    cowardice = fields.Integer
     district = fields.Integer
     pos = fields.Integer

@@ -20,10 +20,10 @@ class Cell:
         self.item = None
         self.tribute = None
         self.pos = None
-        
+
     def get_pos(self):
-        return self.pos    
-    
+        return self.pos
+
     def get_state(self):
         return self.state
 
@@ -47,10 +47,8 @@ class Cell:
         if self.state == TRIBUTE:
             return self.tribute.__str__()
 
-    
     def __eq__(self, other):
         return isinstance(other, Cell)
-
 
     def put_tribute(self, tribute):
         if self.state == TRIBUTE:
@@ -62,7 +60,7 @@ class Cell:
     def remove_tribute(self):
         if self.get_state() == ITEM or self.get_state() == FREE:
             raise ValueError(f"Trying to remove one Item  or the cell is FREE.")
-        
+
         self.tribute.past_pos = self.tribute.pos
         self.state = FREE
         self.tribute = None
@@ -75,17 +73,18 @@ class Cell:
         self.item = item
 
     def remove_item(self):
-        if self.item == None:
+        if self.item is None:
             raise ValueError(f"Trying to remove a Item where there isn't one.")
-        if self.tribute == None:
+        if self.tribute is None:
             self.state = FREE
 
         self.item = None
 
+
 class CellSchema(Schema):
     from game.logic.item import ItemSchema
     from game.logic.tribute import TributeSchema
-    
+
     state = fields.Str()
     item = fields.Nested(ItemSchema)
     tribute = fields.Nested(TributeSchema)

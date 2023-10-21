@@ -1,7 +1,6 @@
 import pytest
 
 from game.logic.cell import State
-from game.logic.district import District
 from game.logic.game_logic import GameLogic, GameMode
 from game.logic.item import Bow, Potion, PotionForce, PotionLife, PotionPoison, Spear, Sword, Weapon
 from game.logic.tribute import Tribute
@@ -90,43 +89,13 @@ def test_remove_tribute2():
     game.put_tribute(1,0,t2)
     game.remove_tribute(t1)
 
-def test_tribute_vision_pos():
-    game = GameLogic()
-    game.new_game(7, 7)
-    t1 = Tribute()
-    t1.pos = (3, 3)
-
-    visible_positions = game.tribute_vision_pos(t1)
-    assert len(visible_positions) == 48
-    for x in range(6):
-        for y in range(6):
-            if x != 3 and y != 3:
-                assert (x, y) in visible_positions
-                assert (x, y) in visible_positions
-                assert (x, y) in visible_positions
-                assert (x, y) in visible_positions
-                assert (x, y) in visible_positions
-                assert (x, y) in visible_positions
-                assert (x, y) in visible_positions
-
-
-def test_tribute_vision_pos_with_tribute_in_border():
-    game = GameLogic()
-    game.new_game(7, 7)
-    t1 = Tribute()
-    t1.pos = (0, 0)
-
-    visible_positions = game.tribute_vision_pos(t1)
-    assert len(visible_positions) == 15
-
-
 def test_tribute_vision_cells_with_a_cells():
     game = GameLogic()
     game.new_game(3, 3)
     x, y = 1, 1
     tribute1 = Tribute()
     game.board.put_tribute(1, 1, tribute1)
-    tribute_vision_cells = game.tribute_vision_cells(tribute1)
+    tribute_vision_cells = tribute1.tribute_vision_cells(game.board)
     assert len(tribute_vision_cells) == 8
     assert game.board.get_element(0, 0) in tribute_vision_cells
     assert game.board.get_element(0, 1) in tribute_vision_cells

@@ -1,12 +1,12 @@
 from marshmallow import Schema, fields
 
-POTION_LIFE_EFFECT = 10 # mas adelanta borrala, representa a POTION_LIFE
+POTION_LIFE_EFFECT = 10  # mas adelanta borrala, representa a POTION_LIFE
 
 POTION_LIFE = 10
 POTION_FORCE = 5
 POTION_POISON = 5
 
-WEAPON_EFFECT = 5 # mas adelante borrarla, representa a SWORD_EFFECT
+WEAPON_EFFECT = 5  # mas adelante borrarla, representa a SWORD_EFFECT
 
 SWORD_EFFECT = 5
 
@@ -16,7 +16,8 @@ RANGE_SPEAR = 1
 BOW_EFFECT = 1
 RANGE_BOW = 2
 
-class Item():
+
+class Item:
 
     def __init__(self):
         self.pos = None
@@ -37,10 +38,10 @@ class Item():
 
     def get_cant_items(self):
         return self.cant_items
-    
+
     def get_pos(self):
         return self.pos
-    
+
     # Apply some efect on tribute.
     def apply_effect(tribute):
         pass
@@ -51,15 +52,16 @@ class Item():
     def is_potion(self):
         return isinstance(self, Potion)
 
+
 class Potion(Item):
-    
+
     def __str__(self):
-        return 'p ' #sera reemplazado por pass
+        return 'p '  # sera reemplazado por pass
 
     def __eq__(self, other):
         return isinstance(other, Potion)
 
-    def apply_effect(self, tribute): #el cuerpo sera reemplazado por pass
+    def apply_effect(self, tribute):  # el cuerpo sera reemplazado por pass
         if tribute.life == tribute.max_life:
             tribute.life += 0
         if tribute.life + POTION_LIFE_EFFECT > tribute.max_life:
@@ -67,12 +69,13 @@ class Potion(Item):
             tribute.life += effect
         if tribute.life + POTION_LIFE_EFFECT < tribute.max_life:
             tribute.life += POTION_LIFE_EFFECT
-     
+
     def create_potion(self, num_potion):
         pass
 
+
 class PotionForce(Potion):
-    
+
     # Potion force is pf
     def __str__(self):
         return 'pf'
@@ -83,7 +86,7 @@ class PotionForce(Potion):
     # Apply effect of potion force to tribute. The force has no limit.
     def apply_effect(self, tribute):
         tribute.force += POTION_FORCE
-    
+
     # Create potions force
     def create_potion(self, num_potion):
         if num_potion < 0:
@@ -93,15 +96,16 @@ class PotionForce(Potion):
             self.items.append(potion_force)
             self.cant_items += 1
 
+
 class PotionLife(Potion):
-    
+
     # Potion life is pl
     def __str__(self):
         return 'pl'
-    
+
     def __eq__(self, other):
         return isinstance(other, PotionLife)
-    
+
     # Apply effect of potion life to tribute.
     def apply_effect(self, tribute):
         if tribute.life == tribute.max_life or (tribute.life + POTION_LIFE > tribute.max_life):
@@ -118,8 +122,9 @@ class PotionLife(Potion):
             self.items.append(potion_life)
             self.cant_items += 1
 
+
 class PotionPoison(Potion):
-     
+
     # Potion poison is po
     def __str__(self):
         return 'po'
@@ -142,16 +147,16 @@ class PotionPoison(Potion):
             self.items.append(potion_poison)
             self.cant_items += 1
 
+
 class Weapon(Item):
 
-    
     def __str__(self):
-        return 'w ' #sera reemplazado por pass
+        return 'w '  # sera reemplazado por pass
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
 
-    def apply_effect(self, tribute): #sera reemplazado por pass
+    def apply_effect(self, tribute):  # sera reemplazado por pass
         if not tribute.weapon:
             tribute.force += WEAPON_EFFECT
             tribute.weapon = True
@@ -161,6 +166,7 @@ class Weapon(Item):
     def create_weapon(self, num_weapon):
         pass
 
+
 class Sword(Weapon):
 
     # Sword is sw
@@ -169,7 +175,7 @@ class Sword(Weapon):
 
     def __eq__(self, other):
         return isinstance(other, Sword)
-    
+
     # Apply effect sword on tribute.
     def apply_effect(self, tribute):
         if not tribute.weapon:
@@ -187,6 +193,7 @@ class Sword(Weapon):
             self.items.append(sword)
             self.cant_items += 1
 
+
 class Spear(Weapon):
 
     # Spear is sp
@@ -195,7 +202,7 @@ class Spear(Weapon):
 
     def __eq__(self, other):
         return isinstance(other, Spear)
-    
+
     # Apply effect spear on tribute.
     def apply_effect(self, tribute):
         if not tribute.weapon:
@@ -214,15 +221,16 @@ class Spear(Weapon):
             self.items.append(spear)
             self.cant_items += 1
 
+
 class Bow(Weapon):
-    
+
     # Bow is bo
     def __str__(self):
         return 'wo'
 
     def __eq__(self, other):
         return isinstance(other, Bow)
-    
+
     # Apply effect bow on tribute.
     def apply_effect(self, tribute):
         if not tribute.weapon:
@@ -240,8 +248,8 @@ class Bow(Weapon):
             bow = Bow()
             self.items.append(bow)
             self.cant_items += 1
-            
+
 
 class ItemSchema(Schema):
-    name = fields.Function(lambda obj: obj.__str__())   
-    #name = fields.Function(self.__str__())
+    name = fields.Function(lambda obj: obj.__str__())
+    # name = fields.Function(self.__str__())
