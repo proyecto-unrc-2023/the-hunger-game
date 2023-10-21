@@ -1,6 +1,6 @@
 import random
 
-from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, TributeSchema
+from game.logic.tribute import Tribute, TributeSchema
 from marshmallow import Schema, fields
 
 TRIBUTES_DEFAULT = 4
@@ -23,7 +23,7 @@ class District:
 
     # Configure own tributes with life, force, alliance, number of district and
     # numbers of tributes.
-    def set_config(self, life, force, alliance, number_district, cant_tributes):        
+    def set_config(self, life, force, alliance, number_district, cant_tributes, cowardice):        
         self.number_district = number_district
         self.cant_tributes = cant_tributes
         letters = 'tabcdefghijklm'
@@ -31,6 +31,7 @@ class District:
             tribute = Tribute()
             tribute.name = letters[i+1] + str(number_district)
             tribute.set_config_parameters(life, force, alliance, number_district)
+            tribute.cowardice = cowardice
             tribute.configured = True
             self.tributes.append(tribute)
 

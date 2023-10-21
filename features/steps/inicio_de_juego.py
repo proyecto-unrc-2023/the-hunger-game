@@ -43,7 +43,7 @@ def step_impl(context):
     assert tribute_zero.alliance == tribute_one.alliance
     assert tribute_zero.max_life == tribute_one.max_life
     assert tribute_zero.district == tribute_one.district
-
+    assert tribute_zero.cowardice == tribute_one.cowardice
 
 @then(u'todos los distritos tienen al menos un tributo')
 def step_impl(context):
@@ -53,4 +53,3 @@ def step_impl(context):
     assert context.game.districts[3].cant_tributes > 0
     assert context.game.districts[4].cant_tributes > 0
     assert context.game.districts[5].cant_tributes > 0
-    assert context.game.districts[6].cant_tributes > 0

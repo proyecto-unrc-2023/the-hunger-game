@@ -5,13 +5,14 @@ from game.logic.tribute import Tribute, LIFE_DEFAULT
 
 def test_set_config_tributes():
     district = District()
-    district.set_config(50, 15, 6, 0, 5)
+    district.set_config(50, 15, 6, 0, 5, 3)
     list_tributes = district.tributes
     for i in range(len(list_tributes)):
         assert list_tributes[i].life == 50
         assert list_tributes[i].force == 15
         assert list_tributes[i].alliance == 6
         assert list_tributes[i].district == 0
+        assert list_tributes[i].cowardice == 3
 
 def test_set_config_by_default_tributes():
     district = District()
