@@ -123,7 +123,34 @@ def test_move_closer_to():
     (x, y) = tribute.move_closer_to(4, 4, board)
     tribute.move_to(x, y, board)
     assert tribute.pos == (4,4)
-    
+
+def test_tribute_vision_pos():
+    board = Board(7,7)
+    t1 = Tribute()
+    t1.pos = (3, 3)
+
+    visible_positions = t1.tribute_vision_pos(board)
+    assert len(visible_positions) == 48
+    for x in range(6):
+        for y in range(6):
+            if x != 3 and y != 3:
+                assert (x, y) in visible_positions
+                assert (x, y) in visible_positions
+                assert (x, y) in visible_positions
+                assert (x, y) in visible_positions
+                assert (x, y) in visible_positions
+                assert (x, y) in visible_positions
+                assert (x, y) in visible_positions
+
+
+def test_tribute_vision_pos_with_tribute_in_border():
+    board = Board(7,7)
+    t1 = Tribute()
+    t1.pos = (0, 0)
+
+    visible_positions = t1.tribute_vision_pos(board)
+    assert len(visible_positions) == 15
+
 def test_neighbors():
     board = Board(5, 5)
     t1 = Tribute()

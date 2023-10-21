@@ -26,7 +26,7 @@ class Board:
         for i in range(6):
             district = District()
             districts.append(district)
-            
+
         for row in range(n_rows):
             for col in range(n_cols):
                 char = matrix[row][col].strip()
@@ -52,7 +52,7 @@ class Board:
                                 districts[1].add_tribute(tribute)
                             elif tribute_number == 2:
                                 tribute.set_config_parameters(50, 5, 3, 2)
-                                districts[2].add_tribute(tribute)                               
+                                districts[2].add_tribute(tribute)
                             elif tribute_number == 3:
                                 tribute.set_config_parameters(50, 5, 3, 3)
                                 districts[3].add_tribute(tribute)
@@ -62,7 +62,7 @@ class Board:
                             elif tribute_number == 5:
                                 tribute.set_config_parameters(50, 5, 3, 5)
                                 districts[5].add_tribute(tribute)
-                            new_board.put_tribute(row,col, tribute)
+                            new_board.put_tribute(row, col, tribute)
                         else:
                             raise ValueError(f'Invalid tribute number: {tribute_number}')
                     except ValueError:
@@ -72,37 +72,36 @@ class Board:
                 elif char == 'w':
                     weapon = Weapon()
                     new_board.get_element(row, col).put_item(weapon)
-                    weapon.pos = (row,col)
+                    weapon.pos = (row, col)
                 elif char == 'sp':
                     spear = Spear()
                     new_board.get_element(row, col).put_item(spear)
-                    spear.pos = (row,col)
+                    spear.pos = (row, col)
                 elif char == 'sw':
                     sword = Sword()
                     new_board.get_element(row, col).put_item(sword)
-                    sword.pos = (row,col)
+                    sword.pos = (row, col)
                 elif char == 'wo':
                     bow = Bow()
                     new_board.get_element(row, col).put_item(bow)
-                    bow.pos = (row,col)
+                    bow.pos = (row, col)
                 elif char == 'po':
-                    potion_posion = PotionPoison()
-                    new_board.get_element(row, col).put_item(potion_posion)
-                    potion_posion.pos = (row,col)
+                    potion_poison = PotionPoison()
+                    new_board.get_element(row, col).put_item(potion_poison)
+                    potion_poison.pos = (row, col)
                 elif char == 'pl':
                     potion_life = PotionLife()
                     new_board.get_element(row, col).put_item(potion_life)
-                    potion_life.pos = (row,col)
+                    potion_life.pos = (row, col)
                 elif char == 'pf':
                     potion_force = PotionForce()
                     new_board.get_element(row, col).put_item(potion_force)
-                    potion_force.pos = (row,col)
+                    potion_force.pos = (row, col)
 
                 elif char != '':
                     raise ValueError(f'Invalid character in board string: {char}')
 
-        return [new_board,districts,neutrals,order]
-
+        return [new_board, districts, neutrals, order]
 
     # Initializes an instance of the Board class with dimensions X and Y
     def __init__(self, rows, columns):
@@ -113,7 +112,7 @@ class Board:
             curr_row = []
             for col in range(self.columns):
                 cell = Cell()
-                cell.pos = (row,col)
+                cell.pos = (row, col)
                 curr_row.append(cell)
             self.board.append(curr_row)
 
@@ -160,12 +159,12 @@ class Board:
 
     # Creat and distribute one type of potion or weapon on board.
     def create_and_distribute_item(self, item):
-        if item.is_potion():     
+        if item.is_potion():
             num_potion = 5
             item.create_potion(num_potion)
         else:
             num_weapon = 5
-            item.create_weapon(num_weapon)    
+            item.create_weapon(num_weapon)
         self.distribute_items(item)
 
     # Distribute different types of potions on board.
@@ -190,7 +189,7 @@ class Board:
             element = self.get_element(x, y)
             if element.state != State.TRIBUTE and element.state != State.ITEM:
                 return x, y
-        
+
     # Converts a row of cells on the board into a string representation.
     @staticmethod
     def _row_to_string(row):
@@ -216,7 +215,8 @@ class Board:
         return res
 
     # Returns the position of the tribute.
-    def get_pos(self, tribute):
+    @staticmethod
+    def get_pos(tribute):
         return tribute.pos
 
     # Gets the cells adjacent to a specific position on the board.
@@ -287,11 +287,10 @@ class Board:
                 element = self.get_element(new_row, new_column)
                 if element.get_state() != State.TRIBUTE:
                     free_positions.append((new_row, new_column))
-                
+
         return free_positions
 
-    
-    # Makes a random choice of a free adjacent position for a tribute without 
+    # Makes a random choice of a free adjacent position for a tribute without
     # considering the tribute's previous position.
     def random_choice(self, tribute):
         x = tribute.pos[0]
@@ -301,7 +300,6 @@ class Board:
         if tribute.past_pos in free_adjacents_pos:
             free_adjacents_pos.remove(tribute.past_pos)
 
-
         if not free_adjacents_pos:
             raise ValueError(f"No available free adjacent positions for Tribute {tribute}")
 
@@ -310,6 +308,7 @@ class Board:
             pos = random.choice(free_adjacents_pos)
 
         return pos
+
 
 class BoardSchema(Schema):
     rows = fields.Integer()
