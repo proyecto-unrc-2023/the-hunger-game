@@ -3,7 +3,7 @@ from enum import Enum
 from game.logic.board import Board, BoardSchema
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT, TributeSchema
 from game.logic.cell import State
-from game.logic.item import Weapon
+from game.logic.item import Weapon, Sword, Spear, Bow
 from game.logic.district import District, TRIBUTES_DEFAULT, DistrictSchema
 from marshmallow import Schema, fields
 
@@ -105,8 +105,6 @@ class GameLogic:
             for cell in vision_cells
             if cell.get_state() == State.ITEM or
             (cell.get_state() == State.TRIBUTE and cell.get_tribute().district != tribute.district)
-            # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
-            # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
 
         if tribute.weapon:
@@ -373,7 +371,7 @@ class GameLogic:
             if i != number_district:
                 district = District()
                 district.cant_tributes = TRIBUTES_DEFAULT
-                district.set_config_by_default(i)  # valor cowardice aqui?
+                district.set_config_by_default(i)
                 self.districts.append(district)
         # Distribute potions and weapons
         self.board.distribute_potions()

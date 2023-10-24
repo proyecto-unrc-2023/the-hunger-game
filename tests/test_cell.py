@@ -1,7 +1,7 @@
 import pytest
 from game.logic.cell import Cell, State
 from game.logic.tribute import Tribute
-from game.logic.item import Item, Potion, Weapon
+from game.logic.item import Item, PotionLife, Sword
 
 
 def test_cell_initial_state():
@@ -101,14 +101,14 @@ def test_string_representation():
     cell = Cell()
     assert str(cell) == '  '
 
-    weapon = Weapon()
-    cell.put_item(weapon)
-    assert str(cell) == weapon.__str__()
+    pl = PotionLife()
+    cell.put_item(pl)
+    assert str(cell) == pl.__str__()
 
-    potion = Potion()
+    sw = Sword()
     cell.remove_item()
-    cell.put_item(potion)
-    assert str(cell) == potion.__str__()
+    cell.put_item(sw)
+    assert str(cell) == sw.__str__()
 
     tribute = Tribute()
     cell.put_tribute(tribute)

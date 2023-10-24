@@ -1,21 +1,15 @@
 from marshmallow import Schema, fields
 
-POTION_LIFE_EFFECT = 10  # mas adelanta borrala, representa a POTION_LIFE
-
 POTION_LIFE = 10
 POTION_FORCE = 5
 POTION_POISON = 5
 
-WEAPON_EFFECT = 5  # mas adelante borrarla, representa a SWORD_EFFECT
-
 SWORD_EFFECT = 5
-
 SPEAR_EFFECT = 3
-RANGE_SPEAR = 1
-
 BOW_EFFECT = 1
-RANGE_BOW = 2
 
+RANGE_SPEAR = 1
+RANGE_BOW = 2
 
 class Item:
 
@@ -24,27 +18,11 @@ class Item:
         self.cant_items = 0
         self.items = []
 
-    @staticmethod
-    def from_string(object_str):
-        if object_str == Potion().__str__():
-            return Potion()
-        elif object_str == Weapon().__str__():
-            return Weapon()
-        else:
-            raise ValueError(f'Invalid object string: {object_str}')
-
-    def __str__(self):
-        pass
-
     def get_cant_items(self):
         return self.cant_items
 
     def get_pos(self):
         return self.pos
-
-    # Apply some efect on tribute.
-    def apply_effect(tribute):
-        pass
 
     def is_weapon(self):
         return isinstance(self, Weapon)
@@ -55,20 +33,25 @@ class Item:
 
 class Potion(Item):
 
+    @staticmethod
+    def from_string(potion_str):
+        if potion_str == PotionLife().__str__():
+            return PotionLife()
+        elif potion_str == PotionForce().__str__():
+            return PotionForce()
+        elif potion_str == PotionPoison().__str__():
+            return PotionPoison()
+        else:
+            raise ValueError(f'Invalid object string: {potion_str}')
+
     def __str__(self):
-        return 'p '  # sera reemplazado por pass
+        pass
 
     def __eq__(self, other):
         return isinstance(other, Potion)
 
-    def apply_effect(self, tribute):  # el cuerpo sera reemplazado por pass
-        if tribute.life == tribute.max_life:
-            tribute.life += 0
-        if tribute.life + POTION_LIFE_EFFECT > tribute.max_life:
-            effect = tribute.max_life - tribute.life
-            tribute.life += effect
-        if tribute.life + POTION_LIFE_EFFECT < tribute.max_life:
-            tribute.life += POTION_LIFE_EFFECT
+    def apply_effect(self, tribute):
+        pass
 
     def create_potion(self, num_potion):
         pass
@@ -76,7 +59,7 @@ class Potion(Item):
 
 class PotionForce(Potion):
 
-    # Potion force is pf
+    # Potion force is representing by pf
     def __str__(self):
         return 'pf'
 
@@ -87,7 +70,7 @@ class PotionForce(Potion):
     def apply_effect(self, tribute):
         tribute.force += POTION_FORCE
 
-    # Create potions force
+    # Create potions force.
     def create_potion(self, num_potion):
         if num_potion < 0:
             raise ValueError(f'Invalid input number: {num_potion}')
@@ -99,7 +82,7 @@ class PotionForce(Potion):
 
 class PotionLife(Potion):
 
-    # Potion life is pl
+    # Potion life is  representing by pl
     def __str__(self):
         return 'pl'
 
@@ -125,14 +108,14 @@ class PotionLife(Potion):
 
 class PotionPoison(Potion):
 
-    # Potion poison is po
+    # Potion poison is representing by po
     def __str__(self):
         return 'po'
 
     def __eq__(self, other):
         return isinstance(other, PotionPoison)
 
-    # Apply effect poison to tribute.
+    # Apply effect potion poison to tribute.
     def apply_effect(self, tribute):
         tribute.life -= POTION_POISON
         if tribute.is_dead():
@@ -150,33 +133,40 @@ class PotionPoison(Potion):
 
 class Weapon(Item):
 
+    @staticmethod
+    def from_string(weapon_str):
+        if weapon_str == Sword().__str__():
+            return Sword()
+        elif weapon_str == Spear().__str__():
+            return Spear()
+        elif weapon_str == Bow().__str__():
+            return Bow()
+        else:
+            raise ValueError(f'Invalid object string: {weapon_str}')
+
     def __str__(self):
-        return 'w '  # sera reemplazado por pass
+        pass
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
 
-    def apply_effect(self, tribute):  # sera reemplazado por pass
-        if not tribute.weapon:
-            tribute.force += WEAPON_EFFECT
-            tribute.weapon = True
-        else:
-            raise ValueError("Tribute has a weapon already")
-
+    def apply_effect(self, tribute):
+        pass
+    
     def create_weapon(self, num_weapon):
         pass
 
 
 class Sword(Weapon):
 
-    # Sword is sw
+    # Sword is representing by sw
     def __str__(self):
         return 'sw'
 
     def __eq__(self, other):
         return isinstance(other, Sword)
 
-    # Apply effect sword on tribute.
+    # Apply effect sword on tribute. Tribute can take just one sword.
     def apply_effect(self, tribute):
         if not tribute.weapon:
             tribute.force += SWORD_EFFECT
@@ -196,14 +186,14 @@ class Sword(Weapon):
 
 class Spear(Weapon):
 
-    # Spear is sp
+    # Spear is representing by sp
     def __str__(self):
         return 'sp'
 
     def __eq__(self, other):
         return isinstance(other, Spear)
 
-    # Apply effect spear on tribute.
+    # Apply effect spear on tribute. Tribute can take just one spear.
     def apply_effect(self, tribute):
         if not tribute.weapon:
             tribute.weapon = True
@@ -224,14 +214,14 @@ class Spear(Weapon):
 
 class Bow(Weapon):
 
-    # Bow is bo
+    # Bow is representing by wo
     def __str__(self):
         return 'wo'
 
     def __eq__(self, other):
         return isinstance(other, Bow)
 
-    # Apply effect bow on tribute.
+    # Apply effect bow on tribute. Tribute can take just one bow.
     def apply_effect(self, tribute):
         if not tribute.weapon:
             tribute.force += BOW_EFFECT

@@ -94,14 +94,21 @@ def test_4x4_board_with_two_tribute_to_string():
     assert expected == res
 
 
-def test_2x2_board_to_string_with_tribute_weapon_potion():
-    board = Board(2, 2)
+def test_3x3_board_to_string_tribute_weapons_potions():
+    board = Board(3, 3)
     board.put_tribute(0, 1, Tribute())
-    board.put_item(0, 0, Potion())
-    board.put_item(1, 1, Weapon())
+    board.put_item(1, 0, Sword())
+    board.put_item(2, 2, Spear())
+    board.put_item(0, 2, Bow())
+    
+    board.put_item(1, 2, PotionLife())
+    board.put_item(2, 1, PotionForce())
+    board.put_item(0, 0, PotionPoison())
+
     res = board.__str__()
-    expected = 'p |t \n' \
-               '  |w '
+    expected = 'po|t |wo\n' \
+               'sw|  |pl\n' \
+               '  |pf|sp'
     assert expected == res
 
 
@@ -214,10 +221,10 @@ def test_2x2_board_put_item_potion_from_string():
 
 
 def test_2x2_board_put_item_and_remove_item(board: Board):
-    weapon1 = Weapon()
-    board.put_item(0, 1, weapon1)
-    assert board.get_element(0, 1).__str__() == 'w '
-    board.remove_item(weapon1)
+    sword = Sword()
+    board.put_item(0, 1, sword)
+    assert board.get_element(0, 1).__str__() == 'sw'
+    board.remove_item(sword)
     assert board.get_element(0, 1).__str__() == '  '
 
 
@@ -241,7 +248,7 @@ def test_2x2_board_get_pos_tribute():
 def test_2x2_board_valid_pos(board: Board):
     t1 = Tribute()
     board.put_tribute(0, 1, t1)
-    board.put_item(1, 0, Weapon())
+    board.put_item(1, 0, Spear())
 
     assert board.valid_pos((0, 0)) is True
     assert board.valid_pos((0, 1)) is False
@@ -326,7 +333,7 @@ def test_3x3_board_get_free_adjacents_some_adjacent_cells_occupied():
     x, y = 3, 3
     board.get_element(2, 3).put_tribute(Tribute())
     board.get_element(2, 2).put_tribute(Tribute())
-    board.get_element(2, 0).put_item(Weapon())
+    board.get_element(2, 0).put_item(Bow())
     free_adjacents = board.get_free_adjacents_cells(x, y)
     assert len(free_adjacents) == 6
     for cell in free_adjacents:
@@ -338,7 +345,7 @@ def test_3x3_board_get_free_adjacents_cells_expected():
     x, y = 3, 3
     board.get_element(0, 1).put_tribute(Tribute())
     board.get_element(2, 3).put_tribute(Tribute())
-    board.get_element(2, 2).put_item(Weapon())
+    board.get_element(2, 2).put_item(Sword())
     free_adjacents = board.get_free_adjacents_cells(x, y)
 
     expected_positions = [(2, 2), (2, 4), (3, 2), (3, 4), (4, 2), (4, 3), (4, 4)]
@@ -359,7 +366,7 @@ def test_get_free_adjacents_out_of_range(board: Board):
 def test_get_free_adjacents_positions_valid_position():
     board = Board(3, 3)
     x, y = 1, 1
-    board.put_item(2, 2, Weapon())
+    board.put_item(2, 2, Bow())
     free_positions = board.get_free_adjacents_positions(x, y)
     assert len(free_positions) == 8
     assert (0, 1) in free_positions
@@ -375,13 +382,11 @@ def test_get_free_adjacents_positions_valid_position():
 def test_get_free_adjacents_positions_boundary_positions():
     board = Board(3, 3)
 
-    # Esquina superior izquierda
-    x, y = 0, 0
+    x, y = 0, 0 # Esquina superior izquierda
     free_positions = board.get_free_adjacents_positions(x, y)
     assert len(free_positions) == 3
-
-    # Esquina inferior Derecha
-    x, y = 2, 2
+    
+    x, y = 2, 2 # Esquina inferior Derecha
     free_positions = board.get_free_adjacents_positions(x, y)
     assert len(free_positions) == 3
 
@@ -471,10 +476,8 @@ def test_put_item_using_create_potion():
 
     board.put_item(0, 0, potion_life.items[0])
     board.put_item(1, 1, potion_life.items[1])
-
     board.put_item(2, 0, potion_force.items[0])
     board.put_item(2, 1, potion_force.items[1])
-
     board.put_item(0, 2, potion_poison.items[0])
     board.put_item(1, 2, potion_poison.items[1])
     board.put_item(2, 2, potion_poison.items[2])
@@ -504,9 +507,7 @@ def test_put_item_using_create_weapon():
 
     board.put_item(0, 1, sword.items[0])
     board.put_item(2, 0, sword.items[1])
-
     board.put_item(1, 2, spear.items[0])
-
     board.put_item(0, 0, bow.items[0])
     board.put_item(0, 2, bow.items[1])
     board.put_item(1, 1, bow.items[2])

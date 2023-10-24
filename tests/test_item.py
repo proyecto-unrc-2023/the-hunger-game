@@ -1,36 +1,27 @@
 import pytest
 
 from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT
-from game.logic.item import BOW_EFFECT, SPEAR_EFFECT, Item, Potion, PotionForce, PotionLife, PotionPoison, Weapon, \
-    Sword, Spear, Bow
-from game.logic.item import POTION_LIFE_EFFECT, POTION_FORCE, POTION_LIFE, POTION_POISON, SWORD_EFFECT
+from game.logic.item import Potion, PotionForce, PotionLife, PotionPoison, Weapon, \
+                            Sword, Spear, Bow
+from game.logic.item import POTION_FORCE, POTION_LIFE, POTION_POISON, SWORD_EFFECT, \
+                            BOW_EFFECT, SPEAR_EFFECT
 
 
-def test_create_potion_from_str():
-    res = Item.from_string('p ')
-    assert res.__eq__(Potion())
+def test_from_string_potion_type():
+    pl = Potion.from_string('pl')
+    pf = Potion.from_string('pf')
+    po = Potion.from_string('po')
+    assert pl.__eq__(PotionLife())
+    assert pf.__eq__(PotionForce())
+    assert po.__eq__(PotionPoison())
 
-
-def test_create_weapon_from_str():
-    res = Item.from_string('w ')
-    assert res.__eq__(Weapon())
-
-
-def test_potion_apply_effect():
-    tribute = Tribute()
-    tribute.life = 75
-    tribute.max_life = 100
-    potion = Potion()
-    potion.apply_effect(tribute)
-    assert tribute.life.__eq__(75 + POTION_LIFE_EFFECT)
-
-    tribute1 = Tribute()
-    tribute1.life = 100
-    tribute1.max_life = 100
-    potion1 = Potion()
-    potion1.apply_effect(tribute1)
-    assert tribute1.life.__eq__(100)
-
+def test_from_string_weapon_type():
+    sw = Weapon.from_string('sw')
+    sp = Weapon.from_string('sp')
+    wo = Weapon.from_string('wo')
+    assert sw.__eq__(Sword())
+    assert sp.__eq__(Spear())
+    assert wo.__eq__(Bow())
 
 # tests apply_effect potion
 def test_apply_effect_potion_force_life_poison():
@@ -77,17 +68,17 @@ def test_create_potion_force_life_poison():
     potion_force = PotionForce()
     num_potion_force = 10
     potion_force.create_potion(num_potion_force)
-    assert potion_force.cant_items == num_potion_force
+    assert potion_force.get_cant_items() == num_potion_force
 
     potion_life = PotionLife()
     num_potion_life = 25
     potion_life.create_potion(num_potion_life)
-    assert potion_life.cant_items == num_potion_life
+    assert potion_life.get_cant_items() == num_potion_life
 
     potion_poison = PotionPoison()
     num_potion_poison = 5
     potion_poison.create_potion(num_potion_poison)
-    assert potion_poison.cant_items == num_potion_poison
+    assert potion_poison.get_cant_items() == num_potion_poison
 
 
 # testing apply_effect weapon
@@ -144,15 +135,15 @@ def test_create_weapon_sword_spear_bow():
     assert bow.cant_items == 17
 
 
-def test_potion_get_pos():
-    potion = Potion()
-    potion.pos = (1, 1)
-    res = potion.get_pos()
+def test_potion_life_get_pos():
+    pl = PotionLife()
+    pl.pos = (1, 1)
+    res = pl.get_pos()
     assert res.__eq__((1, 1))
 
 
-def test_weapon_get_pos():
-    weapon = Weapon()
-    weapon.pos = (3, 2)
-    res = weapon.get_pos()
+def test_weapon_sword_get_pos():
+    sw = Sword()
+    sw.pos = (3, 2)
+    res = sw.get_pos()
     assert res.__eq__((3, 2))

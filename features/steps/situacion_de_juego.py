@@ -139,7 +139,7 @@ def step_impl(context):
 
 @given(u'la poción cura 10 de vida')
 def step_impl(context):
-    assert item.POTION_LIFE_EFFECT == 10
+    assert item.POTION_LIFE == 10
 
 
 @given(u'la pocion esta en la posicion (2,2)')
@@ -551,7 +551,7 @@ def step_impl(context):
 # -------------------------------------------------------------------------------
 # Tributo que no tiene arma encuentra una arma y la recoge
 
-@then(u'w desaparece del mapa')
+@then(u'sw desaparece del mapa')
 def step_impl(context):
     assert context.game.board.get_element(2, 3).state == State.TRIBUTE
 
@@ -588,6 +588,6 @@ def step_impl(context):
     assert context.game.districts[0].tributes[0].pos != (2, 3)
 
 
-@then(u'w estara (2,3)')
+@then(u'sw estara (2,3)')
 def step_impl(context):
     assert context.game.board.get_element(2, 3).state == State.ITEM

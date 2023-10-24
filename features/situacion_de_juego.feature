@@ -436,13 +436,12 @@
       Y la vida de t0 es 45
 
 
-
-    Escenario: Tributo que no tiene arma encuentra una arma y la recoge
+    Escenario: Tributo que no tiene arma encuentra un arma y la recoge
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      |  |  |t0|w |  |  |  |  |
+      |  |  |t0|sw|  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
@@ -450,16 +449,16 @@
       |  |  |  |  |  |  |  |  |
       Cuando se ejecuta una iteracion
       Entonces la fuerza de t0 es 10
-      Y w desaparece del mapa
+      Y sw desaparece del mapa
       Y t0 estara en (2,3)
 
 
-    Escenario: Tributo que tiene arma encuentra una arma y NO la recoge
+    Escenario: Tributo que tiene arma encuentra un arma y NO la recoge
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      |  |  |t0|w |  |  |  |  |
+      |  |  |t0|sw|  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
@@ -468,14 +467,15 @@
       Y t0 tiene un arma
       Cuando se ejecuta una iteracion
       Entonces la posicion de t0 debe ser distinta a (2,2) y a (2,3)
-      Y w estara (2,3)
+      Y sw estara (2,3)
+
 
     Escenario: Tributo ignora el arma y pelea con otro tributo
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      |  |  |t0|w |  |  |  |  |
+      |  |  |t0|sw|  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |t1|  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
@@ -485,5 +485,5 @@
       Y t1 tiene un arma
       Cuando se ejecuta una iteracion
       Entonces la posicion de t0 es (3,2)
-      Y w estara (2,3)
+      Y sw estara (2,3)
       Y la vida de t0 es 45
