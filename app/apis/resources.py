@@ -21,3 +21,9 @@ class MenuResource(Resource):
         # Devuelve los datos serializados como una respuesta JSON
         return jsonify(result)
 
+    def get_new_district(self):
+        district = dict(number_district=2)
+        schema = DistrictSchema()
+        result = jsonify(schema.dump(district))
+        
+        return result

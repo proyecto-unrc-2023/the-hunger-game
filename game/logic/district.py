@@ -1,6 +1,6 @@
 import random
 
-from game.logic.tribute import Tribute, TributeSchema
+from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
 
 TRIBUTES_DEFAULT = 4
@@ -69,6 +69,12 @@ class District:
 
 
 class DistrictSchema(Schema):
+    from game.logic.tribute import TributeSchema
     number_district = fields.Integer()
     cant_tributes = fields.Integer()
-    tributes = fields.Nested(TributeSchema, many=True)
+    tributes = fields.Nested(TributeSchema(), many=True)
+    life = fields.Integer()
+    force = fields.Integer()
+    alliance = fields.Integer()
+    cowardice = fields.Integer()
+    

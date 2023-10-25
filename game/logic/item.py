@@ -252,4 +252,6 @@ class Bow(Weapon):
 
 class ItemSchema(Schema):
     name = fields.Function(lambda obj: obj.__str__())
+    mode = fields.Str()
+    effect = fields.Integer()
     # name = fields.Function(self.__str__())

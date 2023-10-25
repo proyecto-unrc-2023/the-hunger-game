@@ -1,7 +1,6 @@
 import random
 
 from game.logic.cell import Cell, CellSchema, State
-from game.logic.district import District
 from game.logic.item import Weapon, Spear, Sword, Bow, PotionPoison, PotionLife, PotionForce
 from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
@@ -10,6 +9,8 @@ from marshmallow import Schema, fields
 class Board:
     # Converts a string representing a board into an instance of the Board class.  
     def from_string(board_str):
+        from game.logic.district import District
+        
         rows = board_str.split('\n')
         n_rows = len(rows)
         if n_rows < 1:
@@ -313,4 +314,4 @@ class Board:
 class BoardSchema(Schema):
     rows = fields.Integer()
     columns = fields.Integer()
-    board = fields.Nested(CellSchema, many=True)
+    board = fields.List(fields.List(fields.Nested(CellSchema, many=True)))

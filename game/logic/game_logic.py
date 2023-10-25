@@ -1,10 +1,10 @@
 from enum import Enum
 
-from game.logic.board import Board, BoardSchema
-from game.logic.tribute import Tribute, LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT, TributeSchema
+from game.logic.board import Board
+from game.logic.tribute import LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT
 from game.logic.cell import State
 from game.logic.item import Weapon
-from game.logic.district import District, TRIBUTES_DEFAULT, DistrictSchema
+from game.logic.district import District, TRIBUTES_DEFAULT
 from marshmallow import Schema, fields
 
 
@@ -78,6 +78,7 @@ class GameLogic:
 
     # Places a Neutral at a specific position on the board and in Neutrals.
     def put_neutral(self, x, y):
+        from game.logic.tribute import Tribute
         neutral = Tribute()
         self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
@@ -459,6 +460,9 @@ class GameLogic:
 
 
 class GameLogicSchema(Schema):
+    from game.logic.district import DistrictSchema
+    from game.logic.board import BoardSchema
+    from game.logic.tribute import TributeSchema
     mode = fields.Str()
     board = fields.Nested(BoardSchema)
     districts = fields.Nested(DistrictSchema, many=True)

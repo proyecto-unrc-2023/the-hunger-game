@@ -3,7 +3,6 @@ import random
 
 from marshmallow import Schema, fields
 
-from game.logic.cell import State
 
 MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50
@@ -120,6 +119,8 @@ class Tribute:
 
     # Moves a tribute to a specific position on the board.
     def move_to(self, x, y, board):
+        from game.logic.cell import State
+        
         board.remove_tribute(self)
         if not (board.valid_pos(self.pos)):
             raise ValueError(f'Position no valid')
@@ -144,6 +145,8 @@ class Tribute:
         return possible_moves[0]
 
     def get_neighbors_2_distance_free(self, board):
+        from game.logic.cell import State
+        
         (x, y) = self.pos
         neighbors = []
 
@@ -238,9 +241,9 @@ class Tribute:
 
 class TributeSchema(Schema):
     name = fields.Str()
-    life = fields.Integer
-    force = fields.Integer
-    alliance = fields.Integer
-    cowardice = fields.Integer
-    district = fields.Integer
-    pos = fields.Integer
+    life = fields.Integer()
+    force = fields.Integer()
+    alliance = fields.Integer()
+    cowardice = fields.Integer()
+    district = fields.Integer()
+    pos = fields.Tuple((fields.Integer(), fields.Integer()), required=True)
