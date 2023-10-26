@@ -8,6 +8,7 @@ from marshmallow import Schema, fields
 
 
 class Board:
+    
     # Converts a string representing a board into an instance of the Board class.  
     def from_string(board_str):
         rows = board_str.split('\n')

@@ -33,7 +33,6 @@ class District:
             tribute.name = letters[i + 1] + str(number_district)
             tribute.set_config_parameters(life, force, alliance, number_district)
             tribute.cowardice = cowardice
-            tribute.configured = True
             self.tributes.append(tribute)
 
     # Create a district of tributes with random force and alliance, were these stats never are high.

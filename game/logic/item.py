@@ -151,12 +151,12 @@ class PotionPoison(Potion):
 class Weapon(Item):
 
     def __str__(self):
-        return 'w '  # sera reemplazado por pass
+        return 'w '
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
 
-    def apply_effect(self, tribute):  # sera reemplazado por pass
+    def apply_effect(self, tribute):
         if not tribute.weapon:
             tribute.force += WEAPON_EFFECT
             tribute.weapon = True
