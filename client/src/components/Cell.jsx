@@ -3,6 +3,15 @@ import React from 'react';
 const Cell = ({ state, onClick }) => {
   
   const GrassImage = "/board-images/grass3.png";
+  const BorderRImage = "/board-images/border-r.png";
+  const BorderLImage = "/board-images/border-l.png";
+  const BorderDImage = "/board-images/border-d.png";
+  const BorderDLImage = "/board-images/border-dl.png";
+  const BorderDRImage = "/board-images/border-dr.png";
+  const BorderUImage = "/board-images/border-u.png";
+  const BorderULImage = "/board-images/border-ul.png";
+  const BorderURImage = "/board-images/border-ur.png";
+  const WaterImage = "/board-images/water.png";
   const Tribute1Walk1 = "/board-images/characters/female_adventurer_walk1.png";
   const Tribute1Walk2 = "/board-images/characters/female_adventurer_walk2.png";
   const Tribute1HoldBow = "/board-images/characters/female_adventurer_hold_bow.png";
@@ -37,6 +46,60 @@ const Cell = ({ state, onClick }) => {
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
+          </div>
+        );
+      case 'border-r':
+        return (
+          <div className='board-border-r'>
+            <img src={BorderRImage} alt="Right Border Tile" />
+          </div>
+        );
+      case 'border-l':
+        return (
+          <div className='board-border-l'>
+            <img src={BorderLImage} alt="Left Border Tile" />
+          </div>
+        );
+      case 'border-u':
+        return (
+          <div className='board-border-u'>
+            <img src={BorderUImage} alt="Upper Border Tile" />
+          </div>
+        );
+      case 'border-d':
+        return (
+          <div className='board-border-d'>
+            <img src={BorderDImage} alt="Down Border Tile" />
+          </div>
+        );
+      case 'border-dl':
+        return (
+          <div className='board-border-dl'>
+            <img src={BorderDLImage} alt="Down Left Border Tile" />
+          </div>
+        );
+      case 'border-dr':
+        return (
+          <div className='board-border-dr'>
+            <img src={BorderDRImage} alt="Down Right Border Tile" />
+          </div>
+        );
+      case 'border-ul':
+        return (
+          <div className='board-border-ul'>
+            <img src={BorderULImage} alt="Upper Left Border Tile" />
+          </div>
+        );
+      case 'border-ur':
+        return (
+          <div className='board-border-ur'>
+            <img src={BorderURImage} alt="Upper Right Border Tile" />
+          </div>
+        );
+      case 'water':
+        return (
+          <div className='board-water'>
+            <img src={WaterImage} alt="Water Tile" />
           </div>
         );
       case 'tribute':

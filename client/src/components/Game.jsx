@@ -120,7 +120,7 @@ const Game = () => {
             {winner ? (
               <div className="winner-message">Ha ganado el {winner}
               <Board size={size} boardState={emptyBoard} /></div>
-            ) : ( <Board size={size} boardState={boardState} onCellClick={handleCellClick}/>
+            ) : ( <Board size={size} boardState={boardState}/>
             )}
           </section>
         </TransformComponent>
