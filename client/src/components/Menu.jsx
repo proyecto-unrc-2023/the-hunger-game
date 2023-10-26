@@ -221,14 +221,14 @@ export default function Menu({ onStartGame }) {
   
   useEffect(() => {
     const getMenu = async() => {
-      const data = await fetch("http://localhost:5000/apis/menu"); 
+      const data = await fetch("http://localhost:5000/config/district"); 
       const result = await data.json();
       setMenu(result);
     }
     getMenu();
   }, []);
   
-  console.log(menu);
+  console.log();
 
   return (
     <div className="menu-container">
