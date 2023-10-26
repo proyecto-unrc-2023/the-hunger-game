@@ -1,24 +1,37 @@
 
 
-from flask import Blueprint, jsonify
+from flask import jsonify, request
 from flask_restful import Api, Resource
-from app.apis.db import Game
+from game.controllers.district_controller import DistrictController
 
-from game.logic.game_logic import GameLogicSchema
+from game.logic.game_logic import GameLogic, GameLogicSchema
 
-game_bp = Blueprint('game', __name__)
-game_api = Api(game_bp)
+games = {}
 
+class Game(Resource):
 
-class GameResource(Resource):
-    from app.apis.db import Game
+    def put(self,game_id):
+        actual_game = GameLogic()
+        games[game_id] = request.form[actual_game] 
+        return {game_id: games[game_id]}    
 
-    
     def get(self, game_id):
         game_schema  = GameLogicSchema() 
-
-        game = Game.query.filter(id=game_id).first() 
+         
+        
+        game = games[game_id] 
 
         return jsonify(game_schema.dump(game)) 
+
+
+class ConfigDistrict(Resource):
     
-game_api.add_resource(GameResource, '/gamelogic') 
+    def get(self):
+        d_controller = DistrictController()
+        return d_controller.get_new_district()
+    
+    def post(self):
+        return 0        
+
+    
+

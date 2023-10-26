@@ -10,7 +10,7 @@ class DistrictController:
         
         return result
     
-    def get_district_init(self, cant_tributes, life, force, alliance, cowardice):
+    def set_district(self, cant_tributes, life, force, alliance, cowardice):
         District.set_config(self,life,force,alliance,0,cant_tributes,cowardice)
 
         return self
