@@ -16,10 +16,10 @@ def test_set_config_tributes():
         assert list_tributes[i].cowardice == 3
 
 
-def test_set_config_by_default_tributes():
+def test_set_config_random_tributes():
     district = District()
     num_district = 4
-    district.set_config_by_default(num_district)
+    district.set_config_random(num_district)
     for i in range(district.cant_tributes):
         assert district.tributes[i].life == LIFE_DEFAULT
         assert district.tributes[i].force + district.tributes[i].alliance <= 15

@@ -4,7 +4,7 @@ from game.logic.board import Board
 from game.logic.tribute import LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT
 from game.logic.cell import State
 from game.logic.item import Weapon
-from game.logic.district import District, TRIBUTES_DEFAULT
+from game.logic.district import District, TRIBUTES_DEFAULT, DISTRICT_DEFAULT
 from marshmallow import Schema, fields
 
 
@@ -83,6 +83,14 @@ class GameLogic:
         self.board.put_tribute(x, y, neutral)
         self.neutrals.append(neutral)
         neutral.name = 'n' + str(len(self.neutrals) - 1)
+    
+    # Configure five random districts. Stats force and alliance are random, others are by default.
+    def configure_random_districts(self):
+        for i in range(6):
+            if i != DISTRICT_DEFAULT:
+                district = District()
+                district.set_config_random(i)
+                self.districts.append(district)
 
     # Returns the closest occupied cell to the tribute.
     def tribute_vision_closeness(self, tribute):
@@ -259,7 +267,7 @@ class GameLogic:
         # Is necessary create an instance of district here and set by default every stat.
         district = District()
         life, force, alliance, cowardice = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT, COWARDICE_DEFAULT
-        cant_tributes, number_district = TRIBUTES_DEFAULT, 0
+        cant_tributes, number_district = TRIBUTES_DEFAULT, DISTRICT_DEFAULT
         print(f"Board is {rows} x {columns}.")
         print("\nBy default, your number of district is", number_district)
         var_yes, points = 'y', 10
@@ -375,16 +383,11 @@ class GameLogic:
         district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.append(district)
         # Configure others districts
-        for i in range(6):
-            if i != number_district:
-                district = District()
-                district.cant_tributes = TRIBUTES_DEFAULT
-                district.set_config_by_default(i)
-                self.districts.append(district)
+        self.configure_random_districts()
         # Distribute potions and weapons
         self.board.distribute_potions()
         self.board.distribute_weapons()
-
+        # Distribute tributes
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])
 
@@ -445,20 +448,17 @@ class GameLogic:
         self.new_game(rows, columns)
         district = District()
         life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
-        cant_tributes, cowardice, number_district = TRIBUTES_DEFAULT, COWARDICE_DEFAULT, 0
+        cant_tributes, cowardice, number_district = TRIBUTES_DEFAULT, COWARDICE_DEFAULT, DISTRICT_DEFAULT
+        
         district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.append(district)
-        # Configure other districts
-        for i in range(6):
-            if i != number_district:
-                district = District()
-                district.cant_tributes = TRIBUTES_DEFAULT
-                district.set_config_by_default(i)
-                self.districts.append(district)
-
-        # distribute all tributes of districts in board
+        self.configure_random_districts()
+        self.board.distribute_potions()
+        self.board.distribute_weapons()
+        
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])
+        self.distribute_neutral_tributes(10) 
 
     def get_away(self, tribute, enemy):
         pos = tribute.calculate_flee(enemy, self.board)
