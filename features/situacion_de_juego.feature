@@ -10,7 +10,7 @@
       Y luego que se muevan todos los tributos en el tablero, se mueven los neutros
       Y todos los tributos que compartan el mismo valor numerico (por ejemplo a1,b1) pertenecen al mismo distrito (Excepcion para la n)
 
-    Escenario: Dos tributos luchan y uno de ellos encuentra un item de curacion
+    Esquema del escenario: Dos tributos luchan y uno de ellos encuentra un item de curacion
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -24,11 +24,15 @@
       Y la poción cura 10 de vida
       Y la pocion esta en la posicion (2,2)
       Cuando se ejecuta una iteracion
-      Entonces t0 estara en (2,2)
-      Y la vida de t0 se reducirá a 45
-      Y la vida de t1 se mantiene igual
+      Entonces <a> esta en la posicion <x> <y>
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a  | l1 | x | y |
+      | t0 | 45 | 2 | 2 |
+      | t1 | 50 | 1 | 2 |
 
-    Escenario: Tres tributos luchan
+
+    Esquema del escenario: Tres tributos luchan
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -39,16 +43,18 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      Y t2 tiene en su rango de ataque a t0
-      Y t1 tiene en su rango de ataque a t0
-      Y t0 tiene en su rango de ataque a t2
+      Y <a> tiene en su rango de ataque a <b>
       Cuando se ejecuta una iteracion
-      Entonces  la vida de t0 es 40
-      Y la vida de t1 es 50
-      Y la vida de t2 es 45
+      Entonces la vida de <a> es <l1>
+      Ejemplos:
+      | a  | b  | l1 |
+      | t0 | t2 | 40 |
+      | t1 | t0 | 50 |
+      | t2 | t0 | 45 |
 
 
-    Escenario: Dos tributos luchan y llega un aliado
+
+    Esquema del escenario: : Dos tributos luchan y llega un aliado
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -60,13 +66,15 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       Cuando se ejecuten 2 iteraciones
-      Entonces a0 y b0 tendrán en su rango de ataque a t1
-      Y la vida de a0 es 50
-      Y la vida de b0 es 40
-      Y la vida de t1 es 35
+      Entonces <a> tiene en su rango de ataque a <b>
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a  | b  | l1 |
+      | a0 | t1 | 50 |
+      | b0 | t1 | 40 |
+      | t1 | b0 | 35 |
 
-
-    Escenario: Enfrentamiento entre 2 tributos
+    Esquema del escenario: Enfrentamiento entre 2 tributos
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -79,10 +87,13 @@
       |  |  |  |  |  |  |  |  |
       Y t0 y t1 no tienen arma
       Cuando se ejecuta una iteracion
-      Entonces la vida de t0 es 45
-      Y la vida de t1 es 45
+      Entonces la vida de <a> es <l1>
+      Ejemplos:
+      | a  | l1 |
+      | t0 | 45 |
+      | t1 | 45 |
 
-    Escenario: Enfrentamiento entre 2 tributos
+    Esquema del escenario: Enfrentamiento entre 2 tributos
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -93,14 +104,19 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |t2|t3|  |  |  |  |t4|t5|
-      Y t1 no tiene arma
       Cuando se ejecuten 2 iteraciones
-      Entonces la vida de t0 es 40
-      Y t0 tiene una espada
-      Y la vida de t1 es 40
+      Entonces la vida de <a> es <l1>
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a  | l1 | range |
+      | t0 | 40 |   1   |
+      | t1 | 40 |   0   |
+      | t2 | 40 |   0   |
+      | t3 | 40 |   0   |
+      | t4 | 40 |   0   |
+      | t4 | 40 |   0   |
 
-
-    Escenario: Enfrentamiento entre 2 tributos
+    Esquema del escenario: Enfrentamiento entre 2 tributos
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -111,14 +127,15 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      Y t1 no tiene arma
       Cuando se ejecuten 2 iteraciones
-      Entonces t0 tiene una lanza
-      Y  la vida de t0 es 50
-      Y la vida de t1 es 42
+      Entonces <a> tiene un arma con rango <range>
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a  | l1 | range |
+      | t0 | 50 |   2   |
+      | t1 | 42 |   0   |
 
-
-    Escenario: Enfrentamiento entre 2 tributos
+    Esquema del escenario: Enfrentamiento entre 2 tributos
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -129,15 +146,17 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      Y t1 no tiene arma
       Cuando se ejecuten 2 iteraciones
-      Entonces la vida de t0 es 50
-      Y t0 tiene un arco
-      Y la vida de t1 es 44
+      Entonces la vida de <a> es <l1>
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a  | l1 | range |
+      | t0 | 50 |   3   |
+      | t1 | 44 |   0   |
 
 
 
-    Escenario: Un tributo huye de un combate
+    Esquema del escenario: Un tributo huye de un combate
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -151,9 +170,13 @@
       Y t0 tiene un punto de cobardia disponible
       Cuando se ejecuta una iteracion
       Entonces t0 usará medio punto de cobardia
-      Y la pocision de t0 es (3, 0)
+      Y <a> esta en la posicion <x> <y>
+      Ejemplos:
+      | a | x | y |
+      |t0 | 3 | 0 |
 
-    Escenario: Tributo con mayor fuerza inflige mayor daño a otro tributo con menor fuerza en combate
+
+    Esquema del escenario: Tributo con mayor fuerza inflige mayor daño a otro tributo con menor fuerza en combate
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |t0|  |  |  |  |
@@ -166,10 +189,13 @@
       |  |  |  |  |  |  |  |  |
       Y la fuerza de t0 es 10
       Cuando se ejecuta una iteracion
-      Entonces la vida de t1 es 40
-      Y la vida de t0 es 45
+      Entonces la vida de <a> es <l1>
+      Ejemplos:
+      | a  | l1 |
+      | t0 | 45 |
+      | t1 | 40 |
 
-    Escenario: Se producen dos luchas al mismo tiempo
+    Esquema del escenario: Se producen dos luchas al mismo tiempo
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |t0|sw|t1|  |  |  |  |  |
@@ -182,10 +208,16 @@
       |  |  |  |  |  |  |t2|t3|
       Cuando se ejecute el juego
       Entonces el distrito 0 es el ganador
-      Y t0 tiene una espada
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a | range |
+      |t0 |   1   |
+      |t1 |   0   |
+      |t2 |   0   |
+      |t3 |   0   |
 
 
-    Escenario: Dos tributos luchan a muerte y uno de ellos tiene un arco
+    Esquema del escenario: Dos tributos luchan a muerte y uno de ellos tiene un arco
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |t0|wo|  |  |t1|  |  |  |
@@ -199,9 +231,13 @@
       Y la vida de t1 es 5
       Cuando se ejecuten 2 iteraciones
       Entonces t1 esta muerto
-      Y t0 tiene un arco
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a | range |
+      |t0 |   3   |
+      |t1 |   0   |
 
-    Escenario: Dos tributos luchan a muerte y uno de ellos tiene una lanza
+    Esquema del escenario: Dos tributos luchan a muerte y uno de ellos tiene una lanza
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |t0|sp|  |t1|  |  |  |  |
@@ -215,9 +251,13 @@
       Y la vida de t1 es 5
       Cuando se ejecuten 2 iteraciones
       Entonces t1 esta muerto
-      Y t0 tiene una lanza
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a | range |
+      |t0 |   2   |
+      |t1 |   0   |
 
-    Escenario: Dos tributos luchan a muerte y uno de ellos tiene una espada
+    Esquema del escenario: Dos tributos luchan a muerte y uno de ellos tiene una espada
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |t0|sw|t1|  |  |  |  |  |
@@ -231,7 +271,11 @@
       Y la vida de t1 es 5
       Cuando se ejecuten 2 iteraciones
       Entonces t1 esta muerto
-      Y t0 tiene una espada
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a | range |
+      |t0 |   1   |
+      |t1 |   0   |
 
     Escenario: Un tributo muere por el efecto de la posion de veneno
       Dado que el tablero de juego es el siguiente
@@ -267,7 +311,7 @@
       Entonces el tributo n0 no forma parte del distrito 0
       Y t0 esta muerto
 
-    Escenario: Dos tributos en lados contrarios se enfrentan y uno de ellos muere
+    Esquema del escenario: Dos tributos en lados contrarios se enfrentan y uno de ellos muere
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |t0|sw|  |  |  |  |  |  |
@@ -280,7 +324,11 @@
       |  |  |  |  |  |  |  |t1|
       Cuando se ejecute el juego
       Entonces el distrito 0 es el ganador
-      Y t0 tiene una espada
+      Y <a> tiene un arma con rango <range>
+      Ejemplos:
+      | a  | range |
+      | t0 |   1   |
+      | t1 |   0   |
 
     Escenario: Un tributo se alia con un tributo neutro
       Dado que el tablero de juego es el siguiente
@@ -317,22 +365,26 @@
       Entonces el tributo n0 no forma parte del distrito 0
       Y t0 empieza a pelear con n0
 
-      Escenario: Dos tributos del mismo distrito se encuentran en el mapa y se ignoran
+      Esquema del escenario: Dos tributos del mismo distrito se encuentran en el mapa y se ignoran
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
-      |  |a0|b0|  |  |  |  |  |
+      |  |t0|a0|  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       Cuando se ejecuta una iteracion
-      Entonces la vida de a0 es 50
-      Y la vida de b0 es 50
-      Y la posicion de a0 debe ser distinta a (2,1)
-      Y la posicion de b0 debe ser distinta a (2,2)
+      Entonces la vida de <a> es <l1>
+      Y la posicion de t0 debe ser distinta a (2,1)
+      Y la posicion de a0 debe ser distinta a (2,2)
+      Ejemplos:
+      | a  | l1 |
+      | t0 | 50 |
+      | a0 | 50 |
+
 
     Escenario: Muerte de un tributo en batalla
       Dado que el tablero de juego es el siguiente
@@ -364,12 +416,12 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       Cuando los neutrales iteren
-      Entonces la vida de n1 y n0 es 50
+      Entonces la vida de neutros sigue igual
       Y la posicion de n0 es distinta a (2,1)
       Y la posicion de n1 es distinta a (2,2)
 
 
-    Escenario: Tributo encuentra un item de curacion y la utiliza
+    Esquema del escenario: Tributo encuentra un item de curacion y la utiliza
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -382,11 +434,14 @@
       |  |  |  |  |  |  |  |  |
       Y la vida maxima de t0 es 60
       Cuando se ejecuta una iteracion
-      Entonces t0 estara en (2,2)
+      Entonces <a> esta en la posicion <x> <y>
       Y pl desaparece del mapa
-      Y la vida de t0 es 60
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a | x | y | l1 |
+      |t0 | 2 | 2 | 60 |
 
-    Escenario: Tributo encuentra una pocion de curación y no le aplica su efecto
+    Esquema del escenario: Tributo encuentra una pocion de curación y no le aplica su efecto
       Dado que el tablero de juego es el siguiente
         |0 |1 |2 |3 |4 |5 |6 |7 |
         |  |  |  |  |  |  |  |  |
@@ -399,11 +454,16 @@
         |  |  |  |  |  |  |  |  |
       Y la vida maxima de t0 es 50
       Cuando se ejecuta una iteracion
-      Entonces t0 estara en (2,2)
+      Entonces <a> esta en la posicion <x> <y>
       Y pl desaparece del mapa
-      Y la vida de t0 es 50
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a | x | y | l1 |
+      |t0 | 2 | 2 | 50 |
 
-    Escenario: Tributo encuentra una pocion de fuerza y la utiliza
+
+
+    Esquema del escenario: Tributo encuentra una pocion de fuerza y la utiliza
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -415,11 +475,14 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       Cuando se ejecuta una iteracion
-      Entonces t0 estara en (2,2)
+      Entonces <a> esta en la posicion <x> <y>
       Y pf desaparece del mapa
       Y la fuerza de t0 es 10
+      Ejemplos:
+      | a | x | y |
+      |t0 | 2 | 2 |
 
-    Escenario: Tributo encuentra una pocion de veneno y la utiliza
+    Esquema del escenario: Tributo encuentra una pocion de veneno y la utiliza
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -431,13 +494,15 @@
       |  |  |  |  |  |  |  |  |
       |  |  |  |  |  |  |  |  |
       Cuando se ejecuta una iteracion
-      Entonces t0 estara en (2,2)
+      Entonces <a> esta en la posicion <x> <y>
       Y po desaparece del mapa
-      Y la vida de t0 es 45
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a | x | y | l1 |
+      |t0 | 2 | 2 | 45 |
 
 
-
-    Escenario: Tributo que no tiene arma encuentra una arma y la recoge
+    Esquema del escenario: Tributo que no tiene arma encuentra una arma y la recoge
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -451,8 +516,10 @@
       Cuando se ejecuta una iteracion
       Entonces la fuerza de t0 es 10
       Y w desaparece del mapa
-      Y t0 estara en (2,3)
-
+      Y <a> esta en la posicion <x> <y>
+      Ejemplos:
+      | a | x | y |
+      |t0 | 2 | 3 |
 
     Escenario: Tributo que tiene arma encuentra una arma y NO la recoge
       Dado que el tablero de juego es el siguiente
@@ -470,7 +537,7 @@
       Entonces la posicion de t0 debe ser distinta a (2,2) y a (2,3)
       Y w estara (2,3)
 
-    Escenario: Tributo ignora el arma y pelea con otro tributo
+    Esquema del escenario: Tributo ignora el arma y pelea con otro tributo
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |  |  |  |  |  |  |  |  |
@@ -484,6 +551,9 @@
       Y t0 tiene un arma
       Y t1 tiene un arma
       Cuando se ejecuta una iteracion
-      Entonces la posicion de t0 es (3,2)
+      Entonces <a> esta en la posicion <x> <y>
       Y w estara (2,3)
-      Y la vida de t0 es 45
+      Y la vida de <a> es <l1>
+      Ejemplos:
+      | a | x | y | l1 |
+      |t0 | 3 | 2 | 45 |

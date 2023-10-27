@@ -648,3 +648,28 @@ def test_distribute_neutral_tributes():
 
     assert neutrals_count == number_neutrals
     assert len(game.neutrals) == number_neutrals
+
+
+def test_distribute_neutral_tributes():
+    game = GameLogic()
+    game.new_game(4, 4)
+    number_neutrals = 10
+    game.distribute_neutral_tributes(number_neutrals)
+    
+    neutrals_count = 0
+    for row in game.board.board:
+        for cell in row:
+            if cell.state == State.TRIBUTE:
+                neutrals_count += 1
+
+    assert neutrals_count == number_neutrals
+    assert len(game.neutrals) == number_neutrals
+
+
+def test_get_tribute_by_name():
+    game = GameLogic()
+    game.new_game(6,6)
+    t0 = Tribute()
+    t0.set_config_parameters(50,5,3,0)
+    game.put_tribute(0, 0, t0)
+    assert game.districts[0].tributes[0] == game.get_tribute_by_name('t0')

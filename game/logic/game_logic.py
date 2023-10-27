@@ -105,7 +105,7 @@ class GameLogic:
             cell
             for cell in vision_cells
             if cell.get_state() == State.ITEM or
-            (cell.get_state() == State.TRIBUTE and cell.get_tribute().district != tribute.district)
+               (cell.get_state() == State.TRIBUTE and cell.get_tribute().district != tribute.district)
             # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
             # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
@@ -115,7 +115,7 @@ class GameLogic:
                 cell
                 for cell in occupied_cells
                 if cell.state == State.ITEM and cell.get_item().is_weapon() is False
-                or cell.state == State.TRIBUTE
+                   or cell.state == State.TRIBUTE
             ]
 
         occupied_cells.sort(key=calculate_distance)
@@ -243,9 +243,9 @@ class GameLogic:
         self.order_attack()
         if self.mode != GameMode.SIMULATION:
             raise ValueError(f'The state of the game is not SIMULATION')
-        while self.end_game() is False:
+        while self.game_ended() is False:  # not self.eng_game()
             self.all_iteration()
-            if not (self.neutrals is None):
+            if not (self.neutrals is None):  # if self.neutrals
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
             line = '-' * (self.board.columns * 3 - 3)
@@ -330,7 +330,7 @@ class GameLogic:
                         else:
                             print("Invalid input. You should enter 4 or 8 points to spend on Tributes.")
                 # Choice 5 Cowardice            
-                elif choice == 5:
+                elif choice == 5:  # crear metodos para encapsular la entrada por consola
                     while True:
                         cowardice_points = int(input("How many points do you want to spend on Cowardice?: "))
                         if cowardice == 5:
@@ -469,6 +469,54 @@ class GameLogic:
             tribute.cowardice -= 0.5
         else:
             self.fight(tribute, enemy)
+
+    # Method to get a tribute only by name
+    def get_tribute_by_name(self, name_tribute):
+        district = name_tribute[1]
+        number_district = int(district)
+        length = self.districts[number_district].tributes.__len__()
+        for i in range(length):
+            if self.districts[number_district].tributes[i].name == name_tribute:
+                return self.districts[number_district].tributes[i]
+
+    # Method to get a neutral only by name
+    def get_neutral_by_name(self, name_neutral):
+        number = int(name_neutral[1])
+        return self.neutrals[number]
+
+    # Method to get a list of tributes.
+    # Param district is a number of district
+    def get_list_tributes(self, district):
+        return self.districts[district].tributes
+
+    # Method to get the item in the position (x,y)
+    def get_item_pos(self, x, y):
+        return self.board.get_element(x, y).get_item()
+
+    # Method to access to tribute position
+    def get_tribute_pos(self, name_tribute):
+        tribute = self.get_tribute_by_name(name_tribute)
+        return tribute.pos
+
+    # Method to check if game is ended
+    def game_ended(self):
+        districts_alive = 0
+        for i in range(self.districts.__len__()):
+            if self.districts[i].cant_tributes >= 1:
+                districts_alive += 1
+        if districts_alive == 1:
+            return True
+        else:
+            return False
+
+    # Method for returning the number of winner district
+    def winner_district(self):
+        if self.game_ended():
+            for i in range(self.districts.__len__()):
+                if self.districts[i].cant_tributes >= 1:
+                    winner_district = self.districts[i].number_district
+                    return winner_district
+
 
 
 class GameLogicSchema(Schema):
