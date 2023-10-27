@@ -32,7 +32,7 @@ function StatsBar({ stats }) {
   );
 }
 
-function IncrementableBar({ attribute, stats, onIncrement, onDecrement }) {
+function IncrementableBar({ attribute, stats, onIncrement, onDecrement, value }) {
   const handleIncrement = () => {
     onIncrement();
   };
@@ -45,6 +45,7 @@ function IncrementableBar({ attribute, stats, onIncrement, onDecrement }) {
     <div className="incrementable-bars">
       <strong className="incrementable-bar-atribute">{attribute}</strong>
       <StatsBar stats={stats} />
+      <strong className="value-stat">{value}</strong>
       <IncrementButton onClick={handleIncrement} />
       <DecrementButton onClick={handleDecrement} />
     </div>
@@ -58,105 +59,55 @@ function InitGameButton({ isReady, onClick }) {
 
 export default function Menu({ onStartGame }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
-  const [lifeStats, setLifeStats] = useState(Array(10).fill(false).map((_, index) => index < 5));
-  const [forceStats, setForceStats] = useState(Array(10).fill(false).map((_, index) => index < 2));
-  const [allianceStats, setAllianceStats] = useState(Array(10).fill(false).map((_, index) => index < 2));
-  const [tributeStats, setTributeStats] = useState(Array(10).fill(false).map((_, index) => index < 4));
+  const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
+  const [forceStats, setForceStats] = useState(Array(10).fill(false));
+  const [allianceStats, setAllianceStats] = useState(Array(9).fill(false));
+  const [cowardiceStats, setCowardiceStats] = useState(Array(5).fill(false));
+  const [tributeStats, setTributeStats] = useState(Array(10).fill(false));
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
 
-  const incrementLifeStat = () => {
-    const indexLife = lifeStats.findIndex(isConsumed => !isConsumed);
-    const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    const life = menu;
-    if (indexLife !== -1 && indexStatsBar !== -1) {
+  const incrementStat = (statArray, setStatArray, statKey, menu, setMenu, value) => {
+    const indexStat = statArray.findIndex((isConsumed) => !isConsumed);
+    const indexStatsBar = statsBar.slice().reverse().findIndex((isConsumed) => isConsumed);
+    if (indexStat !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
-      const newLifeStats = [...lifeStats];
+      const newStat = [...statArray];
       const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
-      newLifeStats[indexLife] = true; // Consume un stat de vida
+      newStat[indexStat] = true; // Consume un stat
       newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
-      setLifeStats(newLifeStats);
+
+      // Incrementamos el valor de la estadística en el diccionario
+      const updatedMenu = { ...menu, [statKey]: menu[statKey] + value };
+
+      setStatArray(newStat);
       setStatsBar(newStatsBar);
-      life.life++;
-      setMenu(life);
+      setMenu(updatedMenu); 
     }
   };
 
-  const decrementLifeStat = () => {
-    const indexLifeStats = lifeStats.slice().reverse().findIndex(isConsumed => isConsumed);
-    const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    const life = menu;
-    if (indexLifeStats <= 4 && indexStatsBar !== -1) {
+  const decrementStat = (statArray, setStatArray, statKey, menu, setMenu, value) => {
+    const indexStat = statArray.slice().reverse().findIndex((isConsumed) => isConsumed);
+    const indexStatsBar = statsBar.findIndex((isConsumed) => !isConsumed);
+    if (indexStat !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
-      const newLifeStats = [...lifeStats];
-      const reversedLifeStatsIndex = lifeStats.length - 1 - indexLifeStats;
-      newLifeStats[reversedLifeStatsIndex] = false; // Deja de consumir un stat de vida
+      const newStat = [...statArray];
+      const reversedStatIndex = statArray.length - 1 - indexStat;
+      newStat[reversedStatIndex] = false; // Deja de consumir un stat
       newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
-      setStatsBar(newStatsBar);
-      setLifeStats(newLifeStats);
-      life.life--;
-      setMenu(life);
-    }
-  };
 
-  const incrementForceStat = () => {
-    const indexForce = forceStats.findIndex(isConsumed => !isConsumed);
-    const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    if (indexForce !== -1 && indexStatsBar !== -1) {
-      const newStatsBar = [...statsBar];
-      const newForceStats = [...forceStats];
-      const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
-      newForceStats[indexForce] = true; // Consume un stat de fuerza
-      newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
-      setForceStats(newForceStats);
-      setStatsBar(newStatsBar);
-    }
-  };
+      // Decrementamos el valor de la estadística en el diccionario
+      const updatedMenu = { ...menu, [statKey]: menu[statKey] - value };
 
-  const decrementForceStat = () => {
-    const indexForceStats = forceStats.slice().reverse().findIndex(isConsumed => isConsumed);
-    const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    if (indexForceStats <= 7 && indexStatsBar !== -1) {
-      const newStatsBar = [...statsBar];
-      const newForceStats = [...forceStats];
-      const reversedForceStatsIndex = forceStats.length - 1 - indexForceStats;
-      newForceStats[reversedForceStatsIndex] = false; // Deja de consumir un stat de fuerza
-      newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
+      setStatArray(newStat);
       setStatsBar(newStatsBar);
-      setForceStats(newForceStats);
-    }
-  };
-
-  const incrementAllianceStat = () => {
-    const indexAlliance = allianceStats.findIndex(isConsumed => !isConsumed);
-    const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    if (indexAlliance !== -1 && indexStatsBar !== -1) {
-      const newStatsBar = [...statsBar];
-      const newAllianceStats = [...allianceStats];
-      const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
-      newAllianceStats[indexAlliance] = true; // Consume un stat de alianza
-      newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
-      setAllianceStats(newAllianceStats);
-      setStatsBar(newStatsBar);
-    }
-  };
-
-  const decrementAllianceStat = () => {
-    const indexAllianceStats = allianceStats.slice().reverse().findIndex(isConsumed => isConsumed);
-    const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    if (indexAllianceStats <= 7 && indexStatsBar !== -1) {
-      const newStatsBar = [...statsBar];
-      const newAllianceStats = [...allianceStats];
-      const reversedAllianceStatsIndex = allianceStats.length - 1 - indexAllianceStats;
-      newAllianceStats[reversedAllianceStatsIndex] = false; // Deja de consumir un stat de alianza
-      newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
-      setStatsBar(newStatsBar);
-      setAllianceStats(newAllianceStats);
+      setMenu(updatedMenu); 
     }
   };
 
   const incrementTributeStat = () => {
     const indexTribute = tributeStats.findIndex(isConsumed => !isConsumed);
     const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
+    const cant_tributes = menu;
     if (indexTribute !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newTributeStats = [...tributeStats];
@@ -174,15 +125,17 @@ export default function Menu({ onStartGame }) {
         }
         setTributeStats(newTributeStats);
         setStatsBar(newStatsBar);
+        cant_tributes.cant_tributes++;
+        setMenu(cant_tributes);
       }
     }
   };
   
-
   const decrementTributeStat = () => {
     const indexTributeStats = tributeStats.slice().reverse().findIndex(isConsumed => isConsumed);
     const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    if (indexTributeStats <= 7 && indexStatsBar !== -1) {
+    const cant_tributes = menu;
+    if (indexTributeStats !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newTributeStats = [...tributeStats];
       const reversedTributeStatsIndex = tributeStats.length - 1 - indexTributeStats;
@@ -191,7 +144,7 @@ export default function Menu({ onStartGame }) {
       // Verificar que siempre haya al menos 4 elementos true en newTributeStats
       const trueElementsCount = newTributeStats.filter(isConsumed => isConsumed).length;
   
-      if (trueElementsCount >= 4) {
+      if (trueElementsCount >= 0) {
         // Devuelve 4 stats a las disponibles
         for (var i = 0; i < 4; i++) {
           const newIndex = indexStatsBar + i;
@@ -199,6 +152,8 @@ export default function Menu({ onStartGame }) {
         }
         setTributeStats(newTributeStats);
         setStatsBar(newStatsBar);
+        cant_tributes.cant_tributes--;
+        setMenu(cant_tributes);
       }
     }
   };
@@ -206,6 +161,7 @@ export default function Menu({ onStartGame }) {
   const handleStartGame = () => {
     if (isReady) {
       onStartGame();
+      sendDataToServer();
     }
   };
 
@@ -221,15 +177,34 @@ export default function Menu({ onStartGame }) {
   
   useEffect(() => {
     const getMenu = async() => {
-      const data = await fetch("http://localhost:5000/config/district"); 
+      const data = await fetch("http://localhost:5000/game/district"); 
       const result = await data.json();
       setMenu(result);
     }
     getMenu();
   }, []);
-  
-  console.log();
 
+  const sendDataToServer = async () => {
+    const dataToSend = {
+      menu,
+    };
+  
+    const response = await fetch("http://localhost:5000/game/district", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Con esto nos aseguramos que los datos se envíen como JSON
+      },
+      body: JSON.stringify(dataToSend), // Convierte los datos en una cadena JSON
+    });
+
+    // if (response.ok) {
+
+    // } else {
+
+    // }
+
+  };
+  
   return (
     <div className="menu-container">
       <div className="stats-settings-container">
@@ -237,10 +212,11 @@ export default function Menu({ onStartGame }) {
           <strong className="available-stats">Avaible Stats <StatsBar stats={statsBar} /></strong>
         </div>
         <div className="bars-container">
-          <IncrementableBar attribute="Life:" stats={lifeStats} setStats={setLifeStats} onIncrement={incrementLifeStat} onDecrement={decrementLifeStat} />
-          <IncrementableBar attribute="Force:" stats={forceStats} setStats={setForceStats} onIncrement={incrementForceStat} onDecrement={decrementForceStat} />
-          <IncrementableBar attribute="Alliance:" stats={allianceStats} setStats={setAllianceStats} onIncrement={incrementAllianceStat} onDecrement={decrementAllianceStat} />
-          <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} />
+        <IncrementableBar attribute="Life:" stats={lifeStats} onIncrement={() => incrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} onDecrement={() => decrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} value={menu ? menu.life : 0}/>
+          <IncrementableBar attribute="Force:" stats={forceStats} onIncrement={() => incrementStat(forceStats, setForceStats, 'force', menu, setMenu, 1)} onDecrement={() => decrementStat(forceStats, setForceStats, 'force', menu, setMenu, 1)} value={menu ? menu.force : 0}/>
+          <IncrementableBar attribute="Alliance:" stats={allianceStats} onIncrement={() => incrementStat(allianceStats, setAllianceStats, 'alliance', menu, setMenu, 1)} onDecrement={() => decrementStat(allianceStats, setAllianceStats, 'alliance', menu, setMenu, 1)} value={menu ? menu.alliance : 0}/>
+          <IncrementableBar attribute="Cowardice:" stats={cowardiceStats} onIncrement={() => incrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} onDecrement={() => decrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} value={menu ? menu.cowardice : 0}/>
+          <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} value={menu ? menu.cant_tributes : 0}/>
         </div>
         <InitGameButton isReady={isReady} onClick={handleStartGame} />
       </div>
