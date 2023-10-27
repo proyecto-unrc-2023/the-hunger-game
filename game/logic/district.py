@@ -4,7 +4,7 @@ from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
 
 TRIBUTES_DEFAULT = 4
-
+DISTRICT_DEFAULT = 0
 
 class District:
 
@@ -36,7 +36,7 @@ class District:
             self.tributes.append(tribute)
 
     # Create a district of tributes with random force and alliance, were these stats never are high.
-    def set_config_by_default(self, num_district):
+    def set_config_random(self, num_district):
         self.cant_tributes = TRIBUTES_DEFAULT
         self.number_district = num_district
         letters = 'tabcdefghijklm'
