@@ -374,7 +374,7 @@ class GameLogic:
             if i != number_district:
                 district = District()
                 district.cant_tributes = TRIBUTES_DEFAULT
-                district.set_config_by_default(i)  # valor cowardice aqui?
+                district.set_config_by_default(i)
                 self.districts.append(district)
         # Distribute potions and weapons
         self.board.distribute_potions()
@@ -382,6 +382,8 @@ class GameLogic:
 
         for j in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[j])
+
+        self.distribute_neutral_tributes(10)
 
         self.mode = GameMode.SIMULATION
         print(self.to_string())
@@ -395,12 +397,18 @@ class GameLogic:
             for neutral in self.neutrals:
                 self.neutral_heuristic(neutral)
 
-    # Distributes the tributes from a district to random positions on the board.
+    # Distribute tributes from a district to random positions on the board.
     def distribute_tributes(self):
         for j in range(len(self.districts)):
             for i in range(self.districts[j].cant_tributes):
                 pos = self.board.random_pos()
                 self.put_tribute(pos[0], pos[1], self.districts[j].tributes[i])
+
+    # Distribute neutral tributes on board given a number of neutral tributes.
+    def distribute_neutral_tributes(self, number):
+        for i in range(number):
+            pos = self.board.random_pos()
+            self.put_neutral(pos[0], pos[1])
 
     @staticmethod
     def table_to_string(behave_table):
@@ -432,15 +440,14 @@ class GameLogic:
         self.new_game(rows, columns)
         district = District()
         life, force, alliance = LIFE_DEFAULT, FORCE_DEFAULT, ALLIANCE_DEFAULT
-        cant_tributes, cowardice = TRIBUTES_DEFAULT, COWARDICE_DEFAULT
-        number_district = 0
+        cant_tributes, cowardice, number_district = TRIBUTES_DEFAULT, COWARDICE_DEFAULT, 0
         district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.append(district)
-        # Configure districts by random
+        # Configure other districts
         for i in range(6):
             if i != number_district:
                 district = District()
-                district.cant_tributes = 4
+                district.cant_tributes = TRIBUTES_DEFAULT
                 district.set_config_by_default(i)
                 self.districts.append(district)
 

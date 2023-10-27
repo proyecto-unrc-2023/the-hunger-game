@@ -29,7 +29,6 @@ class Tribute:
         self.weapon = False
         self.max_life = MAX_LIFE_DEFAULT
         self.enemy = None
-        self.configured = False
         self.range = RANGE_DEFAULT
 
     @staticmethod
