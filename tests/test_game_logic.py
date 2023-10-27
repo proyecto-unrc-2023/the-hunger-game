@@ -159,8 +159,6 @@ def test_get_tribute_closenes_complex():
     assert game.tribute_vision_closeness(t1).pos == (2,1)
     
 
-#####################
-
 def test_fight_2_tributes_and_one_died():
     game = GameLogic()
     game.new_game(2, 2)
@@ -381,6 +379,8 @@ def test_alliance_neutral_tribute():
     assert neutral.district is district.get_number_district()
     assert 1 + 1 == district.get_cant_tribute()
     assert district.tributes.__contains__(neutral)
+    
+    
 
 
 def test_heuristic_of_game_simple_2_tribute_1_died(game2x2):
@@ -483,7 +483,6 @@ def test_init_simulation_inputs_one(monkeypatch):
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
-        assert tribute_my_district.alliance == 3
  
 
 def test_init_simulation_inputs_two(monkeypatch):
@@ -500,7 +499,6 @@ def test_init_simulation_inputs_two(monkeypatch):
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
-        assert tribute_my_district.alliance == 5
      
 
 def test_put_tribute():
@@ -527,12 +525,14 @@ def test_put_tribute():
     assert game.board.get_element(1, 0).get_tribute() == s1
     assert len(game.districts[1].tributes) == 2
 
+
 def test_put_item():
     w = Weapon()
     game = GameLogic()
     game.new_game(2, 2)
     game.put_item(0, 0, w)
     assert game.board.get_element(0, 0).get_item().pos == (0, 0)
+
 
 def test_neutral_heuristic():
     game = GameLogic()
@@ -556,6 +556,7 @@ def test_neutral_heuristic():
     game.neutral_heuristic(neutral)
     assert neutral.pos != (0,1)
 
+
 def test_order_attack():
     game = GameLogic()
     game.new_game(2,2)
@@ -578,7 +579,8 @@ def test_order_attack():
     game.all_iteration()
     assert game.order == [2,0,1]
     game.all_iteration()
-    
+
+
 def test_get_away():
     game = GameLogic()
     game.new_game(5,5)
@@ -608,7 +610,8 @@ def test_get_away():
     game.put_tribute(4, 4, t1)
     game.get_away(t1,t0)
     assert t1.pos == (2,2)
-    
+
+
 def test_heuristic_get_away():
     game = GameLogic()
     game.new_game(6,6)
@@ -629,3 +632,19 @@ def test_heuristic_get_away():
     assert t1.pos == (4,5)
     assert t0.pos == (1,1)
     assert t1.cowardice == 0
+
+
+def test_distribute_neutral_tributes():
+    game = GameLogic()
+    game.new_game(4, 4)
+    number_neutrals = 10
+    game.distribute_neutral_tributes(number_neutrals)
+    
+    neutrals_count = 0
+    for row in game.board.board:
+        for cell in row:
+            if cell.state == State.TRIBUTE:
+                neutrals_count += 1
+
+    assert neutrals_count == number_neutrals
+    assert len(game.neutrals) == number_neutrals

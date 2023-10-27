@@ -59,7 +59,7 @@ class Cell:
 
     def remove_tribute(self):
         if self.get_state() == ITEM or self.get_state() == FREE:
-            raise ValueError(f"Trying to remove one Item  or the cell is FREE.")
+            raise ValueError(f"Trying to remove one Item or the cell is FREE.")
 
         self.tribute.past_pos = self.tribute.pos
         self.state = FREE
