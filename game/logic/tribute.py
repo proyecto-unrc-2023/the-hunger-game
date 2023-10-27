@@ -68,7 +68,6 @@ class Tribute:
         return True
 
     def attack_to(self, tribute, board):
-        listadj = board.get_adjacent_positions(self.pos[0], self.pos[1])
         if tribute.district != self.district:
             tribute.life -= self.force
         else:

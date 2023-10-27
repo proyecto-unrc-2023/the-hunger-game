@@ -62,7 +62,7 @@ class District:
     # Remove one tribute in a list
     def remove_tribute(self, tribute):
         for tr in self.tributes:
-            if tribute.name == tr.name:
+            if tribute.__eq__(tr):
                 self.tributes.remove(tr)
                 self.cant_tributes -= 1
 

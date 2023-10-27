@@ -153,15 +153,19 @@ class GameLogic:
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
     def alliance_neutral(self, tribute, district):
+        self.remove_tribute(tribute)
         tribute.district = district.get_number_district()
-        district.tributes.append(tribute)
-        district.cant_tributes = district.cant_tributes + 1
-        self.neutrals.remove(tribute)
+        pos = tribute.pos
+        self.put_tribute(pos[0], pos[1], tribute)
 
     def neutral_heuristic(self, neutral):
-        if not (neutral.enemy is None):
-            self.fight(neutral, neutral.enemy)
+        if not (neutral.enemy is None) and neutral.enemy.is_alive():
+            if neutral.district == neutral.enemy.district:
+                neutral.move_to_random(self.board)
+            else:
+                self.fight(neutral, neutral.enemy)
         else:
+            neutral.enemy = None
             neutral.move_to_random(self.board)
 
     # Implements a heuristic move for a tribute in a game or simulation.
@@ -178,9 +182,10 @@ class GameLogic:
             pos_x_t = tribute.pos[0]
             pos_y_t = tribute.pos[1]
 
-            if not (tribute.enemy is None):
+            if not (tribute.enemy is None) and tribute.enemy.is_alive() and tribute.district != tribute.enemy.district:
                 self.fight(tribute, tribute.enemy)
             else:
+                tribute.enemy = None
                 # Check the state of the cell (ITEM or TRIBUTE).
                 if cell.get_state() == State.ITEM:
                     # If it's an item, go to retrieve it.
