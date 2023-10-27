@@ -1,5 +1,3 @@
-
-
 from flask import jsonify, request
 from flask_restful import Api, Resource
 from game.controllers.district_controller import DistrictController
@@ -31,7 +29,9 @@ class ConfigDistrict(Resource):
         return d_controller.get_new_district()
     
     def post(self):
-        return 0        
+        data = request.get_json()  # Obtengo los datos enviados por el cliente
+        print(data); # Imprimo los datos por consola
+        return jsonify({'message': 'Datos recibidos correctamente'})    
 
     
 
