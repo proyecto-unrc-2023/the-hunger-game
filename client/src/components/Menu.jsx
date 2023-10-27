@@ -64,10 +64,10 @@ export default function Menu({ onStartGame }) {
   const [tributeStats, setTributeStats] = useState(Array(10).fill(false).map((_, index) => index < 4));
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
 
-
   const incrementLifeStat = () => {
     const indexLife = lifeStats.findIndex(isConsumed => !isConsumed);
     const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
+    const life = menu;
     if (indexLife !== -1 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newLifeStats = [...lifeStats];
@@ -76,12 +76,15 @@ export default function Menu({ onStartGame }) {
       newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
       setLifeStats(newLifeStats);
       setStatsBar(newStatsBar);
+      life.life++;
+      setMenu(life);
     }
   };
 
   const decrementLifeStat = () => {
     const indexLifeStats = lifeStats.slice().reverse().findIndex(isConsumed => isConsumed);
     const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
+    const life = menu;
     if (indexLifeStats <= 4 && indexStatsBar !== -1) {
       const newStatsBar = [...statsBar];
       const newLifeStats = [...lifeStats];
@@ -90,6 +93,8 @@ export default function Menu({ onStartGame }) {
       newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
       setStatsBar(newStatsBar);
       setLifeStats(newLifeStats);
+      life.life--;
+      setMenu(life);
     }
   };
 
@@ -211,6 +216,19 @@ export default function Menu({ onStartGame }) {
       setIsReady(false);
     }
   }, [statsBar]);
+  
+  const [menu, setMenu] = useState(null);
+  
+  useEffect(() => {
+    const getMenu = async() => {
+      const data = await fetch("http://localhost:5000/config/district"); 
+      const result = await data.json();
+      setMenu(result);
+    }
+    getMenu();
+  }, []);
+  
+  console.log();
 
   return (
     <div className="menu-container">
@@ -228,4 +246,5 @@ export default function Menu({ onStartGame }) {
       </div>
     </div>
   );
+
 }
