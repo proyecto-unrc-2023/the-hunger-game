@@ -370,21 +370,15 @@ def test_end_game():
 
 def test_alliance_neutral_tribute():
     district = District()
-    district.set_config(50, 6, 4, 0, 0, 2)
+    district.set_config(50, 6, 4, 0, 1, 2)
     game = GameLogic()
     game.new_game(2,2)
     game.put_neutral(0, 0)
-    game.put_neutral(0, 1)
-    game.put_neutral(1, 0)
-    neutral0 = game.neutrals[0]
-    neutral1 = game.neutrals[1]
-    neutral2 = game.neutrals[2]
-    game.alliance_neutral(neutral0, district)
-    assert neutral0.district is district.get_number_district()
-    assert 1  == game.districts[0].get_cant_tribute()
-    game.alliance_neutral(neutral1, district)
-    game.alliance_neutral(neutral2, district)
-    assert 3  == game.districts[0].get_cant_tribute()
+    neutral = game.neutrals[0]
+    game.alliance_neutral(neutral, district)
+    assert neutral.district is district.get_number_district()
+    assert 1 + 1 == district.get_cant_tribute()
+    assert district.tributes.__contains__(neutral)
     
     
 

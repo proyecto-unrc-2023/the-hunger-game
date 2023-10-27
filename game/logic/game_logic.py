@@ -153,10 +153,10 @@ class GameLogic:
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
     def alliance_neutral(self, tribute, district):
-        self.remove_tribute(tribute)
         tribute.district = district.get_number_district()
-        pos = tribute.pos
-        self.put_tribute(pos[0], pos[1], tribute)
+        district.tributes.append(tribute)
+        district.cant_tributes = district.cant_tributes + 1
+        self.neutrals.remove(tribute)
 
     def neutral_heuristic(self, neutral):
         if not (neutral.enemy is None) and neutral.enemy.is_alive():

@@ -388,6 +388,7 @@ def step_impl(context):
 @then(u'el tributo n0 forma parte del distrito 0')
 def step_impl(context):
     district_zero = context.game.districts[0]
+    print(context.game.districts[0].number_district)
     context.neutral_tribute = context.game.neutrals[0]
     context.game.alliance_neutral(context.game.neutrals[0], district_zero)
     assert context.game.districts[0].tributes.__contains__(context.neutral_tribute)
