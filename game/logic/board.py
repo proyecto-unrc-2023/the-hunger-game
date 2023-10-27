@@ -27,6 +27,7 @@ class Board:
         order = [0, 1, 2, 3, 4, 5]
         for i in range(6):
             district = District()
+            district.number_district = i
             districts.append(district)
 
         for row in range(n_rows):
