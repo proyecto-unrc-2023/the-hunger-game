@@ -127,7 +127,7 @@ class PotionPoison(Potion):
 
     # Potion poison is po
     def __str__(self):
-        return 'po'
+        return 'pp'
 
     def __eq__(self, other):
         return isinstance(other, PotionPoison)
@@ -151,7 +151,7 @@ class PotionPoison(Potion):
 class Weapon(Item):
 
     def __str__(self):
-        return 'w '
+        return 'w'
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
@@ -226,7 +226,7 @@ class Bow(Weapon):
 
     # Bow is bo
     def __str__(self):
-        return 'wo'
+        return 'ow'
 
     def __eq__(self, other):
         return isinstance(other, Bow)

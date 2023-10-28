@@ -12,37 +12,40 @@ const Cell = ({ state, onClick }) => {
   const BorderULImage = "/board-images/border-ul.png";
   const BorderURImage = "/board-images/border-ur.png";
   const WaterImage = "/board-images/water.png";
-  const Tribute1Walk1 = "/board-images/characters/female_adventurer_walk1.png";
-  const Tribute1Walk2 = "/board-images/characters/female_adventurer_walk2.png";
-  const Tribute1HoldBow = "/board-images/characters/female_adventurer_hold_bow.png";
-  const Tribute1HoldSword = "/board-images/characters/female_adventurer_hold_sword.png";
-  const Tribute2Walk1 = "/board-images/characters/male_adventurer_walk1.png";
-  const Tribute2Walk2 = "/board-images/characters/male_adventurer_walk2.png";
-  const Tribute2HoldBow = "/board-images/characters/male_adventurer_hold_bow.png";
-  const Tribute2HoldSword = "/board-images/characters/male_adventurer_hold_sword.png";
-  const Tribute3Walk1 = "/board-images/characters/female_person_walk1.png";
-  const Tribute3Walk2 = "/board-images/characters/female_person_walk2.png";
-  const Tribute3HoldBow = "/board-images/characters/female_person_hold_bow.png";
-  const Tribute3HoldSword = "/board-images/characters/female_person_hold_sword.png";
-  const Tribute4Walk1 = "/board-images/characters/male_person_walk1.png";
-  const Tribute4Walk2 = "/board-images/characters/male_person_walk2.png";
-  const Tribute4HoldBow = "/board-images/characters/male_person_hold_bow.png";
-  const Tribute4HoldSword = "/board-images/characters/male_person_hold_sword.png";
-  const Tribute5Walk1 = "/board-images/characters/robot_walk1.png";
-  const Tribute5Walk2 = "/board-images/characters/robot_walk2.png";
-  const Tribute5HoldBow = "/board-images/characters/robot_hold_bow.png";
-  const Tribute5HoldSword = "/board-images/characters/robot_hold_sword.png";
-  const Tribute6Walk1 = "/board-images/characters/zombie_walk1.png";
-  const Tribute6Walk2 = "/board-images/characters/zombie_walk2.png";
-  const Tribute6HoldBow = "/board-images/characters/zombie_hold_bow.png";
-  const Tribute6HoldSword = "/board-images/characters/zombie_hold_sword.png";
-  const HealImage = "/board-images/items/heal.png";
+  const Tribute0Walk1 = "/board-images/characters/female_adventurer_walk1.png";
+  const Tribute0Walk2 = "/board-images/characters/female_adventurer_walk2.png";
+  const Tribute0HoldBow = "/board-images/characters/female_adventurer_hold_bow.png";
+  const Tribute0HoldSword = "/board-images/characters/female_adventurer_hold_sword.png";
+  const Tribute1Walk1 = "/board-images/characters/male_adventurer_walk1.png";
+  const Tribute1Walk2 = "/board-images/characters/male_adventurer_walk2.png";
+  const Tribute1HoldBow = "/board-images/characters/male_adventurer_hold_bow.png";
+  const Tribute1HoldSword = "/board-images/characters/male_adventurer_hold_sword.png";
+  const Tribute2Walk1 = "/board-images/characters/female_person_walk1.png";
+  const Tribute2Walk2 = "/board-images/characters/female_person_walk2.png";
+  const Tribute2HoldBow = "/board-images/characters/female_person_hold_bow.png";
+  const Tribute2HoldSword = "/board-images/characters/female_person_hold_sword.png";
+  const Tribute3Walk1 = "/board-images/characters/male_person_walk1.png";
+  const Tribute3Walk2 = "/board-images/characters/male_person_walk2.png";
+  const Tribute3HoldBow = "/board-images/characters/male_person_hold_bow.png";
+  const Tribute3HoldSword = "/board-images/characters/male_person_hold_sword.png";
+  const Tribute4Walk1 = "/board-images/characters/robot_walk1.png";
+  const Tribute4Walk2 = "/board-images/characters/robot_walk2.png";
+  const Tribute4HoldBow = "/board-images/characters/robot_hold_bow.png";
+  const Tribute4HoldSword = "/board-images/characters/robot_hold_sword.png";
+  const Tribute5Walk1 = "/board-images/characters/zombie_walk1.png";
+  const Tribute5Walk2 = "/board-images/characters/zombie_walk2.png";
+  const Tribute5HoldBow = "/board-images/characters/zombie_hold_bow.png";
+  const Tribute5HoldSword = "/board-images/characters/zombie_hold_sword.png";
   const SwordImage = "/board-images/items/sword.png";
   const BowImage = "/board-images/items/bow.png";
+  const SpearImage = "/board-images/items/spear.png";
+  const HealImage = "/board-images/items/heal.png";
+  const PoisonImage = "/board-images/items/poison.png";
+  const ForceImage = "/board-images/items/force.png";
 
   const renderContent = () => {
     switch (state) {
-      case 'free':
+      case '  ':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -102,7 +105,16 @@ const Cell = ({ state, onClick }) => {
             <img src={WaterImage} alt="Water Tile" />
           </div>
         );
-      case 'tribute':
+      case 't0', 'a0', 'b0', 'c0', 'd0', 'e0':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-tribute'>
+              <img src={Tribute0Walk1} alt="Tribute Tile" />
+            </div>
+          </div>
+        );
+      case 't1', 'a1', 'b1', 'c1':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -111,16 +123,70 @@ const Cell = ({ state, onClick }) => {
             </div>
           </div>
         );
-      case 'potion':
+      case 't2', 'a2', 'b2', 'c2':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-tribute'>
+              <img src={Tribute2Walk1} alt="Tribute Tile" />
+            </div>
+          </div>
+        );
+      case 't3', 'a3', 'b3', 'c3':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-tribute'>
+              <img src={Tribute3Walk1} alt="Tribute Tile" />
+            </div>
+          </div>
+        );
+      case 't4', 'a4', 'b4', 'c4':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-tribute'>
+              <img src={Tribute4Walk1} alt="Tribute Tile" />
+            </div>
+          </div>
+        );
+      case 't5', 'a5', 'b5', 'c5':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-tribute'>
+              <img src={Tribute5Walk1} alt="Tribute Tile" />
+            </div>
+          </div>
+        );
+      case 'pl':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-potion'>
-              <img src={HealImage} alt="Potion Tile" />
+              <img src={HealImage} alt="Life Potion Tile" />
             </div>
           </div>
         );
-      case 'sword':
+      case 'pp':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-potion'>
+              <img src={PoisonImage} alt="Poison Potion Tile" />
+            </div>
+          </div>
+        );
+      case 'pf':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-potion'>
+              <img src={ForceImage} alt="Force Potion Tile" />
+            </div>
+          </div>
+        );
+      case 'sw':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -129,7 +195,7 @@ const Cell = ({ state, onClick }) => {
             </div>
           </div>
         );
-      case 'bow':
+      case 'ow':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />

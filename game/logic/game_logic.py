@@ -43,20 +43,7 @@ class GameLogic:
     # "tribute" is the tribute configured
     # Row and Column are the position of tribute
     def put_tribute(self, row, column, tribute):
-        district = tribute.district
-        district_aux = District()
-        letters = 'tabcdefghijklm'
-        if len(self.districts) == district:
-            district_aux.number_district = district
-            district_aux.add_tribute(tribute)
-            self.districts.append(district_aux)
-            self.board.put_tribute(row, column, tribute)
-            tribute.name = letters[district_aux.cant_tributes - 1] + str(district_aux.number_district)
-        else:
-            self.board.put_tribute(row, column, tribute)
-            self.districts[tribute.district].add_tribute(tribute)
-            tribute.name = letters[self.districts[tribute.district].cant_tributes - 1] + str(
-                self.districts[tribute.district].number_district)
+        self.board.put_tribute(row, column, tribute)
 
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
@@ -404,6 +391,7 @@ class GameLogic:
         if not (self.neutrals is None):
             for neutral in self.neutrals:
                 self.neutral_heuristic(neutral)
+        return self
 
     # Distribute tributes from a district to random positions on the board.
     def distribute_tributes(self):
@@ -516,6 +504,16 @@ class GameLogic:
                 if self.districts[i].cant_tributes >= 1:
                     winner_district = self.districts[i].number_district
                     return winner_district
+    
+
+    def set_parameters(self, number_district, life, force, alliance, cant_tributes, cowardice):
+        my_district = District()
+        my_district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
+        self.districts.insert(0, my_district)
+
+    def distribute_items(self):
+        self.board.distribute_potions()
+        self.board.distribute_weapons()
 
 
 

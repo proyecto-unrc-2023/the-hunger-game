@@ -9,7 +9,7 @@ LIFE_DEFAULT = 50
 
 FORCE_DEFAULT = 5
 
-ALLIANCE_DEFAULT = 3
+ALLIANCE_DEFAULT = 1
 RANGE_DEFAULT = 1
 COWARDICE_DEFAULT = 0
 MAX_COWARDICE = 5
@@ -73,11 +73,12 @@ class Tribute:
         else:
             raise ValueError(f"Not possible attack, same district")
 
-    def set_config_parameters(self, life, force, alliance, district):
+    def set_config_parameters(self, life, force, alliance, district, cowardice):
         self.life = life
         self.force = force
         self.alliance = alliance
         self.district = district
+        self.cowardice = cowardice
 
     # First proposal of the alliance system
     # The neutral tribute alliance is fictitious, it does not take said value

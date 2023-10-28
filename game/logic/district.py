@@ -30,9 +30,8 @@ class District:
         letters = 'tabcdefghijklm'
         for i in range(cant_tributes):
             tribute = Tribute()
-            tribute.name = letters[i + 1] + str(number_district)
-            tribute.set_config_parameters(life, force, alliance, number_district)
-            tribute.cowardice = cowardice
+            tribute.name = letters[i] + str(number_district)
+            tribute.set_config_parameters(life, force, alliance, number_district, cowardice)
             self.tributes.append(tribute)
 
     # Create a district of tributes with random force and alliance, were these stats never are high.
@@ -45,7 +44,7 @@ class District:
             tribute.name = letters[t] + str(num_district)
             while True:
                 tribute.force = random.randint(5, 10)
-                tribute.alliance = random.randint(3, 10)
+                tribute.alliance = random.randint(1, 10)
                 if tribute.force + tribute.alliance <= 15:
                     break
             tribute.district = num_district

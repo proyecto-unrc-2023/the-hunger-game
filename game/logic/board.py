@@ -70,7 +70,7 @@ class Board:
                             raise ValueError(f'Invalid tribute number: {tribute_number}')
                     except ValueError:
                         raise ValueError(f'Invalid tribute character: {char}')
-                elif char == ' ':
+                elif char == '  ':
                     pass
                 elif char == 'w':
                     weapon = Weapon()
@@ -84,11 +84,11 @@ class Board:
                     sword = Sword()
                     new_board.get_element(row, col).put_item(sword)
                     sword.pos = (row, col)
-                elif char == 'wo':
+                elif char == 'ow':
                     bow = Bow()
                     new_board.get_element(row, col).put_item(bow)
                     bow.pos = (row, col)
-                elif char == 'po':
+                elif char == 'pp':
                     potion_poison = PotionPoison()
                     new_board.get_element(row, col).put_item(potion_poison)
                     potion_poison.pos = (row, col)
@@ -316,4 +316,4 @@ class Board:
 class BoardSchema(Schema):
     rows = fields.Integer()
     columns = fields.Integer()
-    board = fields.List(fields.List(fields.Nested(CellSchema, many=True)))
+    board = fields.List(fields.List(fields.Str()))

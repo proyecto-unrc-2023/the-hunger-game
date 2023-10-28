@@ -1,12 +1,12 @@
 from flask import jsonify
 from game.logic.district import DistrictSchema, District
-from game.logic.game_logic import GameLogic
+from game.logic.game_logic import GameLogic, GameLogicSchema
 
 
 class DistrictController:
     
     def get_new_district(self):
-        district = dict(cant_tributes=6, life=50, force=5, alliance=1, cowardice=0)
+        district = dict(cant_tributes=4, life=50, force=5, alliance=1, cowardice=0)
         schema = DistrictSchema()
         result = jsonify(schema.dump(district))
         
@@ -14,7 +14,6 @@ class DistrictController:
     
     def set_district(self, cant_tributes, life, force, alliance, cowardice):
         District.set_config(self, life, force, alliance, 0, cant_tributes, cowardice)
-
         return self
     
     # Get own district and random district
@@ -37,3 +36,15 @@ class DistrictController:
         }
 
         return jsonify(response_dict)
+    
+
+    def get_one_iteration(self, actual_game: GameLogic):
+        next_iteration = actual_game.one_iteration()
+
+        if next_iteration is None:
+            return {"error": "No data for next iteration"}
+
+        schema = GameLogicSchema()
+        result = schema.dump(next_iteration)
+        return result
+    

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import {
   TransformWrapper,
   TransformComponent,
@@ -27,35 +27,12 @@ const ControlsAdvance = memo(({ onPause, onFinish }) => {
 });
 
 const Game = () => {
-  const size = 20;
-  // Tablero de prueba 1
-  const testBoardState = Array.from({ length: size }, () => Array(size).fill('free'));
-  // Probando posiciones iniciales
-  testBoardState[4][4] = 'tribute';
-  testBoardState[9][17] = 'tribute';
-  testBoardState[19][1] = 'tribute';
-  testBoardState[8][8] = 'potion';
-  testBoardState[5][15] = 'potion';
-  testBoardState[1][15] = 'bow';
-  testBoardState[7][13] = 'sword';
-  testBoardState[14][1] = 'sword';
 
-  // Tablero de prueba 2
-  const test2BoardState = Array.from({ length: size }, () => Array(size).fill('free'));
-  test2BoardState[4][5] = 'tribute';
-  test2BoardState[8][16] = 'tribute';
-  test2BoardState[18][2] = 'tribute';
-  test2BoardState[8][8] = 'potion';
-  test2BoardState[5][15] = 'potion';
-  test2BoardState[1][15] = 'bow';
-  test2BoardState[7][13] = 'sword';
-  test2BoardState[14][1] = 'sword';
-
-  // Tablero vacío
-  const emptyBoard = Array.from({ length: size }, () => Array(size).fill('free'));
+  //Tamaño del tablero
+  const [boardSize, setBoardSize] = useState(20);
 
   //Estado del tablero
-  const [boardState, setBoardState] = useState(testBoardState);
+  const [boardState, setBoardState] = useState([]);
 
   //Estado de la simulación
   const [isPaused, setPaused] = useState(true);
@@ -68,49 +45,99 @@ const Game = () => {
     setPaused(!isPaused);
   };
 
-  const handleFinish = () => {
-    const winningDistrict = Math.random() < 0.5 ? 'Distrito 1' : 'Distrito 2';
-    setWinner(winningDistrict);
-    // Pausa para que no quede iterando
+  const [gameID, setGameID] = useState(123);
+
+  const handleFinish = async () => {
+    const response = await fetch(`http://localhost:5000/game/${gameID}`, {
+      method: 'PUT',
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const gameData = Object.values(data)[0];
+      if (gameData && gameData.board) {
+        setBoardState(gameData.board.board);
+        setBoardSize(gameData.board.rows); 
+      } else {
+        console.error('La estructura de datos es incorrecta:', data);
+      }
+      // setWinner(data.winner);
+    } else {
+      console.error('Error al finalizar el juego');
+    }
+    
     setPaused(true);
-    // Finaliza la simulación, deja el último tablero y da al ganador
   };
 
-  const [selectedCell, setSelectedCell] = useState(null);
+  useEffect(() => {
+    // Realizar el PUT al principio
+    
+    const fetchGameInfo = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/game/${gameID}/next_iteration`);
+        if (response.ok) {
+          const data = await response.json();
+          const gameData = Object.values(data)[0];
+          setBoardState(gameData.board.board);
+        } else {
+          // Manejar errores de la solicitud, si es necesario
+        }
+      } catch (error) {
+        console.error("Error fetching game information:", error);
+      }
+    };
+
+    // Actualizar la información del juego cada 500 ms si no está pausado
+    const intervalId = setInterval(() => {
+      if (!isPaused) {
+        fetchGameInfo();
+      }
+    }, 500);
+
+    // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
+    return () => clearInterval(intervalId);
+
+  }, [gameID, isPaused]);
+
+  // const [selectedCell, setSelectedCell] = useState(null);
 
   // Función para manejar clics en las celdas
-  const handleCellClick = (row, col) => {
-    const clickedCell = boardState[row][col];
-    setSelectedCell({
-      row,
-      col,
-      type: clickedCell,
-      // Puedes agregar más información aquí según sea necesario
-    });
-  };
+  // const handleCellClick = (row, col) => {
+  //   const clickedCell = boardState[row][col];
+  //   setSelectedCell({
+  //     row,
+  //     col,
+  //     type: clickedCell,
+  //     // Puedes agregar más información aquí según sea necesario
+  //   });
+  // };  
 
-  // Configuración de tiempo y estados para la actualización de los tableros
-  useEffect(() => {
-    let time;
-  
-    // Función para alternar entre estados del tablero
-    const toggleBoardState = () => {
-      setBoardState((prevBoardState) =>
-        prevBoardState === testBoardState ? test2BoardState : testBoardState
-      );
-    };
-  
-    // Iniciar tiempo para alternar el tablero cada 500 ms
-    if (!isPaused) {
-      time = setInterval(toggleBoardState, 500);
-    }
-  
-    // Limpiar el tiempo cuando el juego se pausa
-    return () => clearInterval(time);
-    // esto para que no joda el warning jaja
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [isPaused]);
+  // Tablero de prueba 1
+  const testBoardState = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
+  // Probando posiciones iniciales
+  testBoardState[4][4] = 't0';
+  testBoardState[9][17] = 't1';
+  testBoardState[19][1] = 't2';
+  testBoardState[8][8] = 'pl';
+  testBoardState[5][15] = 'pp';
+  testBoardState[1][15] = 'ow';
+  testBoardState[7][13] = 'sw';
+  testBoardState[14][1] = 'sp';
 
+  // Tablero de prueba 2
+  const test2BoardState = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
+  test2BoardState[4][5]  = 't0';
+  test2BoardState[8][16] = 't1';
+  test2BoardState[18][2] = 't2';
+  test2BoardState[8][8]  = 'pl';
+  test2BoardState[5][15] = 'pp';
+  test2BoardState[1][15] = 'ow';
+  test2BoardState[7][13] = 'sw';
+  test2BoardState[14][1] = 'sp';
+
+  console.log('boardState:', boardState);
+  // Tablero vacío
+  const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('free'));
   return (
     <main className="game">
       <TransformWrapper minScale={0.5}>
@@ -119,8 +146,8 @@ const Game = () => {
           <section className='board'>
             {winner ? (
               <div className="winner-message">Ha ganado el {winner}
-              <Board size={size} boardState={emptyBoard} /></div>
-            ) : ( <Board size={size} boardState={boardState}/>
+              <Board boardSize={boardSize} boardState={emptyBoard} /></div>
+            ) : ( <Board boardSize={boardSize} boardState={test2BoardState}/>
             )}
           </section>
         </TransformComponent>
