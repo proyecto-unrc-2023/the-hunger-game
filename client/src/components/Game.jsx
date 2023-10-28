@@ -52,7 +52,7 @@ const Game = () => {
     //setWinner
   }
   
-  const [gameID, setGameID] = useState(123);
+  const [gameID, setGameID] = useState(0);
   
   // Tablero vacío
   const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
@@ -85,7 +85,7 @@ const Game = () => {
     if (!gameInitialized) initialBoard();
     const fetchGameInfo = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/game/${gameID}/next_iteration`);
+        const response = await fetch(`http://localhost:5000/game/${gameID}`);
         if (response.ok) {
           const data = await response.json();
           const gameData = Object.values(data)[0];

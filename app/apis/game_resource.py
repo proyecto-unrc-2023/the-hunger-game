@@ -1,11 +1,12 @@
 from flask import jsonify, request
-from flask_restful import Api, Resource
-from pytest import console_main
+from flask_restful import Resource
 
 from game.controllers.district_controller import DistrictController
-from game.logic.game_logic import GameLogic, GameLogicSchema, GameMode
+from game.controllers.game_controller import GameController
+from game.logic.game_logic import GameLogicSchema
 
-games = {}
+games = []
+
 class ConfigDistrict(Resource):
     
     def get(self):
@@ -15,56 +16,32 @@ class ConfigDistrict(Resource):
     def post(self):
         data = request.get_json()  # Obtengo los datos enviados por el cliente
         print(data) # Imprimo los datos por consola
-        return jsonify({'message': 'Datos recibidos correctamente'})    
-
-class AllDistrict(Resource):
-
-    def get(self):
-        controller = DistrictController()
-        return controller.get_districts()
-
-    
-    def post(self):
-        data = request.get_json()
-        print(data)
-        return jsonify({'message': 'Datos recibidos correctamente'})
+        g_controller = GameController()
+        first_game = g_controller.get_game(data) # Creo un juego con los datos obtenidos desde el front
+        games.append(first_game)
+        game_id = len(games) - 1
+        return jsonify({'game_id': game_id})    
 
 class Game(Resource):
 
     def put(self, game_id):
-        size = 20
-        num_district = 0
-        cant_neutral_tributes = 10
-        life, force, alliance, cant_tributes, cowardice = 55, 7, 1, 6, 1
-        actual_game = GameLogic()
-        games[game_id] = actual_game
-        game_schema = GameLogicSchema()
-        actual_game.new_game(size, size)
-        actual_game.configure_random_districts()
-        actual_game.set_parameters(num_district, life, force, alliance, cant_tributes, cowardice)
-        actual_game.distribute_tributes()
-        actual_game.distribute_items()
-        actual_game.distribute_neutral_tributes(cant_neutral_tributes)
-        actual_game.mode = GameMode.SIMULATION
-        return {game_id: game_schema.dump(actual_game)}
+        game_id = int(game_id)
+        if game_id < len(games):
+            actual_game = games[game_id]
+            game_schema = GameLogicSchema()
+            return {game_id: game_schema.dump(actual_game)}
+        else:
+            return {'message': 'Juego no encontrado'}, 404
 
     def get(self, game_id):
-        if game_id not in games:
+        game_id = int(game_id)
+        if games[game_id] not in games:
             return {"error": "Game not found"}, 404
-
-        game = games[game_id]
-        game_schema = GameLogicSchema()
-        return {game_id: game_schema.dump(game)}
-
-class NextIteration(Resource):
-
-    def get(self, game_id):
-        if game_id not in games:
-            return {"error": "Game not found"}, 404
-        actual_game = games[str(game_id)]
-        controller = DistrictController()
+        actual_game = games[game_id]
+        controller = GameController()
         next_iteration = controller.get_one_iteration(actual_game)
         result_schema = GameLogicSchema()
         result = result_schema.dump(next_iteration)
         return {game_id: result}
+
     

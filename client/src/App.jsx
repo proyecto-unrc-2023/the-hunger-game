@@ -24,14 +24,14 @@ const App = () => {
   return (
     <div className='app'>
       <Header/>
-      {/* {!gameStarted ? (
+      {!gameStarted ? (
         <Menu onStartGame={handleStartGame} />
-      ) : ( */}
+      ) : (
         <div className='main'>
           <Game />
           <InfoPanel />
         </div>
-      
+      )}
       <Footer />
     </div>
   );
