@@ -41,7 +41,7 @@
   transform: translate(-50%, -50%);
 }
 
-.board-sword img{
+.board-sword img, .board-spear img{
   width: 50%;
   height: auto;
   position: absolute;

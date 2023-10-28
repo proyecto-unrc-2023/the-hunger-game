@@ -3,7 +3,7 @@ import "./Board.css";
 import Cell from './Cell';
 
 const Board = ({ size, boardState}) => {
-  const extraCells = 4;
+  const extraCells = 3;
   const extra = extraCells * 2;
 
   const renderBoard = () => {

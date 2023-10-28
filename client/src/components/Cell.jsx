@@ -36,6 +36,10 @@ const Cell = ({ state, onClick }) => {
   const Tribute5Walk2 = "/board-images/characters/zombie_walk2.png";
   const Tribute5HoldBow = "/board-images/characters/zombie_hold_bow.png";
   const Tribute5HoldSword = "/board-images/characters/zombie_hold_sword.png";
+  const TributeNWalk1 = "/board-images/characters/neutral_walk1.png";
+  const TributeNWalk2 = "/board-images/characters/neutral_walk2.png";
+  const TributeNHoldBow = "/board-images/characters/neutral_hold_bow.png";
+  const TributeNHoldSword = "/board-images/characters/neutral_hold_sword.png";
   const SwordImage = "/board-images/items/sword.png";
   const BowImage = "/board-images/items/bow.png";
   const SpearImage = "/board-images/items/spear.png";
@@ -105,60 +109,98 @@ const Cell = ({ state, onClick }) => {
             <img src={WaterImage} alt="Water Tile" />
           </div>
         );
-      case 't0', 'a0', 'b0', 'c0', 'd0', 'e0':
+      case 't0':
+      case 'a0':
+      case 'b0':
+      case 'c0':
+      case 'd0':
+      case 'e0':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute0Walk1} alt="Tribute Tile" />
+              <img src={Tribute0Walk1} alt="Tribute 0 Tile" />
             </div>
           </div>
         );
-      case 't1', 'a1', 'b1', 'c1':
+      case 't1':
+      case 'a1':
+      case 'b1':
+      case 'c1':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute1Walk1} alt="Tribute Tile" />
+              <img src={Tribute1Walk1} alt="Tribute 1 Tile" />
             </div>
           </div>
         );
-      case 't2', 'a2', 'b2', 'c2':
+      case 't2':
+      case 'a2':
+      case 'b2':
+      case 'c2':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute2Walk1} alt="Tribute Tile" />
+              <img src={Tribute2Walk1} alt="Tribute 2 Tile" />
             </div>
           </div>
         );
-      case 't3', 'a3', 'b3', 'c3':
+      case 't3':
+      case 'a3':
+      case 'b3':
+      case 'c3':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute3Walk1} alt="Tribute Tile" />
+              <img src={Tribute3Walk1} alt="Tribute 3 Tile" />
             </div>
           </div>
         );
-      case 't4', 'a4', 'b4', 'c4':
+      case 't4':
+      case 'a4':
+      case 'b4':
+      case 'c4':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute4Walk1} alt="Tribute Tile" />
+              <img src={Tribute4Walk1} alt="Tribute 4 Tile" />
             </div>
           </div>
         );
-      case 't5', 'a5', 'b5', 'c5':
+      case 't5':
+      case 'a5':
+      case 'b5':
+      case 'c5':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute5Walk1} alt="Tribute Tile" />
+              <img src={Tribute5Walk1} alt="Tribute 5 Tile" />
             </div>
           </div>
         );
+      case 'n0':
+      case 'n1':
+      case 'n2':
+      case 'n3':
+      case 'n4':
+      case 'n5':
+      case 'n6':
+      case 'n7':
+      case 'n8':
+      case 'n9':
+      return (
+        <div className='board-free'>
+          <img src={GrassImage} alt="Free Tile" />
+          <div className='board-tribute'>
+            <img src={TributeNWalk1} alt="Neutral Tribute Tile" />
+          </div>
+        </div>
+      );
       case 'pl':
         return (
           <div className='board-free'>
@@ -195,6 +237,15 @@ const Cell = ({ state, onClick }) => {
             </div>
           </div>
         );
+      case 'sp':
+        return (
+          <div className='board-free'>
+            <img src={GrassImage} alt="Free Tile" />
+            <div className='board-spear'>
+              <img src={SpearImage} alt="Spear Tile" />
+            </div>
+          </div>
+        );
       case 'ow':
         return (
           <div className='board-free'>
@@ -210,7 +261,7 @@ const Cell = ({ state, onClick }) => {
   };
 
   return (
-    <div className={`cell ${state}`} onClick={onClick}>
+    <div className={`cell ${state}`}>
       {renderContent()}
     </div>
   );
