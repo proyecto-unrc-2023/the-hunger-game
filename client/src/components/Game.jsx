@@ -53,12 +53,30 @@ const Game = () => {
   }
   
   const [gameID, setGameID] = useState(0);
+
+  const getLastId = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/game/last_id`, {
+        method: 'GET',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setGameID(data.game_id);
+      } else {
+        console.error('Error al obtener el último game_id');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud de getLastId:', error);
+    }
+  };
   
   // Tablero vacío
   const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
   
   
   const initialBoard = async () => {
+    getLastId();
     const response = await fetch(`http://localhost:5000/game/${gameID}`, {
       method: 'PUT',
     });
@@ -72,7 +90,6 @@ const Game = () => {
       } else {
         console.error('La estructura de datos es incorrecta:', data);
       }
-      // setWinner(data.winner);
     } else {
       console.error('Error al finalizar el juego');
     }
@@ -82,10 +99,14 @@ const Game = () => {
  
 
   useEffect(() => {
-    if (!gameInitialized) initialBoard();
+    if (!gameInitialized) {
+      initialBoard();
+    }
     const fetchGameInfo = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/game/${gameID}`);
+        const response = await fetch(`http://localhost:5000/game/${gameID}`, {
+          method: 'GET',
+        });
         if (response.ok) {
           const data = await response.json();
           const gameData = Object.values(data)[0];

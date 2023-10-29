@@ -31,7 +31,7 @@ class Game(Resource):
             game_schema = GameLogicSchema()
             return {game_id: game_schema.dump(actual_game)}
         else:
-            return {'message': 'Juego no encontrado'}, 404
+            return {'error': 'Game not found'}, 404
 
     def get(self, game_id):
         game_id = int(game_id)
@@ -44,4 +44,9 @@ class Game(Resource):
         result = result_schema.dump(next_iteration)
         return {game_id: result}
 
-    
+class LastGame(Resource):
+    def get(self):
+        last_game_id = len(games) - 1
+        if last_game_id < 0:
+            return {"error": "No games available"}, 404
+        return {'game_id': last_game_id}

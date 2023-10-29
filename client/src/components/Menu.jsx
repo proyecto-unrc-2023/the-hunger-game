@@ -63,7 +63,7 @@ export default function Menu({ onStartGame }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
   const [forceStats, setForceStats] = useState(Array(10).fill(false));
-  const [allianceStats, setAllianceStats] = useState(Array(9).fill(false));
+  const [allianceStats, setAllianceStats] = useState(Array(7).fill(false));
   const [cowardiceStats, setCowardiceStats] = useState(Array(5).fill(false));
   const [tributeStats, setTributeStats] = useState(Array(10).fill(false));
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
