@@ -48,22 +48,22 @@ class Board:
                             tribute.name = char
                             # Customize tribute parameters based on the number
                             if tribute_number == 0:
-                                tribute.set_config_parameters(50, 5, 3, 0)
+                                tribute.set_config_parameters(50, 5, 3, 0, 0)
                                 districts[0].add_tribute(tribute)
                             elif tribute_number == 1:
-                                tribute.set_config_parameters(50, 5, 3, 1)
+                                tribute.set_config_parameters(50, 5, 3, 1, 0)
                                 districts[1].add_tribute(tribute)
                             elif tribute_number == 2:
-                                tribute.set_config_parameters(50, 5, 3, 2)
+                                tribute.set_config_parameters(50, 5, 3, 2, 0)
                                 districts[2].add_tribute(tribute)
                             elif tribute_number == 3:
-                                tribute.set_config_parameters(50, 5, 3, 3)
+                                tribute.set_config_parameters(50, 5, 3, 3, 0)
                                 districts[3].add_tribute(tribute)
                             elif tribute_number == 4:
-                                tribute.set_config_parameters(50, 5, 3, 4)
+                                tribute.set_config_parameters(50, 5, 3, 4, 0)
                                 districts[4].add_tribute(tribute)
                             elif tribute_number == 5:
-                                tribute.set_config_parameters(50, 5, 3, 5)
+                                tribute.set_config_parameters(50, 5, 3, 5, 0)
                                 districts[5].add_tribute(tribute)
                             new_board.put_tribute(row, col, tribute)
                         else:
@@ -84,11 +84,11 @@ class Board:
                     sword = Sword()
                     new_board.get_element(row, col).put_item(sword)
                     sword.pos = (row, col)
-                elif char == 'ow':
+                elif char == 'wo':
                     bow = Bow()
                     new_board.get_element(row, col).put_item(bow)
                     bow.pos = (row, col)
-                elif char == 'pp':
+                elif char == 'po':
                     potion_poison = PotionPoison()
                     new_board.get_element(row, col).put_item(potion_poison)
                     potion_poison.pos = (row, col)

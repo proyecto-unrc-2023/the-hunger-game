@@ -43,7 +43,20 @@ class GameLogic:
     # "tribute" is the tribute configured
     # Row and Column are the position of tribute
     def put_tribute(self, row, column, tribute):
-        self.board.put_tribute(row, column, tribute)
+        district = tribute.district
+        district_aux = District()
+        letters = 'tabcdefghijklm'
+        if len(self.districts) == district:
+            district_aux.number_district = district
+            district_aux.add_tribute(tribute)
+            self.districts.append(district_aux)
+            self.board.put_tribute(row, column, tribute)
+            tribute.name = letters[district_aux.cant_tributes - 1] + str(district_aux.number_district)
+        else:
+            self.board.put_tribute(row, column, tribute)
+            self.districts[tribute.district].add_tribute(tribute)
+            tribute.name = letters[self.districts[tribute.district].cant_tributes - 1] + str(
+                self.districts[tribute.district].number_district) 
 
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
@@ -372,12 +385,10 @@ class GameLogic:
         # Configure others districts
         self.configure_random_districts()
         # Distribute potions and weapons
-        self.board.distribute_potions()
-        self.board.distribute_weapons()
-        # Distribute tributes
-        for j in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[j])
-
+        self.distribute_items()
+        # Distribute tributes of all districts
+        self.distribute_district_tributes()
+        # Distribute neutrals tributes
         self.distribute_neutral_tributes(10)
 
         self.mode = GameMode.SIMULATION
@@ -394,6 +405,7 @@ class GameLogic:
         return self
 
     # Distribute tributes from a district to random positions on the board.
+    # This method is only for test.
     def distribute_tributes(self):
         for j in range(len(self.districts)):
             for i in range(self.districts[j].cant_tributes):
@@ -441,11 +453,8 @@ class GameLogic:
         district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.append(district)
         self.configure_random_districts()
-        self.board.distribute_potions()
-        self.board.distribute_weapons()
-        
-        for j in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[j])
+        self.distribute_items()
+        self.distribute_district_tributes()
         self.distribute_neutral_tributes(10) 
 
     def get_away(self, tribute, enemy):
@@ -505,16 +514,21 @@ class GameLogic:
                     winner_district = self.districts[i].number_district
                     return winner_district
     
-
+    # Set stats of own district. Front use this method
     def set_parameters(self, number_district, life, force, alliance, cant_tributes, cowardice):
         my_district = District()
         my_district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.insert(0, my_district)
 
+    # Distribute items on board. Front use this method
     def distribute_items(self):
         self.board.distribute_potions()
         self.board.distribute_weapons()
 
+    # Distribute all districts of tributes on board. Fron use this method
+    def distribute_district_tributes(self):
+        for i in range(len(self.districts)):
+            self.board.distribute_tributes(self.districts[i])
 
 
 class GameLogicSchema(Schema):

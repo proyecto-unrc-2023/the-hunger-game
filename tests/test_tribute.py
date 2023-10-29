@@ -22,18 +22,18 @@ def test_tribute_is_dead_or_is_alive():
 def test_tribute_to_string():
     tribute1 = Tribute()
     tribute1.name = 't0'
-    tribute1.set_config_parameters(50,5,3,0)
+    tribute1.set_config_parameters(50, 5, 3, 0, 0)
     assert (tribute1.__str__()).__eq__('t0')
 
 
 def test_set_config_parameters_tribute():
     tribute = Tribute()
-    tribute.set_config_parameters(50, 5, 3, 5)
+    tribute.set_config_parameters(50, 5, 3, 5, 3)
     assert tribute.life == 50
     assert tribute.force == 5
     assert tribute.alliance == 3
     assert tribute.district == 5
-
+    assert tribute.cowardice == 3
 
 def test_attack_to():
     board = Board(3, 3)
@@ -166,15 +166,15 @@ def test_neighbors():
 def test_calculate_flee():
     board = Board(5,5)
     t0 = Tribute()
-    t0.set_config_parameters(50,5,3,0)
+    t0.set_config_parameters(50, 5, 3, 0, 0)
     board.put_tribute(0, 0, t0)
     t1 = Tribute()
-    t1.set_config_parameters(50,5,3,1)
+    t1.set_config_parameters(50, 5, 3, 1, 0)
     board.put_tribute(2, 2, t1)
     pos = t1.calculate_flee(t0, board)
     assert pos == (4,4)
     t2 = Tribute()
-    t2.set_config_parameters(50,5,3,1)
+    t2.set_config_parameters(50, 5, 3, 1, 0)
     board.put_tribute(4, 4, t2)
     pos = t1.calculate_flee(t2, board)
     assert pos == (0,1)

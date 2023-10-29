@@ -210,7 +210,7 @@ const Cell = ({ state, onClick }) => {
             </div>
           </div>
         );
-      case 'pp':
+      case 'po':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -246,7 +246,7 @@ const Cell = ({ state, onClick }) => {
             </div>
           </div>
         );
-      case 'ow':
+      case 'wo':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />

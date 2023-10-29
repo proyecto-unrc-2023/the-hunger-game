@@ -56,12 +56,12 @@ class Item:
 class Potion(Item):
 
     def __str__(self):
-        return 'p '  # sera reemplazado por pass
+        return 'p '
 
     def __eq__(self, other):
         return isinstance(other, Potion)
 
-    def apply_effect(self, tribute):  # el cuerpo sera reemplazado por pass
+    def apply_effect(self, tribute):
         if tribute.life == tribute.max_life:
             tribute.life += 0
         if tribute.life + POTION_LIFE_EFFECT > tribute.max_life:
@@ -127,7 +127,7 @@ class PotionPoison(Potion):
 
     # Potion poison is po
     def __str__(self):
-        return 'pp'
+        return 'po'
 
     def __eq__(self, other):
         return isinstance(other, PotionPoison)
@@ -151,7 +151,7 @@ class PotionPoison(Potion):
 class Weapon(Item):
 
     def __str__(self):
-        return 'w'
+        return 'w '
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
@@ -226,7 +226,7 @@ class Bow(Weapon):
 
     # Bow is bo
     def __str__(self):
-        return 'ow'
+        return 'wo'
 
     def __eq__(self, other):
         return isinstance(other, Bow)

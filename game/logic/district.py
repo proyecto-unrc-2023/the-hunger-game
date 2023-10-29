@@ -44,7 +44,7 @@ class District:
             tribute.name = letters[t] + str(num_district)
             while True:
                 tribute.force = random.randint(5, 10)
-                tribute.alliance = random.randint(1, 10)
+                tribute.alliance = random.randint(3, 10)
                 if tribute.force + tribute.alliance <= 15:
                     break
             tribute.district = num_district
