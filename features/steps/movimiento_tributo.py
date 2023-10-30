@@ -11,7 +11,7 @@ def step_impl(context):
     context.game.new_game(4, 4)
     context.t0 = Tribute()
     context.d0 = District()
-    context.t0.set_config_parameters(50, 8, 2, 0)
+    context.t0.set_config_parameters(50, 8, 2, 0, 0)
     context.d0.add_tribute(context.t0)
     context.game.districts.append(context.d0)
 

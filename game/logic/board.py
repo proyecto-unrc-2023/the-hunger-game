@@ -1,6 +1,6 @@
 import random
 
-from game.logic.cell import Cell, CellSchema, State
+from game.logic.cell import Cell, State
 from game.logic.item import Weapon, Spear, Sword, Bow, PotionPoison, PotionLife, PotionForce
 from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
@@ -161,13 +161,11 @@ class Board:
             self.put_item(pos[0], pos[1], item.items[i])
 
     # Creat and distribute one type of potion or weapon on board.
-    def create_and_distribute_item(self, item):
+    def create_and_distribute_item(self, item, num_item):
         if item.is_potion():
-            num_potion = 5
-            item.create_potion(num_potion)
+            item.create_potion(num_item)
         else:
-            num_weapon = 5
-            item.create_weapon(num_weapon)
+            item.create_weapon(num_item)
         self.distribute_items(item)
 
     # Distribute different types of potions on board.
@@ -175,14 +173,14 @@ class Board:
         potion_list = [PotionLife, PotionForce, PotionPoison]
         for potion in potion_list:
             p = potion()
-            self.create_and_distribute_item(p)
+            self.create_and_distribute_item(p, 5)
 
     # Distribute different types of weapons on board.
     def distribute_weapons(self):
         weapon_list = [Sword, Spear, Bow]
         for weapon in weapon_list:
             w = weapon()
-            self.create_and_distribute_item(w)
+            self.create_and_distribute_item(w, 5)
 
     # Generates a random and valid position on the board.
     def random_pos(self):

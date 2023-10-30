@@ -550,7 +550,7 @@ def test_create_and_distribute_item():
     item_list = [PotionLife, PotionForce, PotionPoison, Sword, Spear, Bow]
     for item in item_list:
         i = item()
-        board.create_and_distribute_item(i)
+        board.create_and_distribute_item(i, 5)
 
     count_items = 0
     for row in board.board:

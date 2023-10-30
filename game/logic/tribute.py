@@ -1,8 +1,6 @@
-import math
 import random
 
 from marshmallow import Schema, fields
-
 
 MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50

@@ -68,6 +68,7 @@ class District:
 
 class DistrictSchema(Schema):
     from game.logic.tribute import TributeSchema
+    
     number_district = fields.Integer()
     cant_tributes = fields.Integer()
     tributes = fields.Nested(TributeSchema(), many=True)
@@ -75,4 +76,3 @@ class DistrictSchema(Schema):
     force = fields.Integer()
     alliance = fields.Integer()
     cowardice = fields.Integer()
-    

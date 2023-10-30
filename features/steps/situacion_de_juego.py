@@ -18,17 +18,17 @@ def step_impl(context):
 @given(u'que la vida inicial de todos los tributos es 50')
 def step_impl(context):
     context.t0 = Tribute()
-    context.t0.set_config_parameters(50, 5, 25, 0)
+    context.t0.set_config_parameters(50, 5, 25, 0, 0)
     context.t1 = Tribute()
-    context.t1.set_config_parameters(50, 5, 10, 1)
+    context.t1.set_config_parameters(50, 5, 10, 1, 0)
     context.t2 = Tribute()
-    context.t2.set_config_parameters(50, 5, 10, 2)
+    context.t2.set_config_parameters(50, 5, 10, 2, 0)
     context.t3 = Tribute()
-    context.t3.set_config_parameters(50, 5, 10, 3)
+    context.t3.set_config_parameters(50, 5, 10, 3, 0)
     context.a0 = Tribute()
     context.b0 = Tribute()
-    context.a0.set_config_parameters(50, 5, 10, 0)
-    context.b0.set_config_parameters(50, 5, 10, 0)
+    context.a0.set_config_parameters(50, 5, 10, 0, 0)
+    context.b0.set_config_parameters(50, 5, 10, 0, 0)
 
     assert context.t0.life == 50
     assert context.t1.life == 50
@@ -80,7 +80,7 @@ def step_impl(context):
 @given(u'luego que se muevan todos los tributos en el tablero, se mueven los neutros')
 def step_impl(context):
     context.a0 = Tribute()
-    context.a0.set_config_parameters(50, 5, 0, 0)
+    context.a0.set_config_parameters(50, 5, 0, 0, 0)
     context.game1 = GameLogic()
     context.game1.new_game(3, 3)
     context.game1.put_tribute(1, 1, context.a0)
@@ -246,7 +246,7 @@ def step_impl(context):
 
 
 # -------------------------------------------------------------------------------
-# Un tributo muere por el efecto de la posion de veneno
+# Un tributo muere por el efecto de la pocion de veneno
 
 
 @given(u'la vida de t0 es 5')

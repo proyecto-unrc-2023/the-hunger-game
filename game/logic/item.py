@@ -1,15 +1,14 @@
 from marshmallow import Schema, fields
 
-POTION_LIFE_EFFECT = 10  # mas adelanta borrala, representa a POTION_LIFE
+POTION_LIFE_EFFECT = 10
 
 POTION_LIFE = 10
 POTION_FORCE = 5
 POTION_POISON = 5
 
-WEAPON_EFFECT = 5  # mas adelante borrarla, representa a SWORD_EFFECT
+WEAPON_EFFECT = 5
 
 SWORD_EFFECT = 5
-
 SPEAR_EFFECT = 3
 RANGE_SPEAR = 1
 
@@ -42,7 +41,6 @@ class Item:
     def get_pos(self):
         return self.pos
 
-    # Apply some efect on tribute.
     def apply_effect(tribute):
         pass
 
@@ -76,7 +74,7 @@ class Potion(Item):
 
 class PotionForce(Potion):
 
-    # Potion force is pf
+    # Potion force is pf.
     def __str__(self):
         return 'pf'
 
@@ -87,7 +85,7 @@ class PotionForce(Potion):
     def apply_effect(self, tribute):
         tribute.force += POTION_FORCE
 
-    # Create potions force
+    # Create potions force.
     def create_potion(self, num_potion):
         if num_potion < 0:
             raise ValueError(f'Invalid input number: {num_potion}')
@@ -99,7 +97,7 @@ class PotionForce(Potion):
 
 class PotionLife(Potion):
 
-    # Potion life is pl
+    # Potion life is pl.
     def __str__(self):
         return 'pl'
 
@@ -125,7 +123,7 @@ class PotionLife(Potion):
 
 class PotionPoison(Potion):
 
-    # Potion poison is po
+    # Potion poison is po.
     def __str__(self):
         return 'po'
 
@@ -169,7 +167,7 @@ class Weapon(Item):
 
 class Sword(Weapon):
 
-    # Sword is sw
+    # Sword is sw.
     def __str__(self):
         return 'sw'
 
@@ -196,7 +194,7 @@ class Sword(Weapon):
 
 class Spear(Weapon):
 
-    # Spear is sp
+    # Spear is sp.
     def __str__(self):
         return 'sp'
 
@@ -224,7 +222,7 @@ class Spear(Weapon):
 
 class Bow(Weapon):
 
-    # Bow is bo
+    # Bow is wo.
     def __str__(self):
         return 'wo'
 
