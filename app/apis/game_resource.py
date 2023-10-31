@@ -35,16 +35,22 @@ class Game(Resource):
 
     def get(self, game_id):
         game_id = int(game_id)
+
         if games[game_id] not in games:
             return {"error": "Game not found"}, 404
+        
         actual_game = games[game_id]
         controller = GameController()
+
         next_iteration = controller.get_one_iteration(actual_game)
         result_schema = GameLogicSchema()
         result = result_schema.dump(next_iteration)
+
         return {game_id: result}
 
+
 class LastGame(Resource):
+
     def get(self):
         last_game_id = len(games) - 1
         if last_game_id < 0:

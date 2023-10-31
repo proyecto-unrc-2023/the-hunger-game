@@ -23,6 +23,7 @@ class GameLogic:
         self.districts = []
         self.neutrals = []
         self.order = []
+        self.winner = None
 
     # Starts a new game with the specified number of rows and columns.
     def new_game(self, rows, columns):
@@ -246,6 +247,7 @@ class GameLogic:
                     district_alive = aux_district
             if cant_of_districts_alive == 1:
                 return district_alive
+
 
     def heuristic_of_game(self):
         self.order_attack()
@@ -506,13 +508,14 @@ class GameLogic:
         else:
             return False
 
-    # Method for returning the number of winner district
+    # Method for returning the number of winner district. Return none if no winner district yet
+    # else number of district winner. 
     def winner_district(self):
         if self.game_ended():
-            for i in range(self.districts.__len__()):
+            for i in range(len(self.districts)):
                 if self.districts[i].cant_tributes >= 1:
-                    winner_district = self.districts[i].number_district
-                    return winner_district
+                    self.winner = self.districts[i].number_district
+        return self.winner
     
     # Set stats of own district. Front use this method
     def set_parameters(self, number_district, life, force, alliance, cant_tributes, cowardice):
@@ -530,12 +533,27 @@ class GameLogic:
         for i in range(len(self.districts)):
             self.board.distribute_tributes(self.districts[i])
 
+    # Execute one iteration for each tribute of districts. Finalize when exists just one live distric.
+    # Front use this method.
+    def one_iteration_front(self):
+        while not self.game_ended():
+            for district in self.districts:
+                for tribute in district.tributes:
+                    self.heuristic_tribute_first_attempt(tribute)
+            if not (self.neutrals is None):
+                for neutral in self.neutrals:
+                    self.neutral_heuristic(neutral)
+            return self
+
 
 class GameLogicSchema(Schema):
+    
     from game.logic.district import DistrictSchema
     from game.logic.board import BoardSchema
     from game.logic.tribute import TributeSchema
+    
     mode = fields.Str()
     board = fields.Nested(BoardSchema)
     districts = fields.Nested(DistrictSchema, many=True)
     neutrals = fields.Nested(TributeSchema, many=True)
+    winner = fields.Integer(allow_none=True)  # Permitir que el atributo winner sea None

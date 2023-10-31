@@ -616,7 +616,6 @@ def test_heuristic_get_away():
     t0.set_config_parameters(50, 5, 3, 0, 0)
     game.put_tribute(0, 0, t0)
     t1 = Tribute()
-    #t1.cowardice = 1
     t1.set_config_parameters(50, 5, 3, 1, 1)
     game.put_tribute(0, 1, t1)
     #first iteration, can escape down
@@ -670,3 +669,28 @@ def test_configure_random_districts():
             assert tribute.force + tribute.alliance <= 15
         assert district.cant_tributes == 4
         assert district.number_district != 0
+
+def test_one_iteration_with_winner_district():
+    game = GameLogic()
+    game.new_game(3, 3)
+    #config t0
+    t0 = Tribute()
+    t0.set_config_parameters(10, 5, 3, 0, 0)
+    game.put_tribute(1, 1, t0)
+    #config t1
+    t1 = Tribute()
+    t1.set_config_parameters(50, 10, 3, 1, 0)
+    game.put_tribute(2, 2, t1)
+    
+    winner_district = game.winner_district()
+    assert winner_district == None
+    assert game.winner == None #check constructor var
+
+    game.one_iteration_front()
+    assert t0.life == 0
+    assert t1.life == 45
+    
+    #update winner
+    winner_district = game.winner_district() 
+    assert winner_district == 1
+    assert game.winner == 1
