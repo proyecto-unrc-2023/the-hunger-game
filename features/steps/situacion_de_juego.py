@@ -224,8 +224,8 @@ def step_impl(context):
 @then(u'el distrito 0 es el ganador')
 def step_impl(context):
     assert context.game.game_ended()
-    district_winner = context.game.winner_district()
-    assert district_winner == 0
+    context.game.winner_district()
+    assert context.game.winner == 0
 
 
 # -------------------------------------------------------------------------------
