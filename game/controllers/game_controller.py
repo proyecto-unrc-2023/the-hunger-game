@@ -17,18 +17,23 @@ class GameController:
         actual_game.mode = GameMode.SIMULATION
         return actual_game
 
-
+      # This method takes the current state of game, do an iteration, and
+      # return the update state serialized in readable format. 
       def get_one_iteration(self, actual_game: GameLogic):
         next_iteration = actual_game.one_iteration_front()
         if next_iteration is None:
             return {"error": "No data for next iteration"}
         schema = GameLogicSchema()
+        
         result = schema.dump(next_iteration)
+        
         return result
     
-     # Return none or number of winner district
+     # Return None or number of winner district.
       def get_winner_district(self, actual_game):
           winner = actual_game.winner_district()
           schema = GameLogicSchema()
-          win = schema.dump(winner) 
-          return win
+          
+          result = schema.dump(winner) 
+           
+          return result

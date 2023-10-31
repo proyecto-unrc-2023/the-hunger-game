@@ -33,6 +33,7 @@ class Game(Resource):
         else:
             return {'error': 'Game not found'}, 404
 
+    # Get the current state of game and winner district.    
     def get(self, game_id):
         game_id = int(game_id)
 
@@ -41,12 +42,22 @@ class Game(Resource):
         
         actual_game = games[game_id]
         controller = GameController()
-
+        
+        # Return current state of game 
         next_iteration = controller.get_one_iteration(actual_game)
+        # Return winner
+        winner = controller.get_winner_district(actual_game)
+
         result_schema = GameLogicSchema()
         result = result_schema.dump(next_iteration)
+        
+        response = {game_id: result}
 
-        return {game_id: result}
+        if winner is not None:
+            response["winner"] = winner
+
+        print(response) # imprimo por consola los valores arrojados, solo para ver
+        return response
 
 
 class LastGame(Resource):

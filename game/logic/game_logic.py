@@ -515,8 +515,8 @@ class GameLogic:
             for i in range(len(self.districts)):
                 if self.districts[i].cant_tributes >= 1:
                     self.winner = self.districts[i].number_district
-        return self.winner
-    
+        return self
+
     # Set stats of own district. Front use this method
     def set_parameters(self, number_district, life, force, alliance, cant_tributes, cowardice):
         my_district = District()

@@ -682,15 +682,13 @@ def test_one_iteration_with_winner_district():
     t1.set_config_parameters(50, 10, 3, 1, 0)
     game.put_tribute(2, 2, t1)
     
-    winner_district = game.winner_district()
-    assert winner_district == None
-    assert game.winner == None #check constructor var
+    game.winner_district()
+    assert game.winner == None
 
     game.one_iteration_front()
     assert t0.life == 0
     assert t1.life == 45
     
     #update winner
-    winner_district = game.winner_district() 
-    assert winner_district == 1
+    game.winner_district() 
     assert game.winner == 1
