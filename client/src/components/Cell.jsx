@@ -21,6 +21,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
         return Tribute0Walk1; // Imagen predeterminada si no hay coincidencia
     }
   };
+  const Pointer = "/board-images/characters/pointer.png";
   const GrassImage = "/board-images/grass3.png";
   const BorderRImage = "/board-images/border-r.png";
   const BorderLImage = "/board-images/border-l.png";
@@ -216,7 +217,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
       return (
         <div className='board-free'>
           <img src={GrassImage} alt="Free Tile" />
-          <div className='board-tribute'>
+          <div className='board-tribute-n'>
             <img src={TributeNWalk1} alt="Neutral Tribute Tile" />
           </div>
         </div>

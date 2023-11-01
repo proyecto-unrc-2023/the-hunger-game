@@ -32,6 +32,16 @@
   transform: translate(-50%, -50%);
 }
 
+.board-tribute-n img{
+  width: 60%;
+  height: 90%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
 .board-potion img{
   width: 50%;
   height: auto;
@@ -59,4 +69,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
   rotate: 30deg;
+}
+
+.pointer {
+  width: 10px;
+  height: auto;
+  position: absolute;
+  top: 10%;
+  left: 40%;
 }
