@@ -17,5 +17,5 @@ def step_impl(context):
 
 @then(u'el unico distrito sobreviviente gana la partida')
 def step_impl(context):
-    context_district_winner = context.game.end_game()
-    assert context_district_winner.tributes[0].district == 0
+    context_district_winner = context.game.winner_district()
+    assert context_district_winner == 0
