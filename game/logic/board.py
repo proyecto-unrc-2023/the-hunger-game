@@ -47,14 +47,16 @@ class Board:
             raise ValueError(f"Invalid number of columns: {n_cols}")
 
         new_board = Board(n_rows, n_cols)
-        districts = []
-        neutrals = []
-        order = [0, 1, 2, 3, 4, 5]
+        districts, neutrals, order = [], [], [0, 1, 2, 3, 4, 5] 
         for i in range(6):
             district = District()
             district.number_district = i
             districts.append(district)
-
+        
+        char_to_class = { #Dicctionary that mapping chars to class
+            "w": Weapon, "sp": Spear, "sw": Sword, "wo": Bow,
+            "po": PotionPoison, "pl": PotionLife, "pf": PotionForce
+        }
         for row in range(n_rows):
             for col in range(n_cols):
                 char = matrix[row][col].strip()
@@ -83,35 +85,11 @@ class Board:
                         raise ValueError(f"Invalid tribute character: {char}")
                 elif char == "  ":
                     pass
-                elif char == "w":
-                    weapon = Weapon()
-                    new_board.get_element(row, col).put_item(weapon)
-                    weapon.pos = (row, col)
-                elif char == "sp":
-                    spear = Spear()
-                    new_board.get_element(row, col).put_item(spear)
-                    spear.pos = (row, col)
-                elif char == "sw":
-                    sword = Sword()
-                    new_board.get_element(row, col).put_item(sword)
-                    sword.pos = (row, col)
-                elif char == "wo":
-                    bow = Bow()
-                    new_board.get_element(row, col).put_item(bow)
-                    bow.pos = (row, col)
-                elif char == "po":
-                    potion_poison = PotionPoison()
-                    new_board.get_element(row, col).put_item(potion_poison)
-                    potion_poison.pos = (row, col)
-                elif char == "pl":
-                    potion_life = PotionLife()
-                    new_board.get_element(row, col).put_item(potion_life)
-                    potion_life.pos = (row, col)
-                elif char == "pf":
-                    potion_force = PotionForce()
-                    new_board.get_element(row, col).put_item(potion_force)
-                    potion_force.pos = (row, col)
-
+                elif char in char_to_class:
+                    item_class = char_to_class[char] #recovered class of item
+                    item = item_class() #create instance of class item
+                    new_board.get_element(row, col).put_item(item)
+                    item.pos = (row, col)
                 elif char != "":
                     raise ValueError(f"Invalid character in board string: {char}")
 
