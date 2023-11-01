@@ -61,7 +61,7 @@ class GameLogic:
             self.board.put_tribute(row, column, tribute)
             self.districts[tribute.district].add_tribute(tribute)
             self.districts[tribute.district].asign_name_tribute(tribute)
-            
+
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
         if tribute.district is None:
@@ -99,51 +99,50 @@ class GameLogic:
 
     # Returns the closest occupied cell to the tribute.
     def tribute_vision_closeness(self, tribute):
-        def calculate_distance(cell):
-            distance = (
-                (cell.get_pos()[0] - tribute.pos[0]) ** 2
-                + (cell.get_pos()[1] - tribute.pos[1]) ** 2
-            ) ** 0.5
-            if cell.get_state() == State.ITEM:
-                if cell.get_item() == Weapon():
-                    distance -= 0.9
-                else:
-                    distance -= 0.8
-            elif cell.get_state() == State.TRIBUTE:
-                if cell.get_tribute().district is None:
-                    distance -= 0.001
-
-            return distance
-
         vision_cells = tribute.tribute_vision_cells(self.board)
+        occupied_cells = self.calculate_occupied_cells(vision_cells, tribute)
+        occupied_cells.sort(key=lambda cell: self.calculate_distance(cell, tribute))
+        if not occupied_cells:
+            return False
 
+        return occupied_cells[0]
+
+    def calculate_distance(self, cell, tribute):
+        distance = (
+                           (cell.get_pos()[0] - tribute.pos[0]) ** 2
+                           + (cell.get_pos()[1] - tribute.pos[1]) ** 2
+                   ) ** 0.5
+        if cell.get_state() == State.ITEM:
+            if cell.get_item() == Weapon():
+                distance -= 0.9
+            else:
+                distance -= 0.8
+        elif cell.get_state() == State.TRIBUTE:
+            if cell.get_tribute().district is None:
+                distance -= 0.001
+
+        return distance
+
+    @staticmethod
+    def calculate_occupied_cells(vision_cells, tribute):
         occupied_cells = [
             cell
             for cell in vision_cells
-            if cell.get_state() == State.ITEM
-            or (
-                cell.get_state() == State.TRIBUTE
-                and cell.get_tribute().district != tribute.district
+            if cell.get_state() == State.ITEM or (
+                    cell.get_state() == State.TRIBUTE and
+                    cell.get_tribute().district != tribute.district
             )
-            # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
-            # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
 
         if tribute.weapon:
             occupied_cells = [
                 cell
                 for cell in occupied_cells
-                if cell.state == State.ITEM
-                and cell.get_item().is_weapon() is False
+                if cell.state == State.ITEM and cell.get_item().is_weapon() is False
                 or cell.state == State.TRIBUTE
             ]
 
-        occupied_cells.sort(key=calculate_distance)
-
-        if not occupied_cells:
-            return False
-
-        return occupied_cells[0]
+        return occupied_cells
 
     # Simulates combat between two tributes, moving 'tribute' towards 'tribute2'
     # and removing 'tribute2' if defeated.
@@ -206,7 +205,7 @@ class GameLogic:
         else:
             tribute.step_to(self.board, pos)
 
-    #A method that allows the tribute to attack the enemy if they are in range
+    # A method that allows the tribute to attack the enemy if they are in range
     # or move towards them if not
     def try_attack(self, tribute, pos):
         (x, y) = (pos[0], pos[1])
@@ -214,11 +213,11 @@ class GameLogic:
         t2 = cell.get_tribute()
         self.fight(tribute, t2)
 
-    #Method that allows the tribute to attempt aliance with an neutral
+    # Method that allows the tribute to attempt aliance with an neutral
     def try_alliance(self, tribute, cell):
         (tribute_x, tribute_y) = (tribute.pos[0], tribute.pos[1])
         if cell.get_tribute().pos in self.board.get_adjacent_positions(
-            tribute_x, tribute_y
+                tribute_x, tribute_y
         ):
             if tribute.alliance_to(cell.get_tribute()) is True:
                 district = self.districts[tribute.district]
@@ -234,7 +233,7 @@ class GameLogic:
         if cell is False:
             tribute.move_to_random(self.board)
         else:
-            if (not (tribute.enemy is None) and tribute.enemy.is_alive() and tribute.district != tribute.enemy.district):
+            if not (tribute.enemy is None) and tribute.enemy.is_alive() and tribute.district != tribute.enemy.district:
                 self.fight(tribute, tribute.enemy)
             else:
                 tribute.enemy = None
@@ -414,7 +413,7 @@ class GameLogic:
 
     # Set stats of own district. Front use this method
     def set_parameters(
-        self, number_district, life, force, alliance, cant_tributes, cowardice
+            self, number_district, life, force, alliance, cant_tributes, cowardice
     ):
         my_district = District()
         my_district.set_config(

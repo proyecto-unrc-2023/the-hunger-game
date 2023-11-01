@@ -13,6 +13,10 @@ from game.logic.item import (
 from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
 
+DIRECTIONS = [
+    (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1),
+]
+
 
 class Board:
 
@@ -60,8 +64,8 @@ class Board:
                     tribute.name = char
                     new_board.get_element(row, col).put_tribute(tribute)
                     neutrals.append(tribute)
-                elif char.startswith( ("t","a","b","c","d","e","f","g","h","i","j","k","l","m",)
-                ):
+                elif char.startswith(("t", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",)
+                                     ):
                     # Check if it's a tribute character ('t') followed by a number
                     try:
                         tribute_number = int(char[1])
@@ -219,11 +223,8 @@ class Board:
         adjacent_positions = []
 
         # Define the directions for adjacent cells, including the corners.
-        directions = [
-            (-1, -1),(-1, 0),(-1, 1),(0, -1),(0, 1),(1, -1),(1, 0),(1, 1),
-        ]
 
-        for dr, dc in directions:
+        for dr, dc in DIRECTIONS:
             new_row, new_column = row + dr, column + dc
 
             if 0 <= new_row < self.rows and 0 <= new_column < self.columns:
@@ -278,7 +279,7 @@ class Board:
 
         free_positions = []
         for dr, dc in [
-            (-1, 0),(1, 0),(0, -1),(0, 1),(-1, -1),(-1, 1),(1, -1),(1, 1),
+            (-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1),
         ]:
             new_row, new_column = x + dr, y + dc
 
