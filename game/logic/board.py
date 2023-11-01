@@ -1,25 +1,32 @@
 import random
 
 from game.logic.cell import Cell, State
-from game.logic.item import Weapon, Spear, Sword, Bow, PotionPoison, PotionLife, PotionForce
+from game.logic.item import (
+    Weapon,
+    Spear,
+    Sword,
+    Bow,
+    PotionPoison,
+    PotionLife,
+    PotionForce,
+)
 from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
 
 
 class Board:
-    
-    # Converts a string representing a board into an instance of the Board class.  
+    # Converts a string representing a board into an instance of the Board class.
     def from_string(board_str):
         from game.logic.district import District
-        
-        rows = board_str.split('\n')
+
+        rows = board_str.split("\n")
         n_rows = len(rows)
         if n_rows < 1:
-            raise ValueError(f'Invalid number of rows: {n_rows}')
-        matrix = [row.split('|') for row in rows]
+            raise ValueError(f"Invalid number of rows: {n_rows}")
+        matrix = [row.split("|") for row in rows]
         n_cols = len(matrix[0])
         if n_cols < 1:
-            raise ValueError(f'Invalid number of columns: {n_cols}')
+            raise ValueError(f"Invalid number of columns: {n_cols}")
 
         new_board = Board(n_rows, n_cols)
         districts = []
@@ -33,13 +40,14 @@ class Board:
         for row in range(n_rows):
             for col in range(n_cols):
                 char = matrix[row][col].strip()
-                if char.startswith('n'):
+                if char.startswith("n"):
                     tribute = Tribute()
                     tribute.pos = (row, col)
                     tribute.name = char
                     new_board.get_element(row, col).put_tribute(tribute)
                     neutrals.append(tribute)
-                elif char.startswith(('t', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm')):
+                elif char.startswith( ("t","a","b","c","d","e","f","g","h","i","j","k","l","m",)
+                ):
                     # Check if it's a tribute character ('t') followed by a number
                     try:
                         tribute_number = int(char[1])
@@ -67,42 +75,44 @@ class Board:
                                 districts[5].add_tribute(tribute)
                             new_board.put_tribute(row, col, tribute)
                         else:
-                            raise ValueError(f'Invalid tribute number: {tribute_number}')
+                            raise ValueError(
+                                f"Invalid tribute number: {tribute_number}"
+                            )
                     except ValueError:
-                        raise ValueError(f'Invalid tribute character: {char}')
-                elif char == '  ':
+                        raise ValueError(f"Invalid tribute character: {char}")
+                elif char == "  ":
                     pass
-                elif char == 'w':
+                elif char == "w":
                     weapon = Weapon()
                     new_board.get_element(row, col).put_item(weapon)
                     weapon.pos = (row, col)
-                elif char == 'sp':
+                elif char == "sp":
                     spear = Spear()
                     new_board.get_element(row, col).put_item(spear)
                     spear.pos = (row, col)
-                elif char == 'sw':
+                elif char == "sw":
                     sword = Sword()
                     new_board.get_element(row, col).put_item(sword)
                     sword.pos = (row, col)
-                elif char == 'wo':
+                elif char == "wo":
                     bow = Bow()
                     new_board.get_element(row, col).put_item(bow)
                     bow.pos = (row, col)
-                elif char == 'po':
+                elif char == "po":
                     potion_poison = PotionPoison()
                     new_board.get_element(row, col).put_item(potion_poison)
                     potion_poison.pos = (row, col)
-                elif char == 'pl':
+                elif char == "pl":
                     potion_life = PotionLife()
                     new_board.get_element(row, col).put_item(potion_life)
                     potion_life.pos = (row, col)
-                elif char == 'pf':
+                elif char == "pf":
                     potion_force = PotionForce()
                     new_board.get_element(row, col).put_item(potion_force)
                     potion_force.pos = (row, col)
 
-                elif char != '':
-                    raise ValueError(f'Invalid character in board string: {char}')
+                elif char != "":
+                    raise ValueError(f"Invalid character in board string: {char}")
 
         return [new_board, districts, neutrals, order]
 
@@ -124,7 +134,7 @@ class Board:
         if 0 <= row < self.rows and 0 <= column < self.columns:
             return self.board[row][column]
         else:
-            raise ValueError(f'Invalid row or column index: ({row}, {column})')
+            raise ValueError(f"Invalid row or column index: ({row}, {column})")
 
     # Places a tribute at a specific position on the board.
     def put_tribute(self, row, column, tribute):
@@ -194,25 +204,25 @@ class Board:
     # Converts a row of cells on the board into a string representation.
     @staticmethod
     def _row_to_string(row):
-        res = ''
+        res = ""
         columns = len(row)
         for col in range(columns):
             cell = row[col]
             if cell.get_state() == State.FREE:
-                res += '  '
+                res += "  "
             else:
                 res += cell.__str__()  # Use the __str__ method of the cell
             if col < columns - 1:
-                res += '|'
+                res += "|"
         return res
 
     # Represents the board as a text string.
     def __str__(self):
-        res = ''
+        res = ""
         for row_num in range(self.rows):
             res += Board._row_to_string(self.board[row_num])
             if row_num < self.rows - 1:
-                res += '\n'
+                res += "\n"
         return res
 
     # Returns the position of the tribute.
@@ -225,7 +235,9 @@ class Board:
         adjacent_positions = []
 
         # Define the directions for adjacent cells, including the corners.
-        directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+        directions = [
+            (-1, -1),(-1, 0),(-1, 1),(0, -1),(0, 1),(1, -1),(1, 0),(1, 1),
+        ]
 
         for dr, dc in directions:
             new_row, new_column = row + dr, column + dc
@@ -281,7 +293,9 @@ class Board:
             raise ValueError(f"Invalid position: x={x}, y={y} is out of range.")
 
         free_positions = []
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+        for dr, dc in [
+            (-1, 0),(1, 0),(0, -1),(0, 1),(-1, -1),(-1, 1),(1, -1),(1, 1),
+        ]:
             new_row, new_column = x + dr, y + dc
 
             if 0 <= new_row < self.rows and 0 <= new_column < self.columns:
@@ -302,7 +316,9 @@ class Board:
             free_adjacents_pos.remove(tribute.past_pos)
 
         if not free_adjacents_pos:
-            raise ValueError(f"No available free adjacent positions for Tribute {tribute}")
+            raise ValueError(
+                f"No available free adjacent positions for Tribute {tribute}"
+            )
 
         pos = random.choice(free_adjacents_pos)
         while self.board[pos[0]][pos[1]].get_state() == State.ITEM:
