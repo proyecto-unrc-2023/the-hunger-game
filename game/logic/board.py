@@ -278,9 +278,7 @@ class Board:
             raise ValueError(f"Invalid position: x={x}, y={y} is out of range.")
 
         free_positions = []
-        for dr, dc in [
-            (-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1),
-        ]:
+        for dr, dc in DIRECTIONS:
             new_row, new_column = x + dr, y + dc
 
             if 0 <= new_row < self.rows and 0 <= new_column < self.columns:
