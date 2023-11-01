@@ -3,7 +3,7 @@
   height: 40px;
   margin: 2px;
   background-color: #ffffff;
-  border: 1px solid #00000034;
+  border: 1px solid #0000004f;
   border-radius: 5px; /* Añade bordes redondeados */
 }
 
@@ -14,7 +14,6 @@
 .stats-bar {
   display: flex;
   flex: auto;
-  
   margin: 5px;
 }
 
@@ -26,19 +25,18 @@
 }
 
 .increment-button, .decrement-button {
-  cursor: pointer;
   margin: 5px;
-  display: inline-block
+  display: inline-block;
 }
 
 .increment-button :hover{
   background-color: green;
-  transition: .3s ease background-color;
+  border-color: green;
 }
 
 .decrement-button :hover{
   background-color: red;
-  transition: .3s ease background-color;
+  border-color: red;
 }
 
 .incrementable-bars {
@@ -107,7 +105,6 @@
   border-radius: 0.3em;
   font-size: 16px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .init-simulation-button.is-ready {

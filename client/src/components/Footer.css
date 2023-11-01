@@ -58,3 +58,7 @@
     -webkit-background-clip: text;
     transform: translateX(-0.05em);
 }
+
+.signup {
+    margin-right: 20px;
+}
