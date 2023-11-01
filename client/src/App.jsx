@@ -1,48 +1,31 @@
 import React, { useState } from 'react';
-import Menu from './components/Menu.jsx';
-import Game from './components/Game.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
-import InfoPanel from './components/InfoPanel.jsx';
+import Menu from './components/Menu.jsx';
+import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
+import WinnerScreen from './components/WinnerScreen.jsx';
+
+const views = {
+  init: InitGame,
+  menu: Menu,
+  game: Game,
+  finish: WinnerScreen,
+};
 
 const App = () => {
-  const [gameStarted, setGameStarted] = useState(false);
-  const [playGame, setPlayGame] = useState(false);
-  // const [selectedCell, setSelectedCell] = useState(null);
+  const [currentView, setCurrentView] = useState('init');
 
-  const handleStartGame = () => {
-    setGameStarted(true);
+  const handleViewChange = (view) => {
+    setCurrentView(view);
   };
 
-  const handlePlayGame = () => {
-    setPlayGame(true);
-  };
-
-  // const handleCellClick = (cellData) => {
-  //   setSelectedCell(cellData);
-  // };
-
-  // const handleClosePanel = () => {
-  //   setSelectedCell(null);
-  // };
+  const CurrentViewComponent = views[currentView];
 
   return (
     <div className='app'>
-      <Header/>
-      {!playGame ? (
-        <InitGame onStartGame={handlePlayGame}/>
-        ) : (
-        !gameStarted ? (
-          <Menu onStartGame={handleStartGame} />
-        ) : (
-          <div className='main'>
-            <Game />
-            <InfoPanel />
-          </div>
-        )
-        )
-      }
+      <Header />
+      <CurrentViewComponent onViewChange={handleViewChange} />
       <Footer />
     </div>
   );

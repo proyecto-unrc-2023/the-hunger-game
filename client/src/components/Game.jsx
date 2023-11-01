@@ -5,6 +5,7 @@ import {
   useControls
 } from "react-zoom-pan-pinch";
 import Board from "./Board.jsx";
+// import InfoPanel from './components/InfoPanel.jsx';
 
 const ControlsZoom = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -26,7 +27,7 @@ const ControlsAdvance = memo(({ onPause, onFinish }) => {
   );
 });
 
-const Game = () => {
+const Game = ({onViewChange}) => {
 
   //Tamaño del tablero
   const [boardSize, setBoardSize] = useState(20);
@@ -38,7 +39,7 @@ const Game = () => {
   const [isPaused, setPaused] = useState(true);
   
   //Estado ganador
-  const [winner, setWinner] = useState(null);
+  // const [winner, setWinner] = useState(null);
 
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
@@ -50,6 +51,7 @@ const Game = () => {
   const handleFinish = () => {
     //debe devolver el ganador
     //setWinner
+    onViewChange("finish");
   }
   
   const [gameID, setGameID] = useState(0);
@@ -130,7 +132,7 @@ const Game = () => {
     // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
 
-  }, [gameID, isPaused]);
+  }, [gameID, isPaused, gameInitialized]);
   
 
   // const [selectedCell, setSelectedCell] = useState(null);
@@ -161,7 +163,7 @@ const Game = () => {
         </TransformComponent>
       </TransformWrapper>
       <div className="button-section">
-        <ControlsAdvance onPause={handlePause}  />
+        <ControlsAdvance onPause={handlePause}  onFinish={handleFinish}/>
       </div>
     </main>
   );
