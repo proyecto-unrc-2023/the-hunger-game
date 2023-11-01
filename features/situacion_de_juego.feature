@@ -1,5 +1,5 @@
 # language: es
-  Característica: Sitauacion de juego
+  Característica: Situacion de juego
 
     Antecedentes:
       Dado que el juego se ha creado
@@ -51,7 +51,6 @@
       | t0 | t2 | 40 |
       | t1 | t0 | 50 |
       | t2 | t0 | 45 |
-
 
 
     Esquema del escenario: : Dos tributos luchan y llega un aliado
@@ -153,7 +152,6 @@
       | a  | l1 | range |
       | t0 | 50 |   3   |
       | t1 | 44 |   0   |
-
 
 
     Esquema del escenario: Un tributo huye de un combate
@@ -277,7 +275,7 @@
       |t0 |   1   |
       |t1 |   0   |
 
-    Escenario: Un tributo muere por el efecto de la posion de veneno
+    Escenario: Un tributo muere por el efecto de la pocion de veneno
       Dado que el tablero de juego es el siguiente
       |0 |1 |2 |3 |4 |5 |6 |7 |
       |t0|po|  |  |  |  |  |  |

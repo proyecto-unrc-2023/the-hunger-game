@@ -1,7 +1,7 @@
 import pytest
 
 from game.logic.district import District
-from game.logic.tribute import Tribute, LIFE_DEFAULT
+from game.logic.tribute import Tribute, LIFE_DEFAULT, COWARDICE_DEFAULT
 
 
 def test_set_config_tributes():
@@ -24,6 +24,7 @@ def test_set_config_random_tributes():
         assert district.tributes[i].life == LIFE_DEFAULT
         assert district.tributes[i].force + district.tributes[i].alliance <= 15
         assert district.tributes[i].district == num_district
+        assert district.tributes[i].cowardice == COWARDICE_DEFAULT
 
 
 def test_add_tribute_valid():

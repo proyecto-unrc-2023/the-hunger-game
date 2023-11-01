@@ -27,39 +27,16 @@ const ControlsAdvance = memo(({ onPause, onFinish }) => {
 });
 
 const Game = () => {
-  const size = 20;
-  // Tablero de prueba 1
-  const testBoardState = Array.from({ length: size }, () => Array(size).fill('free'));
-  // Probando posiciones iniciales
-  testBoardState[4][4] = 'tribute';
-  testBoardState[9][17] = 'tribute';
-  testBoardState[19][1] = 'tribute';
-  testBoardState[8][8] = 'potion';
-  testBoardState[5][15] = 'potion';
-  testBoardState[1][15] = 'bow';
-  testBoardState[7][13] = 'sword';
-  testBoardState[14][1] = 'sword';
 
-  // Tablero de prueba 2
-  const test2BoardState = Array.from({ length: size }, () => Array(size).fill('free'));
-  test2BoardState[4][5] = 'tribute';
-  test2BoardState[8][16] = 'tribute';
-  test2BoardState[18][2] = 'tribute';
-  test2BoardState[8][8] = 'potion';
-  test2BoardState[5][15] = 'potion';
-  test2BoardState[1][15] = 'bow';
-  test2BoardState[7][13] = 'sword';
-  test2BoardState[14][1] = 'sword';
-
-  // Tablero vacío
-  const emptyBoard = Array.from({ length: size }, () => Array(size).fill('free'));
+  //Tamaño del tablero
+  const [boardSize, setBoardSize] = useState(20);
 
   //Estado del tablero
-  const [boardState, setBoardState] = useState(testBoardState);
+  const [boardState, setBoardState] = useState([]);
 
   //Estado de la simulación
   const [isPaused, setPaused] = useState(true);
-
+  
   //Estado ganador
   const [winner, setWinner] = useState(null);
 
@@ -68,65 +45,123 @@ const Game = () => {
     setPaused(!isPaused);
   };
 
-  const handleFinish = () => {
-    const winningDistrict = Math.random() < 0.5 ? 'Distrito 1' : 'Distrito 2';
-    setWinner(winningDistrict);
-    // Pausa para que no quede iterando
-    setPaused(true);
-    // Finaliza la simulación, deja el último tablero y da al ganador
-  };
+  const [gameInitialized, setGameInitialized] = useState(false)
 
-  const [selectedCell, setSelectedCell] = useState(null);
+  const handleFinish = () => {
+    //debe devolver el ganador
+    //setWinner
+  }
+  
+  const [gameID, setGameID] = useState(0);
+
+  const getLastId = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/game/last_id`, {
+        method: 'GET',
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setGameID(data.game_id);
+      } else {
+        console.error('Error al obtener el último game_id');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud de getLastId:', error);
+    }
+  };
+  
+  // Tablero vacío
+  const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
+  
+  
+  const initialBoard = async () => {
+    getLastId();
+    const response = await fetch(`http://localhost:5000/game/${gameID}`, {
+      method: 'PUT',
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const gameData = Object.values(data)[0];
+      if (gameData && gameData.board) {
+        setBoardState(gameData.board.board);
+        setBoardSize(gameData.board.rows); 
+      } else {
+        console.error('La estructura de datos es incorrecta:', data);
+      }
+    } else {
+      console.error('Error al finalizar el juego');
+    }
+    setGameInitialized(true);
+    setPaused(true);
+  };
+ 
+
+  useEffect(() => {
+    if (!gameInitialized) {
+      initialBoard();
+    }
+    const fetchGameInfo = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/game/${gameID}`, {
+          method: 'GET',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const gameData = Object.values(data)[0];
+          setBoardState(gameData.board.board);
+          setBoardSize(gameData.board.rows)
+        } else {
+          // Manejar errores de la solicitud, si es necesario
+        }
+      } catch (error) {
+        console.error("Error fetching game information:", error);
+      }
+    };
+
+    // Actualizar la información del juego cada 500 ms si no está pausado
+    const time = setInterval(() => {
+      if (!isPaused) {
+        fetchGameInfo();
+      }
+    }, 500);
+
+    // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
+    return () => clearInterval(time);
+
+  }, [gameID, isPaused]);
+  
+
+  // const [selectedCell, setSelectedCell] = useState(null);
 
   // Función para manejar clics en las celdas
-  const handleCellClick = (row, col) => {
-    const clickedCell = boardState[row][col];
-    setSelectedCell({
-      row,
-      col,
-      type: clickedCell,
-      // Puedes agregar más información aquí según sea necesario
-    });
-  };
-
-  // Configuración de tiempo y estados para la actualización de los tableros
-  useEffect(() => {
-    let time;
+  // const handleCellClick = (row, col) => {
+  //   const clickedCell = boardState[row][col];
+  //   setSelectedCell({
+  //     row,
+  //     col,
+  //     type: clickedCell,
+  //     // Puedes agregar más información aquí según sea necesario
+  //   });
+  // };  
   
-    // Función para alternar entre estados del tablero
-    const toggleBoardState = () => {
-      setBoardState((prevBoardState) =>
-        prevBoardState === testBoardState ? test2BoardState : testBoardState
-      );
-    };
   
-    // Iniciar tiempo para alternar el tablero cada 500 ms
-    if (!isPaused) {
-      time = setInterval(toggleBoardState, 500);
-    }
-  
-    // Limpiar el tiempo cuando el juego se pausa
-    return () => clearInterval(time);
-    // esto para que no joda el warning jaja
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
-  }, [isPaused]);
-
   return (
     <main className="game">
       <TransformWrapper minScale={0.5}>
         <div className='button-section'><ControlsZoom /></div>
         <TransformComponent>
           <section className='board'>
-            {winner ? (
-              <div className="winner-message">Ha ganado el {winner}
-              <Board size={size} boardState={emptyBoard} /></div>
-            ) : ( <Board size={size} boardState={boardState} onCellClick={handleCellClick}/>
-            )}
+            {!gameInitialized ? (
+              <Board boardSize={boardSize} boardState={emptyBoard} />
+              ) : ( <Board size={boardSize} boardState={boardState} />
+              )}
           </section>
         </TransformComponent>
       </TransformWrapper>
       <div className="button-section">
-        <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
+        <ControlsAdvance onPause={handlePause}  />
       </div>
     </main>
   );

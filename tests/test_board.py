@@ -51,7 +51,7 @@ def test_empty_board_to_string(board: Board):
     tribute = Tribute()
     board.put_tribute(0, 1, tribute)
     t0 = Tribute()
-    t0.set_config_parameters(50, 5, 3, 0)
+    t0.set_config_parameters(50, 5, 3, 0, 0)
     t0.name = 't0'
     board.put_tribute(1, 1, t0)
     res = board.__str__()
@@ -59,7 +59,7 @@ def test_empty_board_to_string(board: Board):
                '  |t0'
     assert expected == res
     t1 = Tribute()
-    t1.set_config_parameters(50, 5, 3, 1)
+    t1.set_config_parameters(50, 5, 3, 1, 0)
     t1.name = 't1'
     board.put_tribute(1, 0, t1)
     res = board.__str__()
@@ -111,12 +111,13 @@ def test_2x2_board_from_string():
     board = Board.from_string(board_str)[0]
     assert board.__str__() == board_str
     t1 = board.get_element(1, 1).get_tribute()
-    t3 = board.get_element(0, 0).get_tribute()
     t2 = board.get_element(0, 1).get_tribute()
-    assert t1.life == 50
+    t3 = board.get_element(0, 0).get_tribute()
+    t4 = board.get_element(1, 0).get_tribute()
     assert t1.district == 1
     assert t2.district == 2
     assert t3.district == 3
+    assert t4.district == 4
 
 
 def test_2x4_board_from_string():
@@ -549,7 +550,7 @@ def test_create_and_distribute_item():
     item_list = [PotionLife, PotionForce, PotionPoison, Sword, Spear, Bow]
     for item in item_list:
         i = item()
-        board.create_and_distribute_item(i)
+        board.create_and_distribute_item(i, 5)
 
     count_items = 0
     for row in board.board:

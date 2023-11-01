@@ -1,25 +1,11 @@
 from flask import jsonify, request
-from flask_restful import Api, Resource
+from flask_restful import Resource
 
 from game.controllers.district_controller import DistrictController
-from game.logic.game_logic import GameLogic, GameLogicSchema
+from game.controllers.game_controller import GameController
+from game.logic.game_logic import GameLogicSchema
 
-games = {}
-
-class Game(Resource):
-
-    def put(self,game_id):
-        actual_game = GameLogic()
-        games[game_id] = request.form[actual_game] 
-        return {game_id: games[game_id]}    
-
-    def get(self, game_id):
-        game_schema  = GameLogicSchema() 
-         
-        game = games[game_id] 
-
-        return jsonify(game_schema.dump(game)) 
-
+games = []
 
 class ConfigDistrict(Resource):
     
@@ -30,16 +16,54 @@ class ConfigDistrict(Resource):
     def post(self):
         data = request.get_json()  # Obtengo los datos enviados por el cliente
         print(data) # Imprimo los datos por consola
-        return jsonify({'message': 'Datos recibidos correctamente'})    
+        g_controller = GameController()
+        first_game = g_controller.get_game(data) # Creo un juego con los datos obtenidos desde el front
+        games.append(first_game)
+        game_id = len(games) - 1
+        return jsonify({'game_id': game_id})    
 
-class AllDistrict(Resource):
+class Game(Resource):
+
+    def put(self, game_id):
+        game_id = int(game_id)
+        if game_id < len(games):
+            actual_game = games[game_id]
+            game_schema = GameLogicSchema()
+            return {game_id: game_schema.dump(actual_game)}
+        else:
+            return {'error': 'Game not found'}, 404
+
+    # Get the current state of game and winner district.    
+    def get(self, game_id):
+        game_id = int(game_id)
+
+        if games[game_id] not in games:
+            return {"error": "Game not found"}, 404
+        
+        actual_game = games[game_id]
+        controller = GameController()
+        
+        # Return current state of game 
+        next_iteration = controller.get_one_iteration(actual_game)
+        # Return winner
+        winner = controller.get_winner_district(actual_game)
+
+        result_schema = GameLogicSchema()
+        result = result_schema.dump(next_iteration)
+        
+        response = {game_id: result}
+
+        if winner is not None:
+            response["winner"] = winner
+
+        print(response) # imprimo por consola los valores arrojados, solo para ver
+        return response
+
+
+class LastGame(Resource):
 
     def get(self):
-        controller = DistrictController()
-        return controller.get_districts()
-
-    
-    def post(self):
-        data = request.get_json()
-        print(data)
-        return jsonify({'message': 'Datos recibidos correctamente'})
+        last_game_id = len(games) - 1
+        if last_game_id < 0:
+            return {"error": "No games available"}, 404
+        return {'game_id': last_game_id}

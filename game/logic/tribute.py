@@ -1,8 +1,6 @@
-import math
 import random
 
 from marshmallow import Schema, fields
-
 
 MAX_LIFE_DEFAULT = 50
 LIFE_DEFAULT = 50
@@ -73,11 +71,12 @@ class Tribute:
         else:
             raise ValueError(f"Not possible attack, same district")
 
-    def set_config_parameters(self, life, force, alliance, district):
+    def set_config_parameters(self, life, force, alliance, district, cowardice):
         self.life = life
         self.force = force
         self.alliance = alliance
         self.district = district
+        self.cowardice = cowardice
 
     # First proposal of the alliance system
     # The neutral tribute alliance is fictitious, it does not take said value

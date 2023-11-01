@@ -23,6 +23,7 @@ class GameLogic:
         self.districts = []
         self.neutrals = []
         self.order = []
+        self.winner = None
 
     # Starts a new game with the specified number of rows and columns.
     def new_game(self, rows, columns):
@@ -56,7 +57,7 @@ class GameLogic:
             self.board.put_tribute(row, column, tribute)
             self.districts[tribute.district].add_tribute(tribute)
             tribute.name = letters[self.districts[tribute.district].cant_tributes - 1] + str(
-                self.districts[tribute.district].number_district)
+                self.districts[tribute.district].number_district) 
 
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
@@ -247,6 +248,7 @@ class GameLogic:
             if cant_of_districts_alive == 1:
                 return district_alive
 
+
     def heuristic_of_game(self):
         self.order_attack()
         if self.mode != GameMode.SIMULATION:
@@ -385,12 +387,10 @@ class GameLogic:
         # Configure others districts
         self.configure_random_districts()
         # Distribute potions and weapons
-        self.board.distribute_potions()
-        self.board.distribute_weapons()
-        # Distribute tributes
-        for j in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[j])
-
+        self.distribute_items()
+        # Distribute tributes of all districts
+        self.distribute_district_tributes()
+        # Distribute neutrals tributes
         self.distribute_neutral_tributes(10)
 
         self.mode = GameMode.SIMULATION
@@ -404,8 +404,10 @@ class GameLogic:
         if not (self.neutrals is None):
             for neutral in self.neutrals:
                 self.neutral_heuristic(neutral)
+        return self
 
     # Distribute tributes from a district to random positions on the board.
+    # This method is only for test.
     def distribute_tributes(self):
         for j in range(len(self.districts)):
             for i in range(self.districts[j].cant_tributes):
@@ -453,11 +455,8 @@ class GameLogic:
         district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
         self.districts.append(district)
         self.configure_random_districts()
-        self.board.distribute_potions()
-        self.board.distribute_weapons()
-        
-        for j in range(len(self.districts)):
-            self.board.distribute_tributes(self.districts[j])
+        self.distribute_items()
+        self.distribute_district_tributes()
         self.distribute_neutral_tributes(10) 
 
     def get_away(self, tribute, enemy):
@@ -509,21 +508,52 @@ class GameLogic:
         else:
             return False
 
-    # Method for returning the number of winner district
+    # Method for returning the number of winner district. Return none if no winner district yet
+    # else number of district winner. 
     def winner_district(self):
         if self.game_ended():
-            for i in range(self.districts.__len__()):
+            for i in range(len(self.districts)):
                 if self.districts[i].cant_tributes >= 1:
-                    winner_district = self.districts[i].number_district
-                    return winner_district
+                    self.winner = self.districts[i].number_district
+        return self
 
+    # Set stats of own district. Front use this method
+    def set_parameters(self, number_district, life, force, alliance, cant_tributes, cowardice):
+        my_district = District()
+        my_district.set_config(life, force, alliance, number_district, cant_tributes, cowardice)
+        self.districts.insert(0, my_district)
+
+    # Distribute items on board. Front use this method
+    def distribute_items(self):
+        self.board.distribute_potions()
+        self.board.distribute_weapons()
+
+    # Distribute all districts of tributes on board. Fron use this method
+    def distribute_district_tributes(self):
+        for i in range(len(self.districts)):
+            self.board.distribute_tributes(self.districts[i])
+
+    # Execute one iteration for each tribute of districts. Finalize when exists just one live distric.
+    # Front use this method.
+    def one_iteration_front(self):
+        while not self.game_ended():
+            for district in self.districts:
+                for tribute in district.tributes:
+                    self.heuristic_tribute_first_attempt(tribute)
+            if not (self.neutrals is None):
+                for neutral in self.neutrals:
+                    self.neutral_heuristic(neutral)
+            return self
 
 
 class GameLogicSchema(Schema):
+    
     from game.logic.district import DistrictSchema
     from game.logic.board import BoardSchema
     from game.logic.tribute import TributeSchema
+    
     mode = fields.Str()
     board = fields.Nested(BoardSchema)
     districts = fields.Nested(DistrictSchema, many=True)
     neutrals = fields.Nested(TributeSchema, many=True)
+    winner = fields.Integer(allow_none=True)  # Permitir que el atributo winner sea None

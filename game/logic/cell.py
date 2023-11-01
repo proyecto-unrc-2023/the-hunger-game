@@ -86,5 +86,3 @@ class CellSchema(Schema):
     from game.logic.tribute import TributeSchema
 
     state = fields.Str()
-    item = fields.Nested(ItemSchema)
-    tribute = fields.Nested(TributeSchema)

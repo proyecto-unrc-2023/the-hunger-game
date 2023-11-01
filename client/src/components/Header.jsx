@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 
-const Header = ({ districtChosed, districtsLive }) => {
+const Header = () => {
 
   const handleLogoClick = () => {
     // Redirige a la página de inicio (recarga la página)
@@ -18,12 +18,6 @@ const Header = ({ districtChosed, districtsLive }) => {
         <div className="top">The Hunger Games</div>
         <div className="bottom" aria-hidden="true">The Hunger Games</div>
       </section>
-        {districtChosed && (
-        <div className='districts-info'>
-          <div className='district-chosed'>{`District: ${districtChosed}`}</div>
-          <div className='districts-live'>{`Districts live: ${districtsLive}`}</div>
-        </div>
-        )}
       </div>
       <div className='login'>
         <button className="cssbuttons-io-button">

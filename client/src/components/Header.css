@@ -30,17 +30,6 @@
   margin-left: auto;
 }
 
-.districts-info {
-  text-align: center;
-  display: flex;
-  justify-content: column;
-  
-}
-
-.district-chosed, .districts-live {
-  margin:20px;
-}
-
 .cssbuttons-io-button {
   background: white;
   color: black;
@@ -100,7 +89,7 @@
   font-weight: 700;
   text-transform: uppercase;
   color: var(--text-color);
-  padding-top: 20px;
+  padding: 20px;
 }
 
 .game-title > div {

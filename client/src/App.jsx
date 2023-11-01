@@ -7,23 +7,23 @@ import InfoPanel from './components/InfoPanel.jsx';
 
 const App = () => {
   const [gameStarted, setGameStarted] = useState(false);
-  const [selectedCell, setSelectedCell] = useState(null);
+  // const [selectedCell, setSelectedCell] = useState(null);
 
   const handleStartGame = () => {
     setGameStarted(true);
   };
 
-  const handleCellClick = (cellData) => {
-    setSelectedCell(cellData);
-  };
+  // const handleCellClick = (cellData) => {
+  //   setSelectedCell(cellData);
+  // };
 
-  const handleClosePanel = () => {
-    setSelectedCell(null);
-  };
+  // const handleClosePanel = () => {
+  //   setSelectedCell(null);
+  // };
 
   return (
     <div className='app'>
-      <Header districtChosed={1} districtsLive={4} />
+      <Header/>
       {!gameStarted ? (
         <Menu onStartGame={handleStartGame} />
       ) : (

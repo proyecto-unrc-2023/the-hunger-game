@@ -43,11 +43,13 @@ function IncrementableBar({ attribute, stats, onIncrement, onDecrement, value })
 
   return (
     <div className="incrementable-bars">
-      <strong className="incrementable-bar-atribute">{attribute}</strong>
+      <div className="incrementable-bar-atribute">{attribute}</div>
       <StatsBar stats={stats} />
-      <strong className="value-stat">{value}</strong>
-      <IncrementButton onClick={handleIncrement} />
-      <DecrementButton onClick={handleDecrement} />
+      <div className="incrementable-value">
+        <div className="value-stat">{value}</div>
+        <IncrementButton onClick={handleIncrement} />
+        <DecrementButton onClick={handleDecrement} />
+      </div>
     </div>
   );
 } 
@@ -61,7 +63,7 @@ export default function Menu({ onStartGame }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
   const [forceStats, setForceStats] = useState(Array(10).fill(false));
-  const [allianceStats, setAllianceStats] = useState(Array(9).fill(false));
+  const [allianceStats, setAllianceStats] = useState(Array(7).fill(false));
   const [cowardiceStats, setCowardiceStats] = useState(Array(5).fill(false));
   const [tributeStats, setTributeStats] = useState(Array(10).fill(false));
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
@@ -186,7 +188,7 @@ export default function Menu({ onStartGame }) {
 
   const sendDataToServer = async () => {
     const dataToSend = {
-      menu,
+      ...menu,
     };
   
     const response = await fetch("http://localhost:5000/game/district", {
@@ -209,11 +211,11 @@ export default function Menu({ onStartGame }) {
     <div className="menu-container">
       <div className="stats-settings-container">
         <div>
-          <strong className="available-stats">Avaible Stats <StatsBar stats={statsBar} /></strong>
+          <strong className="available-stats">Available Stats <StatsBar stats={statsBar} /></strong>
         </div>
         <div className="bars-container">
-        <IncrementableBar attribute="Life:" stats={lifeStats} onIncrement={() => incrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} onDecrement={() => decrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} value={menu ? menu.life : 0}/>
-          <IncrementableBar attribute="Force:" stats={forceStats} onIncrement={() => incrementStat(forceStats, setForceStats, 'force', menu, setMenu, 1)} onDecrement={() => decrementStat(forceStats, setForceStats, 'force', menu, setMenu, 1)} value={menu ? menu.force : 0}/>
+          <IncrementableBar attribute="Life:" stats={lifeStats} onIncrement={() => incrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} onDecrement={() => decrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} value={menu ? menu.life : 0}/>
+          <IncrementableBar attribute="Force:" stats={forceStats} onIncrement={() => incrementStat(forceStats, setForceStats, 'force', menu, setMenu, 2)} onDecrement={() => decrementStat(forceStats, setForceStats, 'force', menu, setMenu, 2)} value={menu ? menu.force : 0}/>
           <IncrementableBar attribute="Alliance:" stats={allianceStats} onIncrement={() => incrementStat(allianceStats, setAllianceStats, 'alliance', menu, setMenu, 1)} onDecrement={() => decrementStat(allianceStats, setAllianceStats, 'alliance', menu, setMenu, 1)} value={menu ? menu.alliance : 0}/>
           <IncrementableBar attribute="Cowardice:" stats={cowardiceStats} onIncrement={() => incrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} onDecrement={() => decrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} value={menu ? menu.cowardice : 0}/>
           <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} value={menu ? menu.cant_tributes : 0}/>

@@ -1,6 +1,6 @@
 import random
 
-from game.logic.cell import Cell, CellSchema, State
+from game.logic.cell import Cell, State
 from game.logic.item import Weapon, Spear, Sword, Bow, PotionPoison, PotionLife, PotionForce
 from game.logic.tribute import Tribute
 from marshmallow import Schema, fields
@@ -48,29 +48,29 @@ class Board:
                             tribute.name = char
                             # Customize tribute parameters based on the number
                             if tribute_number == 0:
-                                tribute.set_config_parameters(50, 5, 3, 0)
+                                tribute.set_config_parameters(50, 5, 3, 0, 0)
                                 districts[0].add_tribute(tribute)
                             elif tribute_number == 1:
-                                tribute.set_config_parameters(50, 5, 3, 1)
+                                tribute.set_config_parameters(50, 5, 3, 1, 0)
                                 districts[1].add_tribute(tribute)
                             elif tribute_number == 2:
-                                tribute.set_config_parameters(50, 5, 3, 2)
+                                tribute.set_config_parameters(50, 5, 3, 2, 0)
                                 districts[2].add_tribute(tribute)
                             elif tribute_number == 3:
-                                tribute.set_config_parameters(50, 5, 3, 3)
+                                tribute.set_config_parameters(50, 5, 3, 3, 0)
                                 districts[3].add_tribute(tribute)
                             elif tribute_number == 4:
-                                tribute.set_config_parameters(50, 5, 3, 4)
+                                tribute.set_config_parameters(50, 5, 3, 4, 0)
                                 districts[4].add_tribute(tribute)
                             elif tribute_number == 5:
-                                tribute.set_config_parameters(50, 5, 3, 5)
+                                tribute.set_config_parameters(50, 5, 3, 5, 0)
                                 districts[5].add_tribute(tribute)
                             new_board.put_tribute(row, col, tribute)
                         else:
                             raise ValueError(f'Invalid tribute number: {tribute_number}')
                     except ValueError:
                         raise ValueError(f'Invalid tribute character: {char}')
-                elif char == ' ':
+                elif char == '  ':
                     pass
                 elif char == 'w':
                     weapon = Weapon()
@@ -161,13 +161,11 @@ class Board:
             self.put_item(pos[0], pos[1], item.items[i])
 
     # Creat and distribute one type of potion or weapon on board.
-    def create_and_distribute_item(self, item):
+    def create_and_distribute_item(self, item, num_item):
         if item.is_potion():
-            num_potion = 5
-            item.create_potion(num_potion)
+            item.create_potion(num_item)
         else:
-            num_weapon = 5
-            item.create_weapon(num_weapon)
+            item.create_weapon(num_item)
         self.distribute_items(item)
 
     # Distribute different types of potions on board.
@@ -175,14 +173,14 @@ class Board:
         potion_list = [PotionLife, PotionForce, PotionPoison]
         for potion in potion_list:
             p = potion()
-            self.create_and_distribute_item(p)
+            self.create_and_distribute_item(p, 5)
 
     # Distribute different types of weapons on board.
     def distribute_weapons(self):
         weapon_list = [Sword, Spear, Bow]
         for weapon in weapon_list:
             w = weapon()
-            self.create_and_distribute_item(w)
+            self.create_and_distribute_item(w, 5)
 
     # Generates a random and valid position on the board.
     def random_pos(self):
@@ -316,4 +314,4 @@ class Board:
 class BoardSchema(Schema):
     rows = fields.Integer()
     columns = fields.Integer()
-    board = fields.List(fields.List(fields.Nested(CellSchema, many=True)))
+    board = fields.List(fields.List(fields.Str()))

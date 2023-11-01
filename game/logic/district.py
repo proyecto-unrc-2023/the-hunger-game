@@ -30,9 +30,8 @@ class District:
         letters = 'tabcdefghijklm'
         for i in range(cant_tributes):
             tribute = Tribute()
-            tribute.name = letters[i + 1] + str(number_district)
-            tribute.set_config_parameters(life, force, alliance, number_district)
-            tribute.cowardice = cowardice
+            tribute.name = letters[i] + str(number_district)
+            tribute.set_config_parameters(life, force, alliance, number_district, cowardice)
             self.tributes.append(tribute)
 
     # Create a district of tributes with random force and alliance, were these stats never are high.
@@ -69,6 +68,7 @@ class District:
 
 class DistrictSchema(Schema):
     from game.logic.tribute import TributeSchema
+    
     number_district = fields.Integer()
     cant_tributes = fields.Integer()
     tributes = fields.Nested(TributeSchema(), many=True)
@@ -76,4 +76,3 @@ class DistrictSchema(Schema):
     force = fields.Integer()
     alliance = fields.Integer()
     cowardice = fields.Integer()
-    
