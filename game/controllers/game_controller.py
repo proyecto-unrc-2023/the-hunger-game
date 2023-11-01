@@ -5,7 +5,7 @@ from game.logic.district import DISTRICT_DEFAULT
 class GameController:
   
       def get_game(self, data):
-        size = 20
+        size = 10
         neutral_tributes = 10
         actual_game = GameLogic()
         actual_game.new_game(size, size)
@@ -23,6 +23,7 @@ class GameController:
         next_iteration = actual_game.one_iteration_front()
         if next_iteration is None:
             return {"error": "No data for next iteration"}
+        next_iteration.winner_district()
         schema = GameLogicSchema()
         
         result = schema.dump(next_iteration)
