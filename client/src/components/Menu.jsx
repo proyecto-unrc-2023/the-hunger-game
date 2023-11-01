@@ -59,6 +59,27 @@ function InitGameButton({ isReady, onClick }) {
   return <button className={initSimulationButtonClass} onClick={onClick}>Start Simulation</button>;
 }
 
+const characters = {
+  characterOne: '/board-images/characters/female_adventurer_walk1.png',
+  characterTwo: '/board-images/characters/female_person_walk1.png',
+  characterThree: '/board-images/characters/male_person_walk1.png',
+  characterFour: '/board-images/characters/male_adventurer_walk1.png',
+  characterFive: '/board-images/characters/robot_walk1.png',
+  characterSix: '/board-images/characters/zombie_walk1.png',
+};
+
+function CharacterCard({ characterKey, image, isSelected, onSelect }) {
+  return (
+    <article
+      className={`card ${isSelected ? 'selected' : ''}`}
+      onClick={() => onSelect(characterKey)}
+    >
+      <img src={image} className="image" alt={`Character ${characterKey}`} />
+    </article>
+  );
+}
+
+
 export default function Menu({ onViewChange }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
@@ -161,9 +182,10 @@ export default function Menu({ onViewChange }) {
   };
 
   const handleStartGame = () => {
-    if (isReady) {
-      onViewChange("game");
-      sendDataToServer();
+    if (onViewChange && selectedCharacter != null) {
+      onViewChange('game'); 
+    } else {
+      console.error('Erroraso');
     }
   };
 
@@ -206,9 +228,23 @@ export default function Menu({ onViewChange }) {
     }
 
   };
-  
+
+
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
+
   return (
     <div className="menu-container">
+      <div className="choose-character-container">
+        {Object.keys(characters).map((characterKey) => (
+          <CharacterCard
+            key={characterKey}
+            characterKey={characterKey}
+            image={characters[characterKey]}
+            isSelected={selectedCharacter === characterKey}
+            onSelect={() =>setSelectedCharacter(characterKey)}
+          />
+        ))}
+      </div>
       <div className="stats-settings-container">
         <div>
           <strong className="available-stats">Available Stats <StatsBar stats={statsBar} /></strong>

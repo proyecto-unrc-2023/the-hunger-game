@@ -1,7 +1,26 @@
 import React from 'react';
 
-const Cell = ({ state, onClick }) => {
+const Cell = ({ state, onClick, selectedCharacter}) => {
   
+  const renderTributeImage = (character) => {
+    // Lógica para determinar qué imagen mostrar según selectedCharacter
+    switch (character) {
+      case 'characterOne':
+        return Tribute0Walk1;
+      case 'characterTwo':
+        return Tribute1Walk1;
+      case 'characterThree':
+        return Tribute2Walk1;
+      case 'characterFour':
+        return Tribute3Walk1;
+      case 'characterFive':
+        return Tribute4Walk1;
+      case 'characterSix':
+        return Tribute5Walk1;
+      default:
+        return Tribute0Walk1; // Imagen predeterminada si no hay coincidencia
+    }
+  };
   const GrassImage = "/board-images/grass3.png";
   const BorderRImage = "/board-images/border-r.png";
   const BorderLImage = "/board-images/border-l.png";
@@ -119,7 +138,8 @@ const Cell = ({ state, onClick }) => {
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute0Walk1} alt="Tribute 0 Tile" />
+              <div className='pointer'><img src={Pointer} alt='Pointer' /></div>
+              <img src={renderTributeImage(selectedCharacter)} alt="Tribute 0 Tile" />
             </div>
           </div>
         );

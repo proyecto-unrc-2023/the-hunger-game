@@ -6,19 +6,25 @@ import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
 import WinnerScreen from './components/WinnerScreen.jsx';
 
-const views = {
-  init: InitGame,
-  menu: Menu,
-  game: Game,
-  finish: WinnerScreen,
-};
-
 const App = () => {
   const [currentView, setCurrentView] = useState('init');
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  
+  const handleCharacterSelection = (characterKey) => {
+    setSelectedCharacter(characterKey);
+  };
 
   const handleViewChange = (view) => {
     setCurrentView(view);
   };
+
+  const views = {
+    init: InitGame,
+    menu: () => <Menu onSelect={handleCharacterSelection} onViewChange={handleViewChange}/>,
+    game: () => <Game selectedCharacter={selectedCharacter} onViewChange={handleViewChange}/>,
+    finish: WinnerScreen,
+  };
+  
 
   const CurrentViewComponent = views[currentView];
 

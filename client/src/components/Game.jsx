@@ -27,7 +27,7 @@ const ControlsAdvance = memo(({ onPause, onFinish }) => {
   );
 });
 
-const Game = ({onViewChange}) => {
+const Game = ({onViewChange, selectedCharacter}) => {
 
   //Tamaño del tablero
   const [boardSize, setBoardSize] = useState(20);
@@ -156,8 +156,8 @@ const Game = ({onViewChange}) => {
         <TransformComponent>
           <section className='board'>
             {!gameInitialized ? (
-              <Board boardSize={boardSize} boardState={emptyBoard} />
-              ) : ( <Board size={boardSize} boardState={boardState} />
+              <Board boardSize={boardSize} boardState={emptyBoard} selectedCharacter={selectedCharacter}/>
+              ) : ( <Board size={boardSize} boardState={boardState} selectedCharacter={selectedCharacter}/>
               )}
           </section>
         </TransformComponent>
