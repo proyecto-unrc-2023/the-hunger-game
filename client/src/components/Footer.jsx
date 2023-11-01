@@ -6,8 +6,8 @@ export default function Footer() {
         <footer className='footer'>
             <div className='text-center p-3 center-content'>
                 <section className="game-title">
-                    <div className="top">    Would you like join? </div>
-                    <div className="bottom" aria-hidden="true">Would you like join? </div>
+                    <div className="top">    Would you like to join? </div>
+                    <div className="bottom" aria-hidden="true">Would you like to join? </div>
                 </section>
                 <div className="signup">
                     <button className="cssbuttons-io-button">

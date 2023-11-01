@@ -2,7 +2,6 @@
   background-color: var(--background-color);
   color: var(--text-color);
   display: flex;
-  flex-direction: space-between;
   align-items: center;
 }
 
@@ -10,7 +9,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
+  margin: auto;
 }
 
 .logo-img{
@@ -18,11 +18,6 @@
   height: auto;
   margin: 2em;
   display: block;
-  margin-right: auto;
-}
-
-.a-logo{
-  margin-right: auto;
 }
 
 .login {
@@ -110,4 +105,28 @@
 :root {
   --background-color: black;
   --text-color: hsl(0, 0%, 100%);
+}
+
+.volume-slider {
+  display: none;
+}
+
+.volume-slider.active {
+  display: block;
+}
+
+.audio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 200px;
+  height: 60px;
+  padding: auto;
+  
+}
+
+.volume-button-off {
+  margin-bottom: 20px;
 }

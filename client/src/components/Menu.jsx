@@ -59,7 +59,7 @@ function InitGameButton({ isReady, onClick }) {
   return <button className={initSimulationButtonClass} onClick={onClick}>Start Simulation</button>;
 }
 
-export default function Menu({ onStartGame }) {
+export default function Menu({ onViewChange }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
   const [forceStats, setForceStats] = useState(Array(10).fill(false));
@@ -162,7 +162,7 @@ export default function Menu({ onStartGame }) {
 
   const handleStartGame = () => {
     if (isReady) {
-      onStartGame();
+      onViewChange("game");
       sendDataToServer();
     }
   };
@@ -199,11 +199,11 @@ export default function Menu({ onStartGame }) {
       body: JSON.stringify(dataToSend), // Convierte los datos en una cadena JSON
     });
 
-    // if (response.ok) {
-
-    // } else {
-
-    // }
+    if (response.ok) {
+      console.log("Post request succeeded");
+    } else {
+      console.error("Post request failed");
+    }
 
   };
   
@@ -221,7 +221,7 @@ export default function Menu({ onStartGame }) {
           <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} value={menu ? menu.cant_tributes : 0}/>
         </div>
         <InitGameButton isReady={isReady} onClick={handleStartGame} />
-      </div>
+    </div>
     </div>
   );
 

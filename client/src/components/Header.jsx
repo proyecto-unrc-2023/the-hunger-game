@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import './Header.css';
 
 const Header = () => {
@@ -8,11 +8,47 @@ const Header = () => {
     window.location.href = '/';
   };
 
+  const [volume, setVolume] = useState(0.2); 
+  const audioRef = useRef(new Audio('/audio.mp3'));
+  const [isVolumeVisible, setIsVolumeVisible] = useState(false);
+  const volVisble = isVolumeVisible ? 'volume-button-on' : 'volume-button-off';
+
+  const handleToggleVolume = () => {
+    setIsVolumeVisible(!isVolumeVisible);
+  };
+
+  const handleVolumeChange = (event) => {
+    const newVolume = parseFloat(event.target.value);
+    audioRef.current.volume = newVolume;
+    setVolume(newVolume);
+  };
+
   return (
     <header className='header'>
       <a href="/" onClick={handleLogoClick} className='a-logo'>
         <img src='./11-2-the-hunger-games-picture.png' className='logo-img' alt='logo'></img>
       </a>
+      <div className='audio-container'>
+        <audio ref={audioRef} autoPlay loop>
+          <source src='/audio.mp3' type="audio/mp3" />
+        </audio>
+        <button 
+          className={volVisble}
+          onClick={handleToggleVolume}
+        >🔊
+        </button>
+        {isVolumeVisible && (
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={handleVolumeChange}
+            className={`volume-slider ${isVolumeVisible ? 'active' : ''}`}
+          />
+        )}
+      </div>
       <div className='top-header'>
       <section className="game-title">
         <div className="top">The Hunger Games</div>
