@@ -244,7 +244,7 @@ class Tribute:
         (x,y) = pos
         pos = self.move_closer_to(x, y, board)
         self.move_to(pos[0], pos[1], board)
-
+    
 class TributeSchema(Schema):
     name = fields.Str()
     life = fields.Integer()

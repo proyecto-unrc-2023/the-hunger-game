@@ -13,6 +13,8 @@ class District:
         self.number_district = None
         self.cant_tributes = 0
         self.tributes = []
+        self.chars = ['t','a','b','c','d','e','f','g','h','i','j','k','l','m']
+
 
     # Return number_district attribute
     def get_number_district(self):
@@ -27,10 +29,9 @@ class District:
     def set_config(self, life, force, alliance, number_district, cant_tributes, cowardice):
         self.number_district = number_district
         self.cant_tributes = cant_tributes
-        letters = 'tabcdefghijklm'
         for i in range(cant_tributes):
             tribute = Tribute()
-            tribute.name = letters[i] + str(number_district)
+            self.asign_name_tribute(tribute)
             tribute.set_config_parameters(life, force, alliance, number_district, cowardice)
             self.tributes.append(tribute)
 
@@ -38,10 +39,9 @@ class District:
     def set_config_random(self, num_district):
         self.cant_tributes = TRIBUTES_DEFAULT
         self.number_district = num_district
-        letters = 'tabcdefghijklm'
         for t in range(self.cant_tributes):
             tribute = Tribute()
-            tribute.name = letters[t] + str(num_district)
+            self.asign_name_tribute(tribute)
             while True:
                 tribute.force = random.randint(5, 10)
                 tribute.alliance = random.randint(3, 10)
@@ -65,6 +65,10 @@ class District:
                 self.tributes.remove(tr)
                 self.cant_tributes -= 1
 
+    # Method to assign a name for the tributes of the district
+    def asign_name_tribute(self, tribute):
+        tribute.name = self.chars.pop(0) + str(self.number_district)
+        
 
 class DistrictSchema(Schema):
     from game.logic.tribute import TributeSchema

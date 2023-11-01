@@ -15,6 +15,20 @@ from marshmallow import Schema, fields
 
 
 class Board:
+
+    # Initializes an instance of the Board class with dimensions X and Y
+    def __init__(self, rows, columns):
+        self.rows = rows
+        self.columns = columns
+        self.board = []
+        for row in range(self.rows):
+            curr_row = []
+            for col in range(self.columns):
+                cell = Cell()
+                cell.pos = (row, col)
+                curr_row.append(cell)
+            self.board.append(curr_row)
+
     # Converts a string representing a board into an instance of the Board class.
     def from_string(board_str):
         from game.logic.district import District
@@ -54,25 +68,8 @@ class Board:
                         if 0 <= tribute_number <= 5:
                             tribute = Tribute()
                             tribute.name = char
-                            # Customize tribute parameters based on the number
-                            if tribute_number == 0:
-                                tribute.set_config_parameters(50, 5, 3, 0, 0)
-                                districts[0].add_tribute(tribute)
-                            elif tribute_number == 1:
-                                tribute.set_config_parameters(50, 5, 3, 1, 0)
-                                districts[1].add_tribute(tribute)
-                            elif tribute_number == 2:
-                                tribute.set_config_parameters(50, 5, 3, 2, 0)
-                                districts[2].add_tribute(tribute)
-                            elif tribute_number == 3:
-                                tribute.set_config_parameters(50, 5, 3, 3, 0)
-                                districts[3].add_tribute(tribute)
-                            elif tribute_number == 4:
-                                tribute.set_config_parameters(50, 5, 3, 4, 0)
-                                districts[4].add_tribute(tribute)
-                            elif tribute_number == 5:
-                                tribute.set_config_parameters(50, 5, 3, 5, 0)
-                                districts[5].add_tribute(tribute)
+                            tribute.set_config_parameters(50, 5, 3, tribute_number, 0)
+                            districts[tribute_number].add_tribute(tribute)
                             new_board.put_tribute(row, col, tribute)
                         else:
                             raise ValueError(
@@ -115,19 +112,6 @@ class Board:
                     raise ValueError(f"Invalid character in board string: {char}")
 
         return [new_board, districts, neutrals, order]
-
-    # Initializes an instance of the Board class with dimensions X and Y
-    def __init__(self, rows, columns):
-        self.rows = rows
-        self.columns = columns
-        self.board = []
-        for row in range(self.rows):
-            curr_row = []
-            for col in range(self.columns):
-                cell = Cell()
-                cell.pos = (row, col)
-                curr_row.append(cell)
-            self.board.append(curr_row)
 
     # Gets the cell at a specific position on the board.
     def get_element(self, row, column):

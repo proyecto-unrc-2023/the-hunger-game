@@ -49,23 +49,19 @@ class GameLogic:
     # Row and Column are the position of tribute
     def put_tribute(self, row, column, tribute):
         district = tribute.district
-        district_aux = District()
-        letters = "tabcdefghijklm"
         if len(self.districts) == district:
+            district_aux = District()
             district_aux.number_district = district
             district_aux.add_tribute(tribute)
+            district_aux.asign_name_tribute(tribute)
             self.districts.append(district_aux)
             self.board.put_tribute(row, column, tribute)
-            tribute.name = letters[district_aux.cant_tributes - 1] + str(
-                district_aux.number_district
-            )
+
         else:
             self.board.put_tribute(row, column, tribute)
             self.districts[tribute.district].add_tribute(tribute)
-            tribute.name = letters[
-                self.districts[tribute.district].cant_tributes - 1
-            ] + str(self.districts[tribute.district].number_district)
-
+            self.districts[tribute.district].asign_name_tribute(tribute)
+            
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
         if tribute.district is None:
