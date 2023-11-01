@@ -17,7 +17,6 @@ RANGE_BOW = 2
 
 
 class Item:
-
     def __init__(self):
         self.pos = None
         self.cant_items = 0
@@ -30,7 +29,7 @@ class Item:
         elif object_str == Weapon().__str__():
             return Weapon()
         else:
-            raise ValueError(f'Invalid object string: {object_str}')
+            raise ValueError(f"Invalid object string: {object_str}")
 
     def __str__(self):
         pass
@@ -52,9 +51,8 @@ class Item:
 
 
 class Potion(Item):
-
     def __str__(self):
-        return 'p '
+        return "p "
 
     def __eq__(self, other):
         return isinstance(other, Potion)
@@ -73,10 +71,9 @@ class Potion(Item):
 
 
 class PotionForce(Potion):
-
     # Potion force is pf.
     def __str__(self):
-        return 'pf'
+        return "pf"
 
     def __eq__(self, other):
         return isinstance(other, PotionForce)
@@ -88,7 +85,7 @@ class PotionForce(Potion):
     # Create potions force.
     def create_potion(self, num_potion):
         if num_potion < 0:
-            raise ValueError(f'Invalid input number: {num_potion}')
+            raise ValueError(f"Invalid input number: {num_potion}")
         for i in range(num_potion):
             potion_force = PotionForce()
             self.items.append(potion_force)
@@ -96,17 +93,18 @@ class PotionForce(Potion):
 
 
 class PotionLife(Potion):
-
     # Potion life is pl.
     def __str__(self):
-        return 'pl'
+        return "pl"
 
     def __eq__(self, other):
         return isinstance(other, PotionLife)
 
     # Apply effect of potion life to tribute.
     def apply_effect(self, tribute):
-        if tribute.life == tribute.max_life or (tribute.life + POTION_LIFE > tribute.max_life):
+        if tribute.life == tribute.max_life or (
+            tribute.life + POTION_LIFE > tribute.max_life
+        ):
             tribute.life = tribute.max_life
         if tribute.life + POTION_LIFE <= tribute.max_life:
             tribute.life += POTION_LIFE
@@ -114,7 +112,7 @@ class PotionLife(Potion):
     # Create potions life.
     def create_potion(self, num_potion):
         if num_potion < 0:
-            raise ValueError(f'Invalid input number: {num_potion}')
+            raise ValueError(f"Invalid input number: {num_potion}")
         for i in range(num_potion):
             potion_life = PotionLife()
             self.items.append(potion_life)
@@ -122,10 +120,9 @@ class PotionLife(Potion):
 
 
 class PotionPoison(Potion):
-
     # Potion poison is po.
     def __str__(self):
-        return 'po'
+        return "po"
 
     def __eq__(self, other):
         return isinstance(other, PotionPoison)
@@ -139,7 +136,7 @@ class PotionPoison(Potion):
     # Create potions poison.
     def create_potion(self, num_potion):
         if num_potion < 0:
-            raise ValueError(f'Invalid input number: {num_potion}')
+            raise ValueError(f"Invalid input number: {num_potion}")
         for i in range(num_potion):
             potion_poison = PotionPoison()
             self.items.append(potion_poison)
@@ -147,9 +144,8 @@ class PotionPoison(Potion):
 
 
 class Weapon(Item):
-
     def __str__(self):
-        return 'w '
+        return "w "
 
     def __eq__(self, other):
         return isinstance(other, Weapon)
@@ -166,10 +162,9 @@ class Weapon(Item):
 
 
 class Sword(Weapon):
-
     # Sword is sw.
     def __str__(self):
-        return 'sw'
+        return "sw"
 
     def __eq__(self, other):
         return isinstance(other, Sword)
@@ -185,7 +180,7 @@ class Sword(Weapon):
     # Create weapons sword.
     def create_weapon(self, num_weapon):
         if num_weapon < 0:
-            raise ValueError(f'Invalid input number: {num_weapon}')
+            raise ValueError(f"Invalid input number: {num_weapon}")
         for i in range(num_weapon):
             sword = Sword()
             self.items.append(sword)
@@ -193,10 +188,9 @@ class Sword(Weapon):
 
 
 class Spear(Weapon):
-
     # Spear is sp.
     def __str__(self):
-        return 'sp'
+        return "sp"
 
     def __eq__(self, other):
         return isinstance(other, Spear)
@@ -213,7 +207,7 @@ class Spear(Weapon):
     # Create weapons spear.
     def create_weapon(self, num_weapon):
         if num_weapon < 0:
-            raise ValueError(f'Invalid input number: {num_weapon}')
+            raise ValueError(f"Invalid input number: {num_weapon}")
         for i in range(num_weapon):
             spear = Spear()
             self.items.append(spear)
@@ -221,10 +215,9 @@ class Spear(Weapon):
 
 
 class Bow(Weapon):
-
     # Bow is wo.
     def __str__(self):
-        return 'wo'
+        return "wo"
 
     def __eq__(self, other):
         return isinstance(other, Bow)
@@ -241,7 +234,7 @@ class Bow(Weapon):
     # Create weapons bow.
     def create_weapon(self, num_weapon):
         if num_weapon < 0:
-            raise ValueError(f'Invalid input number: {num_weapon}')
+            raise ValueError(f"Invalid input number: {num_weapon}")
         for i in range(num_weapon):
             bow = Bow()
             self.items.append(bow)

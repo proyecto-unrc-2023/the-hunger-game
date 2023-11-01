@@ -187,13 +187,13 @@ def test_heuristic_tribute_weapons_items():
     game.put_tribute(3, 3, t0)
     sw = Sword()
     game.put_item(2, 2, sw)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.weapon
     t0.weapon = False
     t0.force = 5
     sp = Spear()
     game.put_item(3, 3, sp)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.weapon
     assert t0.range == 2
     assert t0.force == 8
@@ -202,21 +202,21 @@ def test_heuristic_tribute_weapons_items():
     t0.force = 5
     bow = Bow()
     game.put_item(2, 2, bow)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.weapon
     assert t0.range == 3
     assert t0.force == 6
     po = PotionPoison()
     game.put_item(3, 3, po)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     pl = PotionLife()
     assert t0.life  == 45
     game.put_item(3, 4, pl)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.life == 50
     pf = PotionForce()
     game.put_item(3, 5, pf)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.force == 11
     
 def test_figth_weapons():
@@ -232,9 +232,9 @@ def test_figth_weapons():
     #Bow
     bow = Bow()
     game.put_item(3, 3, bow)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.weapon
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t1.life == 44
     #reset and Spear
     t0.force = 5
@@ -242,10 +242,10 @@ def test_figth_weapons():
     t0.range = 1
     sp = Spear()
     game.put_item(4, 4, sp)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.weapon
     assert t0.range == 2
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t1.life == 36
     #reset and Sword
     t0.force = 5
@@ -253,10 +253,10 @@ def test_figth_weapons():
     t0.range = 1
     sword = Sword()
     game.put_item(5, 5, sword)
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t0.weapon
     assert t0.range == 1
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t1.life == 26
     
 def test_heuristic_tribute_complex():
@@ -268,39 +268,39 @@ def test_heuristic_tribute_complex():
     weapon = Weapon()
     game.board.put_item(4, 3, weapon)
     #use Weapon
-    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute(tribute)
     assert tribute.pos == (4, 3)
     assert tribute.force == 10
     tribute1 = Tribute()
     tribute1.set_config_parameters(50, 5, 5, 1, 0)
     game.put_tribute(4, 2, tribute1)
     #fight
-    game.heuristic_tribute_first_attempt(tribute)
-    game.heuristic_tribute_first_attempt(tribute1)
+    game.heuristic_tribute(tribute)
+    game.heuristic_tribute(tribute1)
     assert tribute.life == 45
     assert tribute1.life == 40
-    game.heuristic_tribute_first_attempt(tribute)
-    game.heuristic_tribute_first_attempt(tribute)
-    game.heuristic_tribute_first_attempt(tribute)
-    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute(tribute)
+    game.heuristic_tribute(tribute)
+    game.heuristic_tribute(tribute)
+    game.heuristic_tribute(tribute)
     #random move
-    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute(tribute)
     assert tribute.pos != (4, 3)
     #neutral exito
     game.put_neutral(4, 3)
     tribute.alliance = 25
-    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute(tribute)
     assert len(game.districts[0].tributes) == 2
     #neutral fail
     neutral = game.board.get_element(4, 3).get_tribute()
     game.remove_tribute(neutral)
     game.put_neutral(4, 3)
     tribute.alliance = -25
-    game.heuristic_tribute_first_attempt(tribute)
+    game.heuristic_tribute(tribute)
     assert len(game.districts[0].tributes) == 1
     assert tribute.enemy is not None
 
-def test_heuristic_tribute_first_attempt_complex2():
+def test_heuristic_tribute_complex2():
     game = GameLogic()
     game.new_game(5, 4)
 
@@ -333,21 +333,21 @@ def test_heuristic_tribute_first_attempt_complex2():
     game.board.put_item(2, 3, w)
     game.board.put_item(4, 2, p)
 
-    game.heuristic_tribute_first_attempt(tribute0)
-    game.heuristic_tribute_first_attempt(tribute0)
+    game.heuristic_tribute(tribute0)
+    game.heuristic_tribute(tribute0)
     assert tribute0.pos == w.pos
     assert tribute0.force == 10
-    game.heuristic_tribute_first_attempt(tribute0)
+    game.heuristic_tribute(tribute0)
     t1.attack_to(tribute0, game.board)
-    game.heuristic_tribute_first_attempt(tribute0)
+    game.heuristic_tribute(tribute0)
     assert tribute0.life == 45
     assert t1.is_dead()
     assert game.board.get_element(1, 3).get_state() == State.FREE
-    game.heuristic_tribute_first_attempt(tribute0)
-    game.heuristic_tribute_first_attempt(tribute0)
+    game.heuristic_tribute(tribute0)
+    game.heuristic_tribute(tribute0)
     assert tribute0.life == 50
     assert tribute0.pos == p.pos
-    game.heuristic_tribute_first_attempt(tribute0)
+    game.heuristic_tribute(tribute0)
     assert neutro in game.districts[0].tributes
 
 
@@ -456,13 +456,13 @@ def test_applies_effects_complex():
     game.put_tribute(0, 0, t1)
     game.put_item(0, 1, potion)
     t1.life = 45
-    game.heuristic_tribute_first_attempt(t1)
+    game.heuristic_tribute(t1)
     assert t1.life == 50
     game.put_item(0, 0, potion)
-    game.heuristic_tribute_first_attempt(t1)
+    game.heuristic_tribute(t1)
     assert t1.life == 50
     game.put_item(0, 1, Weapon())
-    game.heuristic_tribute_first_attempt(t1)
+    game.heuristic_tribute(t1)
     assert t1.force == 10
 
 
@@ -541,8 +541,8 @@ def test_neutral_heuristic():
     game.put_tribute(0, 0, t0)
     game.put_tribute(0, 2, t1)
     game.put_neutral(0, 1)
-    game.heuristic_tribute_first_attempt(t0)
-    game.heuristic_tribute_first_attempt(t1)
+    game.heuristic_tribute(t0)
+    game.heuristic_tribute(t1)
     neutral = game.board.get_element(0, 1).get_tribute()
     game.neutral_heuristic(neutral)
     assert t1.life == 55
@@ -589,7 +589,7 @@ def test_get_away():
     t1.set_config_parameters(50, 5, 3, 1, 0)
     game.put_tribute(0, 1, t1)
     #first iteration, can escape down
-    game.heuristic_tribute_first_attempt(t0)
+    game.heuristic_tribute(t0)
     assert t1.life == 45
     game.get_away(t1, t0)
     assert t1.pos == (2, 3)

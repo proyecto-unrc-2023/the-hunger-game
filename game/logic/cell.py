@@ -14,7 +14,6 @@ TRIBUTE = State.TRIBUTE
 
 
 class Cell:
-
     def __init__(self):
         self.state = FREE
         self.item = None
@@ -41,7 +40,7 @@ class Cell:
 
     def __str__(self):
         if self.state == FREE:
-            return '  '
+            return "  "
         if self.state == ITEM:
             return self.item.__str__()
         if self.state == TRIBUTE:
@@ -67,7 +66,9 @@ class Cell:
 
     def put_item(self, item):
         if self.state != FREE:
-            raise ValueError(f"Trying to place one Item on top of another or over an Tribute.")
+            raise ValueError(
+                f"Trying to place one Item on top of another or over an Tribute."
+            )
 
         self.state = ITEM
         self.item = item
