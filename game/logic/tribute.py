@@ -141,13 +141,13 @@ class Tribute:
 
         return possible_moves[0]
 
+    # Method to determine the cells that are free within a two-cell distance
     def get_neighbors_2_distance_free(self, board):
         from game.logic.cell import State
         
         (x, y) = self.pos
         neighbors = []
 
-        # Coordenadas a una distancia de 2 unidades en todas las direcciones
         possible_neighbors = self.get_neighbors_2_distance(board)
 
         for pos in possible_neighbors:
@@ -157,11 +157,11 @@ class Tribute:
 
         return neighbors
 
+    # Method to determine the neighbors within a two-cell distance of a tribute
     def get_neighbors_2_distance(self, board):
         (x, y) = self.pos
         neighbors = []
 
-        # Coordenadas a una distancia de 2 unidades en todas las direcciones
         possible_neighbors = [
             (x - 2, y - 2), (x - 2, y - 1), (x - 2, y), (x - 2, y + 1), (x - 2, y + 2),
             (x - 1, y - 2), (x, y - 2), (x + 1, y - 2), (x + 2, y - 2),
@@ -175,23 +175,27 @@ class Tribute:
 
         return neighbors
 
+    #Method to know if a tribute has to escape down or up, left or right
+    def flee_direction(self, enemy):
+        (tribute_x,tribute_y) = self.pos
+        (enemy_x, enemy_y) = enemy.pos
+        x_escape, y_escape = [], []
+        if (enemy_x > tribute_x):
+            x_escape = [tribute_x - 2, tribute_x - 1, tribute_x]
+        else:
+            x_escape = [tribute_x + 2, tribute_x + 1, tribute_x]
+        if (enemy_y > tribute_y):
+            y_escape = [tribute_y - 2, tribute_y - 1, tribute_y]
+        else:
+            y_escape = [tribute_y + 2, tribute_y + 1, tribute_y]
+        return (x_escape, y_escape)
+    
+    #Method for calculate the best escape for a tribute with cowardice
     def calculate_flee(self, enemy, board):
-        tX, tY = self.pos
-        eX, eY = enemy.pos
         neighbors = self.get_neighbors_2_distance_free(board)
         if neighbors is None:
             return False
-        x_escape = []
-        y_escape = []
-        if (eX > tX):
-            x_escape = [tX - 2, tX - 1, tX]
-        else:
-            x_escape = [tX + 2, tX + 1, tX]
-        if (eY > tY):
-            y_escape = [tY - 2, tY - 1, tY]
-        else:
-            y_escape = [tY + 2, tY + 1, tY]
-
+        (x_escape,y_escape) = self.flee_direction(enemy)
         for x in x_escape:
             for y in y_escape:
                 if (x, y) in neighbors:
@@ -235,6 +239,7 @@ class Tribute:
 
         return tribute_vision_cells
 
+    # Method to move the tribute one cell closer to the position
     def step_to(self, board, pos):
         (x,y) = pos
         pos = self.move_closer_to(x, y, board)
