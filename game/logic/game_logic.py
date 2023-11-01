@@ -253,25 +253,6 @@ class GameLogic:
                         else:
                             self.try_attack(tribute, cell.pos)
 
-    # Check which district won (literally return a district)
-    # Return false if still in play
-    def end_game(self):
-        district_alive = District()
-        cant_of_districts_alive = 0
-        dead_districts = 0
-        if len(self.districts) == 0:
-            raise ValueError("There is not tributes in the game")
-        else:
-            for aux_district in self.districts:
-                if aux_district.get_cant_tribute() == 0:
-                    dead_districts = dead_districts + 1
-                else:
-                    cant_of_districts_alive = cant_of_districts_alive + 1
-                    if cant_of_districts_alive >= 2:
-                        return False
-                    district_alive = aux_district
-            if cant_of_districts_alive == 1:
-                return district_alive
 
     def heuristic_of_game(self):
         self.order_attack()
@@ -398,6 +379,8 @@ class GameLogic:
 
     # Method to check if game is ended
     def game_ended(self):
+        if len(self.districts) == 0:
+            raise ValueError("There is not tributes in the game")
         districts_alive = 0
         for i in range(self.districts.__len__()):
             if self.districts[i].cant_tributes >= 1:
@@ -414,7 +397,7 @@ class GameLogic:
             for i in range(len(self.districts)):
                 if self.districts[i].cant_tributes >= 1:
                     self.winner = self.districts[i].number_district
-        return self
+        return self.winner
 
     # Set stats of own district. Front use this method
     def set_parameters(

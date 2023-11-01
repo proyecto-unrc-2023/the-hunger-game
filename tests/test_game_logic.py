@@ -359,12 +359,12 @@ def test_end_game():
     district2.set_config(50, 5, 3, 2, 2, 3)
     game = GameLogic()
     game.districts.append(district1)
-    assert game.end_game() is district1  # end_game returns the only district alive
+    assert game.winner_district() == district1.get_number_district()  # end_game returns the only district alive
     game.districts.append(district2)
-    assert game.end_game() is False
+    assert game.game_ended() is False
     game2 = GameLogic()
     with pytest.raises(ValueError):
-        game2.end_game()
+        game2.game_ended()
     # assert neutro.district == tribute.district
 
 
