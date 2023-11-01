@@ -183,6 +183,7 @@ export default function Menu({ onViewChange }) {
 
   const handleStartGame = () => {
     if (onViewChange && selectedCharacter != null) {
+      sendDataToServer();
       onViewChange('game'); 
     } else {
       console.error('Erroraso');
