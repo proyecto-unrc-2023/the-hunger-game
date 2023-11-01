@@ -175,9 +175,9 @@ class GameLogic:
         ):
             tribute.attack_to(tribute2, self.board)
         else:
-            pos = tribute.move_closer_to(x, y, self.board)
-            tribute.move_to(pos[0], pos[1], self.board)
-
+            pos = (x, y)
+            tribute.step_to(self.board, pos)
+            
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
     def alliance_neutral(self, tribute, district):
