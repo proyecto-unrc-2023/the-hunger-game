@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_restful import Api
-
+from app.apis.user_resource import Structure
 from app.apis.game_resource import ConfigDistrict, Game, LastGame
 
 
@@ -12,3 +12,5 @@ api = Api(apis_bp)
 api.add_resource(ConfigDistrict, '/district')
 api.add_resource(Game, '/<int:game_id>')
 api.add_resource(LastGame,'/last_id')
+api.add_resource(Structure, '/db')
+
