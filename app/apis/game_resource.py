@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from flask_restful import Resource
+from app import db #traigo instancia db
 
 from game.controllers.district_controller import DistrictController
 from game.controllers.game_controller import GameController
