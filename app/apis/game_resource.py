@@ -51,8 +51,6 @@ class Game(Resource):
         
         response = {game_id: result}
 
-
-        print(response) 
         return response
 
 
