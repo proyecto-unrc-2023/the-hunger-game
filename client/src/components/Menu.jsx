@@ -1,63 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Menu.css";
-
-function IncrementButton({ onClick }) {
-  return (
-    <div className="increment-button" onClick={onClick}>
-      <button>+</button>
-    </div>
-  );
-}
-
-function DecrementButton({ onClick }) {
-  return (
-    <div className="decrement-button" onClick={onClick}>
-      <button>-</button>
-    </div>
-  );
-}
-
-function Stat({ isConsumed }) {
-  const statClassName = isConsumed ? 'stat is-consumed' : 'stat';
-  return <div className={statClassName}></div>;
-}
-
-function StatsBar({ stats }) {
-  return (
-    <div className="stats-bar">
-      {stats.map((isConsumed, index) => (
-        <Stat key={index} isConsumed={isConsumed} />
-      ))}
-    </div>
-  );
-}
-
-function IncrementableBar({ attribute, stats, onIncrement, onDecrement, value }) {
-  const handleIncrement = () => {
-    onIncrement();
-  };
-
-  const handleDecrement = () => {
-    onDecrement();
-  };
-
-  return (
-    <div className="incrementable-bars">
-      <div className="incrementable-bar-atribute">{attribute}</div>
-      <StatsBar stats={stats} />
-      <div className="incrementable-value">
-        <div className="value-stat">{value}</div>
-        <IncrementButton onClick={handleIncrement} />
-        <DecrementButton onClick={handleDecrement} />
-      </div>
-    </div>
-  );
-} 
+import { IncrementableBar, StatsBar } from "./IncrementableBar";
 
 function InitGameButton({ isReady, onClick }) {
   const initSimulationButtonClass = isReady ? 'init-simulation-button is-ready' : 'init-simulation-button';
   return <button className={initSimulationButtonClass} onClick={onClick}>Start Simulation</button>;
-}
+};
 
 const characters = {
   characterOne: '/board-images/characters/female_adventurer_walk1.png',
@@ -73,113 +21,99 @@ function CharacterCard({ characterKey, image, isSelected, onSelect }) {
     <article
       className={`card ${isSelected ? 'selected' : ''}`}
       onClick={() => onSelect(characterKey)}
-    >
+      >
       <img src={image} className="image" alt={`Character ${characterKey}`} />
     </article>
   );
-}
+};
 
+// Barras en el menú
+const bars = {
+  life:{
+    attribute: 'Life',
+    bar: Array(10).fill(false),
+    increases: 5,
+    consumes: 1
+  },
+  force:{
+    attribute: 'Force',
+    bar: Array(10).fill(false),
+    increases: 2,
+    consumes: 1
+  },
+  alliance:{
+    attribute: 'Alliance',
+    bar: Array(7).fill(false),
+    increases: 1,
+    consumes: 1
+  },
+  cowardice:{
+    attribute: 'Cowardice',
+    bar: Array(5).fill(false),
+    increases: 1,
+    consumes: 1
+  },
+  cant_tributes:{
+    attribute: 'Tributes',
+    bar: Array(2).fill(false),
+    increases: 1,
+    consumes: 4
+  }
+};
 
 export default function Menu({ onViewChange }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
-  const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
-  const [forceStats, setForceStats] = useState(Array(10).fill(false));
-  const [allianceStats, setAllianceStats] = useState(Array(7).fill(false));
-  const [cowardiceStats, setCowardiceStats] = useState(Array(5).fill(false));
-  const [tributeStats, setTributeStats] = useState(Array(10).fill(false));
+  const [stats, setStats] = useState(bars);
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
+  const [menu, setMenu] = useState(null);
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  const incrementStat = (statArray, setStatArray, statKey, menu, setMenu, value) => {
-    const indexStat = statArray.findIndex((isConsumed) => !isConsumed);
-    const indexStatsBar = statsBar.slice().reverse().findIndex((isConsumed) => isConsumed);
-    if (indexStat !== -1 && indexStatsBar !== -1) {
-      const newStatsBar = [...statsBar];
-      const newStat = [...statArray];
-      const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
-      newStat[indexStat] = true; // Consume un stat
-      newStatsBar[reversedStatsBarIndex] = false; // Deja de consumir un stat disponible
-
-      // Incrementamos el valor de la estadística en el diccionario
-      const updatedMenu = { ...menu, [statKey]: menu[statKey] + value };
-
-      setStatArray(newStat);
-      setStatsBar(newStatsBar);
-      setMenu(updatedMenu); 
-    }
-  };
-
-  const decrementStat = (statArray, setStatArray, statKey, menu, setMenu, value) => {
-    const indexStat = statArray.slice().reverse().findIndex((isConsumed) => isConsumed);
-    const indexStatsBar = statsBar.findIndex((isConsumed) => !isConsumed);
-    if (indexStat !== -1 && indexStatsBar !== -1) {
-      const newStatsBar = [...statsBar];
-      const newStat = [...statArray];
-      const reversedStatIndex = statArray.length - 1 - indexStat;
-      newStat[reversedStatIndex] = false; // Deja de consumir un stat
-      newStatsBar[indexStatsBar] = true; // Devuelve un stat a los disponibles
-
-      // Decrementamos el valor de la estadística en el diccionario
-      const updatedMenu = { ...menu, [statKey]: menu[statKey] - value };
-
-      setStatArray(newStat);
-      setStatsBar(newStatsBar);
-      setMenu(updatedMenu); 
-    }
-  };
-
-  const incrementTributeStat = () => {
-    const indexTribute = tributeStats.findIndex(isConsumed => !isConsumed);
+  const incrementStat = (statKey, increases, consumes) => {
+    const indexStat = stats[statKey].bar.findIndex(isConsumed => !isConsumed);
     const indexStatsBar = statsBar.slice().reverse().findIndex(isConsumed => isConsumed);
-    const cant_tributes = menu;
-    if (indexTribute !== -1 && indexStatsBar !== -1) {
+    if (indexStat !== -1 && indexStatsBar !== -1) {
+      const newStats = { ...stats };
       const newStatsBar = [...statsBar];
-      const newTributeStats = [...tributeStats];
       const reversedStatsBarIndex = statsBar.length - 1 - indexStatsBar;
-      newTributeStats[indexTribute] = true; // Consume un stat de tributo
-  
-      // Verificar si hay al menos 4 elementos true en newStatsBar
-      const trueElementsCount = newStatsBar.filter(isConsumed => isConsumed).length;
-  
-      if (trueElementsCount >= 4) {
-        // Deja de consumir 4 stats disponibles
-        for (var i = 0; i < 4; i++) {
-          const newIndex = reversedStatsBarIndex - i;
-          newStatsBar[newIndex] = false;
+      // Verificar si hay suficientes stats disponibles antes de incrementar
+      if (reversedStatsBarIndex >= consumes - 1) {
+        newStats[statKey].bar[indexStat] = true;
+        // Asegurarse de no exceder el rango permitido al decrementar statsBar
+        for (let i = 0; i < consumes; i++) {
+          const newIndexStatsBar = reversedStatsBarIndex - i;
+          newStatsBar[newIndexStatsBar] = false;
         }
-        setTributeStats(newTributeStats);
+        const updatedMenu = { ...menu, [statKey]: menu[statKey] + increases };
+        setStats(newStats);
         setStatsBar(newStatsBar);
-        cant_tributes.cant_tributes++;
-        setMenu(cant_tributes);
+        setMenu(updatedMenu);
       }
     }
   };
   
-  const decrementTributeStat = () => {
-    const indexTributeStats = tributeStats.slice().reverse().findIndex(isConsumed => isConsumed);
+  
+  const decrementStat = (statKey, increases, consumes) => {
+    const indexStat = stats[statKey].bar.slice().reverse().findIndex(isConsumed => isConsumed);
     const indexStatsBar = statsBar.findIndex(isConsumed => !isConsumed);
-    const cant_tributes = menu;
-    if (indexTributeStats !== -1 && indexStatsBar !== -1) {
+    if (indexStat !== -1 && indexStatsBar !== -1) {
+      const newStats = { ...stats };
       const newStatsBar = [...statsBar];
-      const newTributeStats = [...tributeStats];
-      const reversedTributeStatsIndex = tributeStats.length - 1 - indexTributeStats;
-      newTributeStats[reversedTributeStatsIndex] = false; // Deja de consumir un stat de tributo
-      
-      // Verificar que siempre haya al menos 4 elementos true en newTributeStats
-      const trueElementsCount = newTributeStats.filter(isConsumed => isConsumed).length;
-  
-      if (trueElementsCount >= 0) {
-        // Devuelve 4 stats a las disponibles
-        for (var i = 0; i < 4; i++) {
-          const newIndex = indexStatsBar + i;
-          newStatsBar[newIndex] = true;
-        }
-        setTributeStats(newTributeStats);
-        setStatsBar(newStatsBar);
-        cant_tributes.cant_tributes--;
-        setMenu(cant_tributes);
+      const reversedStatsIndex = newStats[statKey].bar.length - 1 - indexStat;
+      newStats[statKey].bar[reversedStatsIndex] = false;
+      for (let i = 0; i < consumes; i++) {
+        const newIndexStatsBar = indexStatsBar + i;
+        newStatsBar[newIndexStatsBar] = true;
+        console.log('barra index al decre: ', newIndexStatsBar);
+        console.log('barra avS al decre: ',newStatsBar);
       }
+      const updatedMenu = { ...menu, [statKey]: menu[statKey] - increases };
+      console.log('barra al decre: ',newStats[statKey].bar)
+      setStats(newStats);
+      setStatsBar(newStatsBar);
+      setMenu(updatedMenu);
     }
   };
+  
 
   const handleStartGame = () => {
     if (onViewChange && selectedCharacter != null) {
@@ -197,8 +131,6 @@ export default function Menu({ onViewChange }) {
       setIsReady(false);
     }
   }, [statsBar]);
-  
-  const [menu, setMenu] = useState(null);
   
   useEffect(() => {
     const getMenu = async() => {
@@ -230,9 +162,6 @@ export default function Menu({ onViewChange }) {
 
   };
 
-
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
-
   return (
     <div className="menu-container">
       <div className="choose-character-container">
@@ -248,18 +177,24 @@ export default function Menu({ onViewChange }) {
       </div>
       <div className="stats-settings-container">
         <div>
-          <strong className="available-stats">Available Stats <StatsBar stats={statsBar} /></strong>
+        <strong className="available-stats">
+            Available Stats <StatsBar stats={statsBar} />
+          </strong>
         </div>
         <div className="bars-container">
-          <IncrementableBar attribute="Life:" stats={lifeStats} onIncrement={() => incrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} onDecrement={() => decrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} value={menu ? menu.life : 0}/>
-          <IncrementableBar attribute="Force:" stats={forceStats} onIncrement={() => incrementStat(forceStats, setForceStats, 'force', menu, setMenu, 2)} onDecrement={() => decrementStat(forceStats, setForceStats, 'force', menu, setMenu, 2)} value={menu ? menu.force : 0}/>
-          <IncrementableBar attribute="Alliance:" stats={allianceStats} onIncrement={() => incrementStat(allianceStats, setAllianceStats, 'alliance', menu, setMenu, 1)} onDecrement={() => decrementStat(allianceStats, setAllianceStats, 'alliance', menu, setMenu, 1)} value={menu ? menu.alliance : 0}/>
-          <IncrementableBar attribute="Cowardice:" stats={cowardiceStats} onIncrement={() => incrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} onDecrement={() => decrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} value={menu ? menu.cowardice : 0}/>
-          <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} value={menu ? menu.cant_tributes : 0}/>
+          {Object.entries(stats).map(([key, { attribute, bar, increases, consumes }]) => (
+            <IncrementableBar
+              key={key}
+              attribute={`${attribute}:`}
+              stats={bar}
+              onIncrement={() => incrementStat(key, increases, consumes)}
+              onDecrement={() => decrementStat(key, increases, consumes)}
+              value={menu ? menu[key] : 0}
+            />
+          ))}
         </div>
         <InitGameButton isReady={isReady} onClick={handleStartGame} />
-    </div>
+      </div>
     </div>
   );
-
 }
