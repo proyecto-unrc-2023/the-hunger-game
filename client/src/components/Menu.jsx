@@ -66,7 +66,7 @@ export default function Menu({ onViewChange }) {
   // Estado de la barra de stats disponibles
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   // Estados de las barras incrementables
-  const [stats, setStats] = useState(bars);
+  const [stats, setStats] = useState({...bars});
   // Estado para regular el inicio de la simulacion
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
   // Estado para llevar las configuracion inicial, parcial y final del distrito
@@ -74,6 +74,7 @@ export default function Menu({ onViewChange }) {
   // Estado para llevar el personaje seleccionado
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   // Seteo el id del juego con la respuesta del POST
+  const { setGameID } = useGame();
 
   const incrementStat = (statKey, increases, consumes) => {
     const indexStat = stats[statKey].bar.findIndex(isConsumed => !isConsumed);
@@ -109,43 +110,44 @@ export default function Menu({ onViewChange }) {
       for (let i = 0; i < consumes; i++) {
         const newIndexStatsBar = indexStatsBar + i;
         newStatsBar[newIndexStatsBar] = true;
-        console.log('barra index al decre: ', newIndexStatsBar);
-        console.log('barra avS al decre: ',newStatsBar);
       }
       const updatedMenu = { ...menu, [statKey]: menu[statKey] - increases };
-      console.log('barra al decre: ',newStats[statKey].bar)
       setStats(newStats);
       setStatsBar(newStatsBar);
       setMenu(updatedMenu);
     }
   };
-  
 
   // Al darle click al boton de start simulation
   const handleStartGame = () => {
-    if (onViewChange && selectedCharacter != null) {
+    if (isReady && selectedCharacter != null) {
       sendDataToServer();
       onViewChange('game'); 
-    } else {
-      console.error('Erroraso');
     }
   };
 
-  // Regula que todas las stats disponibles sean distribuidas
+  // Regula que todas las stats disponibles sean distribuidas y que se elija un personaje
   useEffect(() => {
-    if (!statsBar.includes(true)) {
+    if (!statsBar.includes(true) && selectedCharacter != null) {
       setIsReady(true);
     } else {
       setIsReady(false);
     }
-  }, [statsBar]);
+  }, [statsBar, selectedCharacter]);
   
   // Hago un fetch para obtener configuraciones iniciales
   useEffect(() => {
     const getMenu = async() => {
       const data = await fetch("http://localhost:5000/game/district"); 
       const result = await data.json();
+      // Asegurarse de que las barras se inicialicen vacías
+      const updatedStats = {};
+      Object.entries(bars).forEach(([key, { attribute, increases, consumes }]) => {
+        const filledBar = Array(bars[key].bar.length).fill(false);
+        updatedStats[key] = { attribute, bar: filledBar, increases, consumes };
+      });
       setMenu(result);
+      setStats(updatedStats);
     }
     getMenu();
   }, []);
