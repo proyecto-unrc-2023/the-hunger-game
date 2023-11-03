@@ -9,12 +9,12 @@ function InitGameButton({ isReady, onClick }) {
 };
 
 const characters = {
-  characterOne: '/board-images/characters/female_adventurer_walk1.png',
-  characterTwo: '/board-images/characters/female_person_walk1.png',
-  characterThree: '/board-images/characters/male_person_walk1.png',
-  characterFour: '/board-images/characters/male_adventurer_walk1.png',
-  characterFive: '/board-images/characters/robot_walk1.png',
-  characterSix: '/board-images/characters/zombie_walk1.png',
+  0: '/board-images/characters/female_adventurer_walk1.png',
+  1: '/board-images/characters/male_adventurer_walk1.png',
+  2: '/board-images/characters/female_person_walk1.png',
+  3: '/board-images/characters/male_person_walk1.png',
+  4: '/board-images/characters/robot_walk1.png',
+  5: '/board-images/characters/zombie_walk1.png',
 };
 
 function CharacterCard({ characterKey, image, isSelected, onSelect }) {
@@ -72,7 +72,7 @@ export default function Menu({ onViewChange }) {
   // Estado para llevar las configuracion inicial, parcial y final del distrito
   const [menu, setMenu] = useState(null);
   // Estado para llevar el personaje seleccionado
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const { selectedCharacter, setSelectedCharacter } = useGame();
   // Seteo el id del juego con la respuesta del POST
   const { setGameID } = useGame();
 
@@ -122,7 +122,7 @@ export default function Menu({ onViewChange }) {
   const handleStartGame = () => {
     if (isReady && selectedCharacter != null) {
       sendDataToServer();
-      onViewChange('game'); 
+      onViewChange('game');
     }
   };
 

@@ -2,7 +2,7 @@ import React from "react";
 import "./Board.css";
 import Cell from './Cell';
 
-const Board = ({ size, boardState, selectedCharacter}) => {
+const Board = ({ size, boardState}) => {
   const extraCells = 3;
   const extra = extraCells * 2;
 
@@ -24,8 +24,6 @@ const Board = ({ size, boardState, selectedCharacter}) => {
         <Cell
           key={`${rowIndex}-${columnIndex}`}
           state={cellState}
-          selectedCharacter = {selectedCharacter}
-          // onClick={() => onCellClick(rowIndex, columnIndex)}
         />
       );
     }

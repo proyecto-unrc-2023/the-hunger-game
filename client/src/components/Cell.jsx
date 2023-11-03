@@ -1,26 +1,9 @@
 import React from 'react';
+import { useGame } from "./GameContext";
 
-const Cell = ({ state, onClick, selectedCharacter}) => {
-  
-  const renderTributeImage = (character) => {
-    // Lógica para determinar qué imagen mostrar según selectedCharacter
-    switch (character) {
-      case 'characterOne':
-        return Tribute0Walk1;
-      case 'characterTwo':
-        return Tribute1Walk1;
-      case 'characterThree':
-        return Tribute2Walk1;
-      case 'characterFour':
-        return Tribute3Walk1;
-      case 'characterFive':
-        return Tribute4Walk1;
-      case 'characterSix':
-        return Tribute5Walk1;
-      default:
-        return Tribute0Walk1; // Imagen predeterminada si no hay coincidencia
-    }
-  };
+const Cell = ({state}) => {
+  const { selectedCharacter } = useGame(); 
+  // characters ahora contendrá las imágenes actualizadas para todos los tributos
   const Pointer = "/board-images/characters/pointer.png";
   const GrassImage = "/board-images/grass3.png";
   const BorderRImage = "/board-images/border-r.png";
@@ -66,6 +49,24 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
   const HealImage = "/board-images/items/heal.png";
   const PoisonImage = "/board-images/items/poison.png";
   const ForceImage = "/board-images/items/force.png";
+
+  const renderTributeImage = (selectedTribute) => {
+    const tributeImages = [
+      Tribute0Walk1,
+      Tribute1Walk1,
+      Tribute2Walk1,
+      Tribute3Walk1,
+      Tribute4Walk1,
+      Tribute5Walk1,
+    ];
+  
+    const result = [];
+    for (let i = 0; i < tributeImages.length; i++) {
+      result.push(tributeImages[(parseInt(selectedTribute) + i) % tributeImages.length]);
+    }
+  
+    return result;
+  };
 
   const renderContent = () => {
     switch (state) {
@@ -140,7 +141,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
               <div className='pointer'><img src={Pointer} alt='Pointer' /></div>
-              <img src={renderTributeImage(selectedCharacter)} alt="Tribute 0 Tile" />
+              <img src={renderTributeImage(selectedCharacter)[0]} alt="Tribute 0 Tile" />
             </div>
           </div>
         );
@@ -152,7 +153,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute1Walk1} alt="Tribute 1 Tile" />
+              <img src={renderTributeImage(selectedCharacter)[1]} alt="Tribute 1 Tile" />
             </div>
           </div>
         );
@@ -164,7 +165,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute2Walk1} alt="Tribute 2 Tile" />
+              <img src={renderTributeImage(selectedCharacter)[2]} alt="Tribute 2 Tile" />
             </div>
           </div>
         );
@@ -176,7 +177,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute3Walk1} alt="Tribute 3 Tile" />
+              <img src={renderTributeImage(selectedCharacter)[3]} alt="Tribute 3 Tile" />
             </div>
           </div>
         );
@@ -188,7 +189,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute4Walk1} alt="Tribute 4 Tile" />
+              <img src={renderTributeImage(selectedCharacter)[4]} alt="Tribute 4 Tile" />
             </div>
           </div>
         );
@@ -200,7 +201,7 @@ const Cell = ({ state, onClick, selectedCharacter}) => {
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
             <div className='board-tribute'>
-              <img src={Tribute5Walk1} alt="Tribute 5 Tile" />
+              <img src={renderTributeImage(selectedCharacter)[5]} alt="Tribute 5 Tile" />
             </div>
           </div>
         );
