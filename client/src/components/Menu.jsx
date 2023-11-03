@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Menu.css";
+import { useGame } from "./GameContext";
 
 function IncrementButton({ onClick }) {
   return (
@@ -60,13 +61,24 @@ function InitGameButton({ isReady, onClick }) {
 }
 
 export default function Menu({ onViewChange }) {
+  // Estado de la barra de stats disponibles
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
+
+  // Estados de las barras incrementables
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
   const [forceStats, setForceStats] = useState(Array(10).fill(false));
   const [allianceStats, setAllianceStats] = useState(Array(7).fill(false));
   const [cowardiceStats, setCowardiceStats] = useState(Array(5).fill(false));
   const [tributeStats, setTributeStats] = useState(Array(10).fill(false));
+
+  // Estado para regular el inicio de la simulacion
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
+  
+  // Estado para llevar las configuracion inicial, parcial y final del distrito
+  const [menu, setMenu] = useState(null);
+
+  // Seteo el id del juego con la respuesta del POST
+  const { setGameID } = useGame();
 
   const incrementStat = (statArray, setStatArray, statKey, menu, setMenu, value) => {
     const indexStat = statArray.findIndex((isConsumed) => !isConsumed);
@@ -160,6 +172,7 @@ export default function Menu({ onViewChange }) {
     }
   };
 
+  // Al darle click al boton de start simulation
   const handleStartGame = () => {
     if (isReady) {
       onViewChange("game");
@@ -167,6 +180,7 @@ export default function Menu({ onViewChange }) {
     }
   };
 
+  // Regula que todas las stats disponibles sean distribuidas
   useEffect(() => {
     if (!statsBar.includes(true)) {
       setIsReady(true);
@@ -175,8 +189,7 @@ export default function Menu({ onViewChange }) {
     }
   }, [statsBar]);
   
-  const [menu, setMenu] = useState(null);
-  
+  // Hago un fetch para obtener configuraciones iniciales
   useEffect(() => {
     const getMenu = async() => {
       const data = await fetch("http://localhost:5000/game/district"); 
@@ -186,25 +199,31 @@ export default function Menu({ onViewChange }) {
     getMenu();
   }, []);
 
+  // Envio al back las stats configuradas por el usuario
   const sendDataToServer = async () => {
     const dataToSend = {
       ...menu,
     };
   
-    const response = await fetch("http://localhost:5000/game/district", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Con esto nos aseguramos que los datos se envíen como JSON
-      },
-      body: JSON.stringify(dataToSend), // Convierte los datos en una cadena JSON
-    });
-
-    if (response.ok) {
-      console.log("Post request succeeded");
-    } else {
-      console.error("Post request failed");
+    try {
+      const response = await fetch("http://localhost:5000/game/district", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        const gameIdFromResponse = data.game_id;
+        setGameID(gameIdFromResponse); // Establecer el game_id en el contexto
+      } else {
+        console.error("Post request failed");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
-
   };
   
   return (

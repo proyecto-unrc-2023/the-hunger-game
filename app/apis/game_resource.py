@@ -52,12 +52,3 @@ class Game(Resource):
         response = {game_id: result}
 
         return response
-
-
-class LastGame(Resource):
-
-    def get(self):
-        last_game_id = len(games) - 1
-        if last_game_id < 0:
-            return {"error": "No games available"}, 404
-        return {'game_id': last_game_id}
