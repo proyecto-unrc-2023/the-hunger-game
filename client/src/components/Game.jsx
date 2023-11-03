@@ -135,8 +135,8 @@ const Game = ({onViewChange}) => {
         <TransformComponent>
           <section className='board'>
             {!gameInitialized ? (
-              <Board boardSize={boardSize} boardState={emptyBoard} />
-              ) : ( <Board size={boardSize} boardState={boardState} />
+              <Board boardSize={boardSize} boardState={emptyBoard}/>
+              ) : ( <Board size={boardSize} boardState={boardState}/>
               )}
           </section>
         </TransformComponent>
