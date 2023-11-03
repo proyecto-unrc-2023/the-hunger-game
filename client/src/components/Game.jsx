@@ -5,7 +5,7 @@ import {
   useControls
 } from "react-zoom-pan-pinch";
 import Board from "./Board.jsx";
-// import InfoPanel from './components/InfoPanel.jsx';
+import { useGame } from "./GameContext";
 
 const ControlsZoom = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -40,28 +40,30 @@ const Game = ({onViewChange, selectedCharacter}) => {
   
   //Estado ganador
   const [winner, setWinner] = useState(null);
+  
+  //Estado del juego
+  const [gameInitialized, setGameInitialized] = useState(false);
+
+  //Estado para regular el fetch
+  const [fetchGameData, setFetchGameData] = useState(true);
+
+  //Estado para obtener el id del juego actual, se obtiene de un contexto
+  const { gameID } = useGame();
 
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
     setPaused(!isPaused);
   };
 
-  const [gameInitialized, setGameInitialized] = useState(false)
-  const [fetchGameData, setFetchGameData] = useState(true);
-
-
   const handleFinish = () => {
     //debe devolver el ganador
-    //setWinner
     onViewChange("finish");
   }
-  
-  const [gameID, setGameID] = useState(0);
 
   // Tablero vacío
   const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
   
-  
+  // Crea un juego
   const initialBoard = async () => {
     const response = await fetch(`http://localhost:5000/game/${gameID}`, {
       method: 'PUT',
@@ -83,6 +85,7 @@ const Game = ({onViewChange, selectedCharacter}) => {
     setPaused(true);
   }
 
+  // Actualiza el juego creado 
   const fetchGameInfo = async () => {
     try {
       if (fetchGameData && winner === null) {
@@ -106,9 +109,12 @@ const Game = ({onViewChange, selectedCharacter}) => {
     }
   };
  
+  // Crea un juego si es necesario y se encarga de actualizarlo cada cierto intervalo
   useEffect(() => {
-    if (!gameInitialized) {
-      initialBoard();
+    if (gameID !== null){
+      if (!gameInitialized) {
+        initialBoard();
+      }
     }
     
     const time = setInterval(() => {
@@ -120,7 +126,7 @@ const Game = ({onViewChange, selectedCharacter}) => {
     // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
   
-  }, [isPaused, gameInitialized, winner]);
+  }, [gameID, isPaused, gameInitialized, winner]);
 
   return (
     <main className="game">
