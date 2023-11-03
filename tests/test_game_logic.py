@@ -5,6 +5,7 @@ from game.logic.game_logic import GameLogic, GameMode
 from game.logic.item import Bow, Potion, PotionForce, PotionLife, PotionPoison, Spear, Sword, Weapon
 from game.logic.tribute import Tribute
 from game.logic.district import District
+from main import init_simulation
 
 
 @pytest.fixture
@@ -358,12 +359,12 @@ def test_end_game():
     district2.set_config(50, 5, 3, 2, 2, 3)
     game = GameLogic()
     game.districts.append(district1)
-    assert game.end_game() is district1  # end_game returns the only district alive
+    assert game.winner_district() == district1.get_number_district()  # end_game returns the only district alive
     game.districts.append(district2)
-    assert game.end_game() is False
+    assert game.game_ended() is False
     game2 = GameLogic()
     with pytest.raises(ValueError):
-        game2.end_game()
+        game2.game_ended()
     # assert neutro.district == tribute.district
 
 
@@ -465,7 +466,7 @@ def test_applies_effects_complex():
     game.heuristic_tribute(t1)
     assert t1.force == 10
 
-
+# Test for init_simulation in main.py
 def test_init_simulation_inputs_one(monkeypatch):
     game = GameLogic()
     user_inputs = iter(['1', '5', '4', '4', '2', '1', 'n']) 
@@ -474,14 +475,14 @@ def test_init_simulation_inputs_one(monkeypatch):
         return next(user_inputs)
     
     monkeypatch.setattr('builtins.input', mock_input)
-    game.init_simulation(15, 15)
+    init_simulation(15, 15, game)
     my_district = game.districts[0]
 
     for i in range(len(my_district.tributes)):
         tribute_my_district = my_district.tributes[i]
         assert tribute_my_district.district == 0
  
-
+# Test for init_simulation in main.py
 def test_init_simulation_inputs_two(monkeypatch):
     game = GameLogic()
     user_inputs = iter(['3', '2', '5', '5', '2', '3', 'n'])
@@ -490,7 +491,7 @@ def test_init_simulation_inputs_two(monkeypatch):
         return next(user_inputs)
     
     monkeypatch.setattr('builtins.input', mock_input)
-    game.init_simulation(15, 15)
+    init_simulation(15, 15, game)
     my_district = game.districts[0]
 
     for i in range(len(my_district.tributes)):
@@ -670,7 +671,7 @@ def test_configure_random_districts():
         assert district.cant_tributes == 4
         assert district.number_district != 0
 
-def test_one_iteration_with_winner_district():
+def test_one_iteration_front_with_winner_district():
     game = GameLogic()
     game.new_game(3, 3)
     #config t0

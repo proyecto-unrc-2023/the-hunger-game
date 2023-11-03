@@ -49,22 +49,18 @@ class GameLogic:
     # Row and Column are the position of tribute
     def put_tribute(self, row, column, tribute):
         district = tribute.district
-        district_aux = District()
-        letters = "tabcdefghijklm"
         if len(self.districts) == district:
+            district_aux = District()
             district_aux.number_district = district
             district_aux.add_tribute(tribute)
+            district_aux.asign_name_tribute(tribute)
             self.districts.append(district_aux)
             self.board.put_tribute(row, column, tribute)
-            tribute.name = letters[district_aux.cant_tributes - 1] + str(
-                district_aux.number_district
-            )
+
         else:
             self.board.put_tribute(row, column, tribute)
             self.districts[tribute.district].add_tribute(tribute)
-            tribute.name = letters[
-                self.districts[tribute.district].cant_tributes - 1
-            ] + str(self.districts[tribute.district].number_district)
+            self.districts[tribute.district].asign_name_tribute(tribute)
 
     # Remove a Tribute of the board and of its district
     def remove_tribute(self, tribute):
@@ -103,51 +99,50 @@ class GameLogic:
 
     # Returns the closest occupied cell to the tribute.
     def tribute_vision_closeness(self, tribute):
-        def calculate_distance(cell):
-            distance = (
-                (cell.get_pos()[0] - tribute.pos[0]) ** 2
-                + (cell.get_pos()[1] - tribute.pos[1]) ** 2
-            ) ** 0.5
-            if cell.get_state() == State.ITEM:
-                if cell.get_item() == Weapon():
-                    distance -= 0.9
-                else:
-                    distance -= 0.8
-            elif cell.get_state() == State.TRIBUTE:
-                if cell.get_tribute().district is None:
-                    distance -= 0.001
-
-            return distance
-
         vision_cells = tribute.tribute_vision_cells(self.board)
+        occupied_cells = self.calculate_occupied_cells(vision_cells, tribute)
+        occupied_cells.sort(key=lambda cell: self.calculate_distance(cell, tribute))
+        if not occupied_cells:
+            return False
 
+        return occupied_cells[0]
+
+    def calculate_distance(self, cell, tribute):
+        distance = (
+                           (cell.get_pos()[0] - tribute.pos[0]) ** 2
+                           + (cell.get_pos()[1] - tribute.pos[1]) ** 2
+                   ) ** 0.5
+        if cell.get_state() == State.ITEM:
+            if cell.get_item() == Weapon():
+                distance -= 0.9
+            else:
+                distance -= 0.8
+        elif cell.get_state() == State.TRIBUTE:
+            if cell.get_tribute().district is None:
+                distance -= 0.001
+
+        return distance
+
+    @staticmethod
+    def calculate_occupied_cells(vision_cells, tribute):
         occupied_cells = [
             cell
             for cell in vision_cells
-            if cell.get_state() == State.ITEM
-            or (
-                cell.get_state() == State.TRIBUTE
-                and cell.get_tribute().district != tribute.district
+            if cell.get_state() == State.ITEM or (
+                    cell.get_state() == State.TRIBUTE and
+                    cell.get_tribute().district != tribute.district
             )
-            # && cell.get_state() != State.TRIBUTE para que sólo se fije en los ítems
-            # && cell.get_state() != State.ITEM para que sólo se fije en los tributos
         ]
 
         if tribute.weapon:
             occupied_cells = [
                 cell
                 for cell in occupied_cells
-                if cell.state == State.ITEM
-                and cell.get_item().is_weapon() is False
+                if cell.state == State.ITEM and cell.get_item().is_weapon() is False
                 or cell.state == State.TRIBUTE
             ]
 
-        occupied_cells.sort(key=calculate_distance)
-
-        if not occupied_cells:
-            return False
-
-        return occupied_cells[0]
+        return occupied_cells
 
     # Simulates combat between two tributes, moving 'tribute' towards 'tribute2'
     # and removing 'tribute2' if defeated.
@@ -157,27 +152,32 @@ class GameLogic:
         if tribute.range == 3:
             tribute.attack_to(tribute2, self.board)
         elif tribute.range == 2:
-            if (x, y) in tribute.get_neighbors_2_distance(self.board) or (
-                x,
-                y,
-            ) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
-                tribute.attack_to(tribute2, self.board)
-            else:
-                pos = tribute.move_closer_to(x, y, self.board)
-                tribute.move_to(pos[0], pos[1], self.board)
+            self.attack_in_range_2(tribute, tribute2, x, y)
         else:
-            if (x, y) in self.board.get_adjacent_positions(
-                tribute.pos[0], tribute.pos[1]
-            ):
-                tribute.attack_to(tribute2, self.board)
-            else:
-                pos = tribute.move_closer_to(x, y, self.board)
-                tribute.move_to(pos[0], pos[1], self.board)
-
+            self.attack_in_range_1(tribute, tribute2, x, y)
         if tribute2.is_dead():
             self.remove_tribute(tribute2)
             tribute.enemy = None
 
+    def attack_in_range_2(self, tribute, tribute2, x, y):
+        if (x, y) in tribute.get_neighbors_2_distance(self.board) or (
+            x,
+            y,
+        ) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
+            tribute.attack_to(tribute2, self.board)
+        else:
+            pos = tribute.move_closer_to(x, y, self.board)
+            tribute.move_to(pos[0], pos[1], self.board)
+
+    def attack_in_range_1(self, tribute, tribute2, x, y):
+        if (x, y) in self.board.get_adjacent_positions(
+                tribute.pos[0], tribute.pos[1]
+        ):
+            tribute.attack_to(tribute2, self.board)
+        else:
+            pos = (x, y)
+            tribute.step_to(self.board, pos)
+            
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
     def alliance_neutral(self, tribute, district):
@@ -210,7 +210,7 @@ class GameLogic:
         else:
             tribute.step_to(self.board, pos)
 
-    #A method that allows the tribute to attack the enemy if they are in range
+    # A method that allows the tribute to attack the enemy if they are in range
     # or move towards them if not
     def try_attack(self, tribute, pos):
         (x, y) = (pos[0], pos[1])
@@ -218,11 +218,11 @@ class GameLogic:
         t2 = cell.get_tribute()
         self.fight(tribute, t2)
 
-    #Method that allows the tribute to attempt aliance with an uetral
+    # Method that allows the tribute to attempt aliance with an neutral
     def try_alliance(self, tribute, cell):
         (tribute_x, tribute_y) = (tribute.pos[0], tribute.pos[1])
         if cell.get_tribute().pos in self.board.get_adjacent_positions(
-            tribute_x, tribute_y
+                tribute_x, tribute_y
         ):
             if tribute.alliance_to(cell.get_tribute()) is True:
                 district = self.districts[tribute.district]
@@ -238,7 +238,7 @@ class GameLogic:
         if cell is False:
             tribute.move_to_random(self.board)
         else:
-            if (not (tribute.enemy is None) and tribute.enemy.is_alive() and tribute.district != tribute.enemy.district):
+            if not (tribute.enemy is None) and tribute.enemy.is_alive() and tribute.district != tribute.enemy.district:
                 self.fight(tribute, tribute.enemy)
             else:
                 tribute.enemy = None
@@ -253,237 +253,25 @@ class GameLogic:
                         else:
                             self.try_attack(tribute, cell.pos)
 
-    # Check which district won (literally return a district)
-    # Return false if still in play
-    def end_game(self):
-        district_alive = District()
-        cant_of_districts_alive = 0
-        dead_districts = 0
-        if len(self.districts) == 0:
-            raise ValueError("There is not tributes in the game")
-        else:
-            for aux_district in self.districts:
-                if aux_district.get_cant_tribute() == 0:
-                    dead_districts = dead_districts + 1
-                else:
-                    cant_of_districts_alive = cant_of_districts_alive + 1
-                    if cant_of_districts_alive >= 2:
-                        return False
-                    district_alive = aux_district
-            if cant_of_districts_alive == 1:
-                return district_alive
 
     def heuristic_of_game(self):
         self.order_attack()
         if self.mode != GameMode.SIMULATION:
             raise ValueError(f"The state of the game is not SIMULATION")
-        while self.game_ended() is False:  # not self.eng_game()
+        while not self.game_ended():
             self.all_iteration()
-            if not (self.neutrals is None):  # if self.neutrals
+            if self.neutrals:
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
             line = "-" * (self.board.columns * 3 - 3)
             print(line)
             print(self.to_string())
 
-    # This method create a new board, request by console stats of your district,
-    # configure five random districts, distributes items and tributes in board
-    def init_simulation(self, rows, columns):
-        self.new_game(rows, columns)
-        # Is necessary create an instance of district here and set by default every stat.
-        district = District()
-        life, force, alliance, cowardice = (
-            LIFE_DEFAULT,
-            FORCE_DEFAULT,
-            ALLIANCE_DEFAULT,
-            COWARDICE_DEFAULT,
-        )
-        cant_tributes, number_district = TRIBUTES_DEFAULT, DISTRICT_DEFAULT
-        print(f"Board is {rows} x {columns}.")
-        print("\nBy default, your number of district is", number_district)
-        var_yes, points = "y", 10
-        while var_yes == "y":
-            print("\nYou have", points, "points available to distribute on:")
-            print("1. Life")
-            print("2. Force")
-            print("3. Alliance")
-            print("4. Tributes")
-            print("5. Cowardice")
-            try:
-                choice = int(
-                    input(
-                        "¿Where do you want to spend your points? Choose a number (1 - 5): "
-                    )
-                )
-                # Choice 1 Life
-                if choice == 1:
-                    while True:
-                        life_points = int(
-                            input("How many points do you want to spend on Life?: ")
-                        )
-                        if 1 <= life_points <= points:
-                            life = life + (5 * life_points)
-                            points -= life_points
-                            print("Life increased to:", life)
-                            break
-                        else:
-                            print("Invalid input. You have", points, "points.")
-                # Choice 2 Force
-                elif choice == 2:
-                    while True:
-                        force_points = int(
-                            input("How many points do you want to spend on Force?: ")
-                        )
-                        if 1 <= force_points <= points:
-                            force = force + (2 * force_points)
-                            points -= force_points
-                            print("Force increased to:", force)
-                            break
-                        else:
-                            print("Invalid input. You have", points, "points.")
-                # Choice 3 Alliance
-                elif choice == 3:
-                    while True:
-                        alli_points = int(
-                            input("How many points do you want to spend on Alliance?: ")
-                        )
-                        if alliance == 10:
-                            print(
-                                "Alliance is at 10. You can't spend more points on it."
-                            )
-                            break
-                        if 1 <= alli_points <= points and alli_points <= 7:
-                            alliance += alli_points
-                            points -= alli_points
-                            print("Alliance increased by:", alliance)
-                            break
-                        elif 7 < alli_points <= 10:
-                            print("The limit for spending points on alliance is 7.")
-                            break
-                        else:
-                            print("Invalid input. You have", points, "points.")
-                # Choice 4 Tributes
-                elif choice == 4:
-                    while True:
-                        tributes_points = int(
-                            input(
-                                "How many points do you want to spend on Tributes? Each tribute costs 4 points: "
-                            )
-                        )
-                        if tributes_points in (4, 8):
-                            required_points = tributes_points
-                            num_tributes = tributes_points // 4
-                            if points >= required_points:
-                                cant_tributes += num_tributes
-                                points -= required_points
-                                print(
-                                    "The number of tributes increased to:",
-                                    cant_tributes,
-                                )
-                                break
-                            else:
-                                print(
-                                    "You don't have enough points for this operation. You have",
-                                    points,
-                                    "points.",
-                                )
-                                break
-                        else:
-                            print(
-                                "Invalid input. You should enter 4 or 8 points to spend on Tributes."
-                            )
-                # Choice 5 Cowardice
-                elif (
-                    choice == 5
-                ):  # crear metodos para encapsular la entrada por consola
-                    while True:
-                        cowardice_points = int(
-                            input(
-                                "How many points do you want to spend on Cowardice?: "
-                            )
-                        )
-                        if cowardice == 5:
-                            print(
-                                "Cowardice is at 5. You can't spend more points on it."
-                            )
-                            break
-                        if 1 <= cowardice_points <= points and cowardice_points <= 5:
-                            cowardice += cowardice_points
-                            points -= cowardice_points
-                            print("Cowardice increased by:", cowardice)
-                            break
-                        elif 5 < cowardice_points <= 10:
-                            print("The limit for spending points on cowardice is 5.")
-                            break
-                        else:
-                            print("Invalid input. You have", points, "points.")
-                else:
-                    print("Invalid option. Please choose a number between 1 and 4.")
-
-            except ValueError:
-                print("Invalid input. Please enter a valid number (1 - 5).")
-            # If you spent all points then it asks if you want to reconfigure the district
-            if points <= 0:
-                print("\nYou have spent all your points.")
-                print(
-                    "The stats of your district are: \nLife:",
-                    life,
-                    "\nForce:",
-                    force,
-                    "\nAlliance:",
-                    alliance,
-                    "\nTributes:",
-                    cant_tributes,
-                    "\nCowardice:",
-                    cowardice,
-                )
-                var_yes = (
-                    input("Do you want to redistribute the points (y / n)?: ")
-                    .strip()
-                    .lower()
-                )
-                while var_yes not in ("y", "n"):
-                    var_yes = input("Invalid input. Enter (y / n): ").strip().lower()
-
-                # Choice y, then sets all stats like in beginning
-                if var_yes == "y":
-                    life, force, alliance, cowardice = (
-                        LIFE_DEFAULT,
-                        FORCE_DEFAULT,
-                        ALLIANCE_DEFAULT,
-                        COWARDICE_DEFAULT,
-                    )
-                    # Remove tributes
-                    for tribute in district.tributes:
-                        district.remove_tribute(tribute)
-                    cant_tributes, points = TRIBUTES_DEFAULT, 10
-
-        if rows * columns < cant_tributes + 20:
-            print("You must creat a board more bigger.")
-            return
-        # Configure own district
-        district.set_config(
-            life, force, alliance, number_district, cant_tributes, cowardice
-        )
-        self.districts.append(district)
-        # Configure others districts
-        self.configure_random_districts()
-        # Distribute potions and weapons
-        self.distribute_items()
-        # Distribute tributes of all districts
-        self.distribute_district_tributes()
-        # Distribute neutrals tributes
-        self.distribute_neutral_tributes(10)
-
-        self.mode = GameMode.SIMULATION
-        print(self.to_string())
-        self.heuristic_of_game()
-
     def one_iteration(self):
         for district in self.districts:
             for tribute in district.tributes:
                 self.heuristic_tribute(tribute)
-        if not (self.neutrals is None):
+        if self.neutrals:
             for neutral in self.neutrals:
                 self.neutral_heuristic(neutral)
         return self
@@ -591,6 +379,8 @@ class GameLogic:
 
     # Method to check if game is ended
     def game_ended(self):
+        if len(self.districts) == 0:
+            raise ValueError("There is not tributes in the game")
         districts_alive = 0
         for i in range(self.districts.__len__()):
             if self.districts[i].cant_tributes >= 1:
@@ -607,11 +397,11 @@ class GameLogic:
             for i in range(len(self.districts)):
                 if self.districts[i].cant_tributes >= 1:
                     self.winner = self.districts[i].number_district
-        return self
+        return self.winner
 
     # Set stats of own district. Front use this method
     def set_parameters(
-        self, number_district, life, force, alliance, cant_tributes, cowardice
+            self, number_district, life, force, alliance, cant_tributes, cowardice
     ):
         my_district = District()
         my_district.set_config(
@@ -636,7 +426,7 @@ class GameLogic:
             for district in self.districts:
                 for tribute in district.tributes:
                     self.heuristic_tribute(tribute)
-            if not (self.neutrals is None):
+            if self.neutrals:
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
             return self

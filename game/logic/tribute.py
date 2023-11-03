@@ -11,6 +11,12 @@ ALLIANCE_DEFAULT = 3
 RANGE_DEFAULT = 1
 COWARDICE_DEFAULT = 0
 MAX_COWARDICE = 5
+POSSIBLE_POSITIONS = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1),
+                      (-2, 0), (2, 0), (0, -2), (0, 2), (-2, -1), (-2, 1), (-1, -2), (-1, 2),
+                      (-2, -2), (-2, 2), (1, -2), (1, 2), (2, -1), (2, 1), (2, -2), (2, 2),
+                      (-3, 0), (3, 0), (0, -3), (0, 3), (-3, -2), (-3, -1), (-3, 1), (-3, 2),
+                      (-2, -3), (-2, 3), (-1, -3), (-1, 3), (-3, -3), (-3, 3), (1, -3), (1, 3),
+                      (2, -3), (2, 3), (3, -2), (3, -1), (3, 2), (3, 1), (3, -3), (3, 3)]
 
 
 class Tribute:
@@ -117,7 +123,7 @@ class Tribute:
     # Moves a tribute to a specific position on the board.
     def move_to(self, x, y, board):
         from game.logic.cell import State
-        
+
         board.remove_tribute(self)
         if not (board.valid_pos(self.pos)):
             raise ValueError(f'Position no valid')
@@ -144,15 +150,13 @@ class Tribute:
     # Method to determine the cells that are free within a two-cell distance
     def get_neighbors_2_distance_free(self, board):
         from game.logic.cell import State
-        
-        (x, y) = self.pos
         neighbors = []
 
         possible_neighbors = self.get_neighbors_2_distance(board)
 
         for pos in possible_neighbors:
             if (0 <= pos[0] < board.rows) and (0 <= pos[1] < board.columns):
-                if (board.get_element(pos[0], pos[1]).get_state() == State.FREE):
+                if board.get_element(pos[0], pos[1]).get_state() == State.FREE:
                     neighbors.append((pos[0], pos[1]))
 
         return neighbors
@@ -175,27 +179,26 @@ class Tribute:
 
         return neighbors
 
-    #Method to know if a tribute has to escape down or up, left or right
+    # Method to know if a tribute has to escape down or up, left or right
     def flee_direction(self, enemy):
-        (tribute_x,tribute_y) = self.pos
+        (tribute_x, tribute_y) = self.pos
         (enemy_x, enemy_y) = enemy.pos
-        x_escape, y_escape = [], []
-        if (enemy_x > tribute_x):
+        if enemy_x > tribute_x:
             x_escape = [tribute_x - 2, tribute_x - 1, tribute_x]
         else:
             x_escape = [tribute_x + 2, tribute_x + 1, tribute_x]
-        if (enemy_y > tribute_y):
+        if enemy_y > tribute_y:
             y_escape = [tribute_y - 2, tribute_y - 1, tribute_y]
         else:
             y_escape = [tribute_y + 2, tribute_y + 1, tribute_y]
-        return (x_escape, y_escape)
-    
-    #Method for calculate the best escape for a tribute with cowardice
+        return x_escape, y_escape
+
+    # Method for calculate the best escape for a tribute with cowardice
     def calculate_flee(self, enemy, board):
         neighbors = self.get_neighbors_2_distance_free(board)
         if neighbors is None:
             return False
-        (x_escape,y_escape) = self.flee_direction(enemy)
+        (x_escape, y_escape) = self.flee_direction(enemy)
         for x in x_escape:
             for y in y_escape:
                 if (x, y) in neighbors:
@@ -209,19 +212,11 @@ class Tribute:
         visible_positions = []
         row = self.pos[0]
         column = self.pos[1]
-
         # Checks adjacent cells within a 3 radius.
-        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1),
-                       (-2, 0), (2, 0), (0, -2), (0, 2), (-2, -1), (-2, 1), (-1, -2), (-1, 2),
-                       (-2, -2), (-2, 2), (1, -2), (1, 2), (2, -1), (2, 1), (2, -2), (2, 2),
-                       (-3, 0), (3, 0), (0, -3), (0, 3), (-3, -2), (-3, -1), (-3, 1), (-3, 2),
-                       (-2, -3), (-2, 3), (-1, -3), (-1, 3), (-3, -3), (-3, 3), (1, -3), (1, 3),
-                       (2, -3), (2, 3), (3, -2), (3, -1), (3, 2), (3, 1), (3, -3), (3, 3)]:
+        for dr, dc in POSSIBLE_POSITIONS:
             new_row, new_column = row + dr, column + dc
-
             if 0 <= new_row < board.rows and 0 <= new_column < board.columns:
                 visible_positions.append((new_row, new_column))
-
         return visible_positions
 
     # Returns the list of visible cells for a tribute.
@@ -241,9 +236,10 @@ class Tribute:
 
     # Method to move the tribute one cell closer to the position
     def step_to(self, board, pos):
-        (x,y) = pos
+        (x, y) = pos
         pos = self.move_closer_to(x, y, board)
         self.move_to(pos[0], pos[1], board)
+
 
 class TributeSchema(Schema):
     name = fields.Str()

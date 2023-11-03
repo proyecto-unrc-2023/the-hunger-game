@@ -45,18 +45,12 @@ class Game(Resource):
         
         # Return current state of game 
         next_iteration = controller.get_one_iteration(actual_game)
-        # Return winner
-        winner = controller.get_winner_district(actual_game)
 
         result_schema = GameLogicSchema()
         result = result_schema.dump(next_iteration)
         
         response = {game_id: result}
 
-        if winner is not None:
-            response["winner"] = winner
-
-        print(response) # imprimo por consola los valores arrojados, solo para ver
         return response
 
 

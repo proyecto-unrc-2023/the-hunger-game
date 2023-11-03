@@ -39,7 +39,7 @@ const Game = ({onViewChange, selectedCharacter}) => {
   const [isPaused, setPaused] = useState(true);
   
   //Estado ganador
-  // const [winner, setWinner] = useState(null);
+  const [winner, setWinner] = useState(null);
 
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
@@ -47,6 +47,8 @@ const Game = ({onViewChange, selectedCharacter}) => {
   };
 
   const [gameInitialized, setGameInitialized] = useState(false)
+  const [fetchGameData, setFetchGameData] = useState(true);
+
 
   const handleFinish = () => {
     //debe devolver el ganador
@@ -56,29 +58,11 @@ const Game = ({onViewChange, selectedCharacter}) => {
   
   const [gameID, setGameID] = useState(0);
 
-  const getLastId = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/game/last_id`, {
-        method: 'GET',
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setGameID(data.game_id);
-      } else {
-        console.error('Error al obtener el último game_id');
-      }
-    } catch (error) {
-      console.error('Error en la solicitud de getLastId:', error);
-    }
-  };
-  
   // Tablero vacío
   const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
   
   
   const initialBoard = async () => {
-    getLastId();
     const response = await fetch(`http://localhost:5000/game/${gameID}`, {
       method: 'PUT',
     });
@@ -97,15 +81,11 @@ const Game = ({onViewChange, selectedCharacter}) => {
     }
     setGameInitialized(true);
     setPaused(true);
-  };
- 
+  }
 
-  useEffect(() => {
-    if (!gameInitialized) {
-      initialBoard();
-    }
-    const fetchGameInfo = async () => {
-      try {
+  const fetchGameInfo = async () => {
+    try {
+      if (fetchGameData && winner === null) {
         const response = await fetch(`http://localhost:5000/game/${gameID}`, {
           method: 'GET',
         });
@@ -113,16 +93,24 @@ const Game = ({onViewChange, selectedCharacter}) => {
           const data = await response.json();
           const gameData = Object.values(data)[0];
           setBoardState(gameData.board.board);
-          setBoardSize(gameData.board.rows)
-        } else {
-          // Manejar errores de la solicitud, si es necesario
+          setBoardSize(gameData.board.rows);
+          
+          if (gameData.winner !== null) {
+            setFetchGameData(false);
+            setWinner(gameData.winner);
+          }
         }
-      } catch (error) {
-        console.error("Error fetching game information:", error);
       }
-    };
-
-    // Actualizar la información del juego cada 500 ms si no está pausado
+    } catch (error) {
+      console.error("Error fetching game information:", error);
+    }
+  };
+ 
+  useEffect(() => {
+    if (!gameInitialized) {
+      initialBoard();
+    }
+    
     const time = setInterval(() => {
       if (!isPaused) {
         fetchGameInfo();
@@ -131,24 +119,9 @@ const Game = ({onViewChange, selectedCharacter}) => {
 
     // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
-
-  }, [gameID, isPaused, gameInitialized]);
   
+  }, [isPaused, gameInitialized, winner]);
 
-  // const [selectedCell, setSelectedCell] = useState(null);
-
-  // Función para manejar clics en las celdas
-  // const handleCellClick = (row, col) => {
-  //   const clickedCell = boardState[row][col];
-  //   setSelectedCell({
-  //     row,
-  //     col,
-  //     type: clickedCell,
-  //     // Puedes agregar más información aquí según sea necesario
-  //   });
-  // };  
-  
-  
   return (
     <main className="game">
       <TransformWrapper minScale={0.5}>

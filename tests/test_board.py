@@ -34,9 +34,9 @@ def test_from_string():
     expected = '  |n0|t1\n' \
                'a1|b0|a0\n' \
                'a2|n1|b2'
-    board_obj = Board.from_string(expected)[0]  # Crea el objeto Board a partir de la cadena
+    board_obj = Board.from_string(expected)[0] 
     print(board_obj.get_element(0, 1).get_tribute().name)
-    res = str(board_obj.__str__())  # Obtiene la representación de cadena del objeto Board
+    res = str(board_obj.__str__()) 
     assert expected == res
 
 
