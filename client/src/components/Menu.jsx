@@ -9,12 +9,12 @@ function InitGameButton({ isReady, onClick }) {
 };
 
 const characters = {
-  0: '/board-images/characters/female_adventurer_walk1.png',
-  1: '/board-images/characters/male_adventurer_walk1.png',
-  2: '/board-images/characters/female_person_walk1.png',
-  3: '/board-images/characters/male_person_walk1.png',
-  4: '/board-images/characters/robot_walk1.png',
-  5: '/board-images/characters/zombie_walk1.png',
+  0: '/board-images/characters/Minotaur_Walking_1.png',
+  1: '/board-images/characters/Fallen_Angels_Walking_1.png',
+  2: '/board-images/characters/Golem_Walking_1.png',
+  3: '/board-images/characters/Goblin_Walking_1.png',
+  4: '/board-images/characters/Orc_Walking_1.png',
+  5: '/board-images/characters/Reaper_Man_Walking_1.png',
 };
 
 function CharacterCard({ characterKey, image, isSelected, onSelect }) {
