@@ -182,6 +182,7 @@ class GameLogic:
     # "Tribute" is the neutral tribute who accept the alliance
     def alliance_neutral(self, tribute, district):
         tribute.district = district.get_number_district()
+        district.asign_name_tribute(tribute)
         district.tributes.append(tribute)
         district.cant_tributes = district.cant_tributes + 1
         self.neutrals.remove(tribute)

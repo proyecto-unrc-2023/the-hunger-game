@@ -1,18 +1,23 @@
 from flask import Flask
-from config import config
 from flask_cors import CORS
-from flask_restful import Api
+from config import config
+from flask_sqlalchemy import SQLAlchemy
 
-
+db = SQLAlchemy(session_options={"expire_on_commit": False})
 
 def create_app(config_name='development'):
     app = Flask(__name__)
-    app.config.from_object(config[config_name])
     CORS(app)
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+    
+    db.init_app(app)
 
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
     register_modules(app)
+    
     return app
 
 
