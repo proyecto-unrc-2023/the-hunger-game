@@ -2,7 +2,7 @@ import React from 'react';
 import { useGame } from "./GameContext";
 
 const Cell = ({state}) => {
-  const { selectedCharacter } = useGame(); 
+  const { selectedCharacter } = useGame();
   // characters ahora contendrá las imágenes actualizadas para todos los tributos
   const Pointer = "/board-images/characters/pointer.png";
   const GrassImage = "/board-images/grass3.png";
@@ -136,6 +136,14 @@ const Cell = ({state}) => {
       case 'c0':
       case 'd0':
       case 'e0':
+      case 'f0':
+      case 'g0':
+      case 'h0':
+      case 'i0':
+      case 'j0':
+      case 'k0':
+      case 'l0':
+      case 'm0':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -149,6 +157,16 @@ const Cell = ({state}) => {
       case 'a1':
       case 'b1':
       case 'c1':
+      case 'd1':
+      case 'e1':
+      case 'f1':
+      case 'g1':
+      case 'h1':
+      case 'i1':
+      case 'j1':
+      case 'k1':
+      case 'l1':
+      case 'm1':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -161,6 +179,16 @@ const Cell = ({state}) => {
       case 'a2':
       case 'b2':
       case 'c2':
+      case 'd2':
+      case 'e2':
+      case 'f2':
+      case 'g2':
+      case 'h2':
+      case 'i2':
+      case 'j2':
+      case 'k2':
+      case 'l2':
+      case 'm2':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -173,6 +201,16 @@ const Cell = ({state}) => {
       case 'a3':
       case 'b3':
       case 'c3':
+      case 'd3':
+      case 'e3':
+      case 'f3':
+      case 'g3':
+      case 'h3':
+      case 'i3':
+      case 'j3':
+      case 'k3':
+      case 'l3':
+      case 'm3':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -185,6 +223,16 @@ const Cell = ({state}) => {
       case 'a4':
       case 'b4':
       case 'c4':
+      case 'd4':
+      case 'e4':
+      case 'f4':
+      case 'g4':
+      case 'h4':
+      case 'i4':
+      case 'j4':
+      case 'k4':
+      case 'l4':
+      case 'm4':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -197,6 +245,16 @@ const Cell = ({state}) => {
       case 'a5':
       case 'b5':
       case 'c5':
+      case 'd5':
+      case 'e5':
+      case 'f5':
+      case 'g5':
+      case 'h5':
+      case 'i5':
+      case 'j5':
+      case 'k5':
+      case 'l5':
+      case 'm5':
         return (
           <div className='board-free'>
             <img src={GrassImage} alt="Free Tile" />
@@ -215,6 +273,16 @@ const Cell = ({state}) => {
       case 'n7':
       case 'n8':
       case 'n9':
+      case 'n10':
+      case 'n11':
+      case 'n12':
+      case 'n13':
+      case 'n14':
+      case 'n15':
+      case 'n16':
+      case 'n17':
+      case 'n18':
+      case 'n19':
       return (
         <div className='board-free'>
           <img src={GrassImage} alt="Free Tile" />
