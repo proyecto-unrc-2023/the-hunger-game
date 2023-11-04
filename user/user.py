@@ -1,7 +1,5 @@
-from marshmallow import Schema, fields
 from app import db
 from marshmallow import Schema, fields
-import json
 
 
 class User(db.Model):
@@ -35,7 +33,7 @@ class User(db.Model):
 
 class UserSchema(Schema):
     id = fields.Integer()
-    name = fields.Str()
+    username = fields.Str()
     password = fields.Str()
     character = fields.Str()
 

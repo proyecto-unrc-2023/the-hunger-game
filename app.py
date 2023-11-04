@@ -9,6 +9,6 @@ if __name__ == '__main__':
     print(app.url_map)
     app.run(debug=True)
     with app.app_context():
-        db.create_all() #crea db
+        db.create_all()
         for rule in app.url_map.iter_rules():
             print(rule)
