@@ -5,6 +5,7 @@ import Menu from './components/Menu.jsx';
 import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
 import WinnerScreen from './components/WinnerScreen.jsx';
+import './App.css';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('init');
@@ -24,9 +25,7 @@ const App = () => {
 
   return (
     <div className='app'>
-      <Header />
       <CurrentViewComponent onViewChange={handleViewChange} />
-      <Footer />
     </div>
   );
 };

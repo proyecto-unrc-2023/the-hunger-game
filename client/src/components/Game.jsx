@@ -6,6 +6,7 @@ import {
 } from "react-zoom-pan-pinch";
 import Board from "./Board.jsx";
 import { useGame } from "./GameContext";
+import './Game.css';
 
 const ControlsZoom = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -13,7 +14,7 @@ const ControlsZoom = () => {
     <>
       <button onClick={() => zoomIn()}>🔍+</button>
       <button onClick={() => zoomOut()}>🔍-</button>
-      <button onClick={() => resetTransform()}>↩️</button>
+      <button onClick={() => resetTransform()}>Reset</button>
     </>
   );
 };
@@ -21,7 +22,7 @@ const ControlsZoom = () => {
 const ControlsAdvance = memo(({ onPause, onFinish }) => {
   return (
     <>
-      <button onClick={onPause}>Pause⏯️</button>
+      <button onClick={onPause}>Play</button>
       <button onClick={onFinish}>Finish</button>
     </>
   );
@@ -130,19 +131,25 @@ const Game = ({onViewChange}) => {
 
   return (
     <main className="game">
-      <TransformWrapper minScale={0.5}>
-        <div className='button-section'><ControlsZoom /></div>
-        <TransformComponent>
-          <section className='board'>
-            {!gameInitialized ? (
-              <Board boardSize={boardSize} boardState={emptyBoard}/>
-              ) : ( <Board size={boardSize} boardState={boardState}/>
+      <div className="game-container">
+        
+        <TransformWrapper minScale={0.5}>
+          <div className="button-section left">
+            <ControlsZoom />
+          </div>
+          <TransformComponent>
+            <section className="board">
+              {!gameInitialized ? (
+                <Board boardSize={boardSize} boardState={emptyBoard} />
+              ) : (
+                <Board size={boardSize} boardState={boardState} />
               )}
-          </section>
-        </TransformComponent>
-      </TransformWrapper>
-      <div className="button-section">
-        <ControlsAdvance onPause={handlePause}  onFinish={handleFinish}/>
+            </section>
+          </TransformComponent>
+        </TransformWrapper>
+        <div className="button-section right">
+          <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
+        </div>
       </div>
     </main>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import "./InitGame.css";
-
+import Header from './Header.jsx';
+import Footer from './Footer.jsx';
 const InitGame = ({ onViewChange }) => {
   const handlePlayGame = () => {
     onViewChange("menu"); // Llamando a la función proporcionada desde App
@@ -8,12 +9,14 @@ const InitGame = ({ onViewChange }) => {
 
   return (
     <div className="init-render">
-      <div className="video">
-        <video width="auto" height="646" autoPlay muted loop playsInline>
+      <Header /> 
+      <div className="video">      
+        <video width="auto" height="360" autoPlay muted loop playsInline>
           <source src="/video.mp4" type="video/mp4"/>
         </video>
-      </div>
+      </div> 
       <button className='button-play-game' onClick={handlePlayGame}>PLAY GAME</button>
+      <Footer /> 
     </div>
   );
 };

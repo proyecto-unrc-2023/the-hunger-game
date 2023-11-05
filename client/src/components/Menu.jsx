@@ -62,6 +62,16 @@ const bars = {
   }
 };
 
+function BackButton({ onClick }) {
+  const backButtonClass = "init-simulation-button is-ready"; // Utiliza la misma clase de estilo que el botón "Start Simulation"
+  return (
+    <button className={backButtonClass} onClick={onClick}>
+      Volver
+    </button>
+  );
+}
+
+
 export default function Menu({ onViewChange }) {
   // Estado de la barra de stats disponibles
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
@@ -179,9 +189,24 @@ export default function Menu({ onViewChange }) {
     }
   };
 
+  const handleBackToHome = () => {
+    onViewChange('init'); // Cambia "home" al valor correcto para regresar a la página de inicio
+  };
+
+  function MenuButtonsContainer({ children }) {
+    return <div className="menu-buttons-container">{children}</div>;
+  }
+
   return (
+    
     <div className="menu-container">
-      <div className="choose-character-container">
+      <div className="stats-settings-container">
+        <div>
+        <strong className="available-stats">
+             Your Stats <StatsBar stats={statsBar} />
+          </strong> 
+        </div>
+        <div className="choose-character-container">
         {Object.keys(characters).map((characterKey) => (
           <CharacterCard
             key={characterKey}
@@ -192,12 +217,6 @@ export default function Menu({ onViewChange }) {
           />
         ))}
       </div>
-      <div className="stats-settings-container">
-        <div>
-        <strong className="available-stats">
-            Available Stats <StatsBar stats={statsBar} />
-          </strong>
-        </div>
         <div className="bars-container">
           {Object.entries(stats).map(([key, { attribute, bar, increases, consumes }]) => (
             <IncrementableBar
@@ -210,7 +229,11 @@ export default function Menu({ onViewChange }) {
             />
           ))}
         </div>
-        <InitGameButton isReady={isReady} onClick={handleStartGame} />
+        
+        <MenuButtonsContainer>
+          <BackButton onClick={handleBackToHome} />
+          <InitGameButton isReady={isReady} onClick={handleStartGame} />
+        </MenuButtonsContainer>
       </div>
     </div>
   );
