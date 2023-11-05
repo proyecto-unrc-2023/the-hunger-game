@@ -3,6 +3,7 @@
   color: var(--text-color);
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .top-header {
@@ -41,6 +42,7 @@
   overflow: hidden;
   position: relative;
   height: 2.8em;
+  
 }
 
 .cssbuttons-io-button .icon {
@@ -129,4 +131,9 @@
 
 .volume-button-off {
   margin-bottom: 20px;
+}
+.login {
+  display: flex;
+  justify-content: space-between; /* Esto distribuirá el espacio entre el contenido y el botón */
+  margin-left: 150px; 
 }

@@ -59,6 +59,16 @@ function InitGameButton({ isReady, onClick }) {
   return <button className={initSimulationButtonClass} onClick={onClick}>Start Simulation</button>;
 }
 
+function BackButton({ onClick }) {
+  const backButtonClass = "init-simulation-button is-ready"; // Utiliza la misma clase de estilo que el botón "Start Simulation"
+  return (
+    <button className={backButtonClass} onClick={onClick}>
+      Volver
+    </button>
+  );
+}
+
+
 export default function Menu({ onViewChange }) {
   const [statsBar, setStatsBar] = useState(Array(10).fill(true));
   const [lifeStats, setLifeStats] = useState(Array(10).fill(false));
@@ -206,12 +216,21 @@ export default function Menu({ onViewChange }) {
     }
 
   };
+
+  const handleBackToHome = () => {
+    onViewChange('init'); // Cambia "home" al valor correcto para regresar a la página de inicio
+  };
+
+  function MenuButtonsContainer({ children }) {
+    return <div className="menu-buttons-container">{children}</div>;
+  }
   
   return (
+    
     <div className="menu-container">
       <div className="stats-settings-container">
         <div>
-          <strong className="available-stats">Available Stats <StatsBar stats={statsBar} /></strong>
+          <strong className="available-stats"> Your Stats <StatsBar stats={statsBar} /></strong> 
         </div>
         <div className="bars-container">
           <IncrementableBar attribute="Life:" stats={lifeStats} onIncrement={() => incrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} onDecrement={() => decrementStat(lifeStats, setLifeStats, 'life', menu, setMenu, 5)} value={menu ? menu.life : 0}/>
@@ -220,7 +239,10 @@ export default function Menu({ onViewChange }) {
           <IncrementableBar attribute="Cowardice:" stats={cowardiceStats} onIncrement={() => incrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} onDecrement={() => decrementStat(cowardiceStats, setCowardiceStats, 'cowardice', menu, setMenu, 1)} value={menu ? menu.cowardice : 0}/>
           <IncrementableBar attribute="Tributes:" stats={tributeStats} setStats={setTributeStats} onIncrement={incrementTributeStat} onDecrement={decrementTributeStat} value={menu ? menu.cant_tributes : 0}/>
         </div>
-        <InitGameButton isReady={isReady} onClick={handleStartGame} />
+        <MenuButtonsContainer>
+          <BackButton onClick={handleBackToHome} />
+          <InitGameButton isReady={isReady} onClick={handleStartGame} />
+        </MenuButtonsContainer>
     </div>
     </div>
   );
