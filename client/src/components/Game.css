@@ -1,0 +1,70 @@
+.button-section.left,
+.button-section.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-section.left button,
+.button-section.right button {
+  background-color: hsl(0, 0%, 0%); 
+  color: #fff; 
+  border: none;
+  padding: 10px 20px; 
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 16px; 
+  border-radius: 5px; 
+  transition: background-color 0.3s; 
+}
+
+.button-section.left button:hover,
+.button-section.right button:hover {
+  background-color: #2980b9; 
+}
+
+.game {
+    background-image: url('../../public/game.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+.game-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 0 20px;
+  
+  }
+  
+  
+  /* Estilos para los botones de zoom en el lado izquierdo */
+  .button-section.left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .button-section.left button {
+    margin-bottom: 10px; 
+  }
+  
+  /* Estilos para los botones en el lado derecho */
+  .button-section.right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .button-section.right button {
+    margin-bottom: 10px; 
+  }
+  
+ 
+  .board {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

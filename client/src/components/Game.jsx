@@ -5,7 +5,8 @@ import {
   useControls
 } from "react-zoom-pan-pinch";
 import Board from "./Board.jsx";
-// import InfoPanel from './components/InfoPanel.jsx';
+import { useGame } from "./GameContext";
+import './Game.css';
 
 const ControlsZoom = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -13,7 +14,7 @@ const ControlsZoom = () => {
     <>
       <button onClick={() => zoomIn()}>🔍+</button>
       <button onClick={() => zoomOut()}>🔍-</button>
-      <button onClick={() => resetTransform()}>↩️</button>
+      <button onClick={() => resetTransform()}>Reset</button>
     </>
   );
 };
@@ -21,7 +22,7 @@ const ControlsZoom = () => {
 const ControlsAdvance = memo(({ onPause, onFinish }) => {
   return (
     <>
-      <button onClick={onPause}>Pause⏯️</button>
+      <button onClick={onPause}>Play</button>
       <button onClick={onFinish}>Finish</button>
     </>
   );
@@ -40,28 +41,30 @@ const Game = ({onViewChange}) => {
   
   //Estado ganador
   const [winner, setWinner] = useState(null);
+  
+  //Estado del juego
+  const [gameInitialized, setGameInitialized] = useState(false);
+
+  //Estado para regular el fetch
+  const [fetchGameData, setFetchGameData] = useState(true);
+
+  //Estado para obtener el id del juego actual, se obtiene de un contexto
+  const { gameID } = useGame();
 
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
     setPaused(!isPaused);
   };
 
-  const [gameInitialized, setGameInitialized] = useState(false)
-  const [fetchGameData, setFetchGameData] = useState(true);
-
-
   const handleFinish = () => {
     //debe devolver el ganador
-    //setWinner
     onViewChange("finish");
   }
-  
-  const [gameID, setGameID] = useState(0);
 
   // Tablero vacío
   const emptyBoard = Array.from({ length: boardSize }, () => Array(boardSize).fill('  '));
   
-  
+  // Crea un juego
   const initialBoard = async () => {
     const response = await fetch(`http://localhost:5000/game/${gameID}`, {
       method: 'PUT',
@@ -83,6 +86,7 @@ const Game = ({onViewChange}) => {
     setPaused(true);
   }
 
+  // Actualiza el juego creado 
   const fetchGameInfo = async () => {
     try {
       if (fetchGameData && winner === null) {
@@ -106,9 +110,12 @@ const Game = ({onViewChange}) => {
     }
   };
  
+  // Crea un juego si es necesario y se encarga de actualizarlo cada cierto intervalo
   useEffect(() => {
-    if (!gameInitialized) {
-      initialBoard();
+    if (gameID !== null){
+      if (!gameInitialized) {
+        initialBoard();
+      }
     }
     
     const time = setInterval(() => {
@@ -120,23 +127,29 @@ const Game = ({onViewChange}) => {
     // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
   
-  }, [isPaused, gameInitialized, winner]);
+  }, [gameID, isPaused, gameInitialized, winner]);
 
   return (
     <main className="game">
-      <TransformWrapper minScale={0.5}>
-        <div className='button-section'><ControlsZoom /></div>
-        <TransformComponent>
-          <section className='board'>
-            {!gameInitialized ? (
-              <Board boardSize={boardSize} boardState={emptyBoard} />
-              ) : ( <Board size={boardSize} boardState={boardState} />
+      <div className="game-container">
+        
+        <TransformWrapper minScale={0.5}>
+          <div className="button-section left">
+            <ControlsZoom />
+          </div>
+          <TransformComponent>
+            <section className="board">
+              {!gameInitialized ? (
+                <Board boardSize={boardSize} boardState={emptyBoard} />
+              ) : (
+                <Board size={boardSize} boardState={boardState} />
               )}
-          </section>
-        </TransformComponent>
-      </TransformWrapper>
-      <div className="button-section">
-        <ControlsAdvance onPause={handlePause}  onFinish={handleFinish}/>
+            </section>
+          </TransformComponent>
+        </TransformWrapper>
+        <div className="button-section right">
+          <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
+        </div>
       </div>
     </main>
   );

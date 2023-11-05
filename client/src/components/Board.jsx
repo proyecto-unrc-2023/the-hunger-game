@@ -24,7 +24,6 @@ const Board = ({ size, boardState}) => {
         <Cell
           key={`${rowIndex}-${columnIndex}`}
           state={cellState}
-          // onClick={() => onCellClick(rowIndex, columnIndex)}
         />
       );
     }
