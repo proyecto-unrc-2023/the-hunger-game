@@ -24,12 +24,12 @@ class User(Resource):
 """
 tener flask corriendo:
 
-consola python:
+consola python (open the data base):
 import app
-from app import db
+from app import db, create_app
+app = create_app()
 with app.app_context():
-...         db.create_all()       ///enter - enter
-
+    db.create_all()       ///enter - enter
 
 console sqlite3: entrar con (sqlite3 /tmp/foo.db)
 .schema

@@ -26,7 +26,7 @@ class User(db.Model):
             'password': self.password
         }
     
-    def add_user(self):
+    def add_user(self): #parametros username, password
         new_user = User(username="ejemplo", password="contraseña_de_ejemplo")
         db.session.add(new_user)
         db.session.commit()
