@@ -36,3 +36,10 @@ class GameController:
           result = schema.dump(winner) 
            
           return result
+      
+      def pause_method(self):
+          lives = self.tributes_lives()
+          schema = GameLogicSchema()
+          result = schema.dump(lives)
+
+          return result

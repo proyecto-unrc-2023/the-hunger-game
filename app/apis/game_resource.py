@@ -49,7 +49,24 @@ class Game(Resource):
 
         result_schema = GameLogicSchema()
         result = result_schema.dump(next_iteration)
+        live_district = current_game.pause_method()
+
         
-        response = {game_id: result}
+        response = {game_id: result,
+                    is_paused: live_district }
 
         return response
+    
+class Pause(Resource):
+    def get(self, game_id):
+        game_id = int(game_id)
+        
+        if games[game_id] not in games:
+            return {"error": "Game not found"}, 404
+        
+        current_game = games[game_id]
+        controller = GameController()
+
+        
+
+        return jsonify(result)

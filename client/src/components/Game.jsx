@@ -8,6 +8,7 @@ import Board from "./Board.jsx";
 import { useGame } from "./GameContext";
 import './Game.css';
 
+
 const ControlsZoom = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
   return (
@@ -54,6 +55,7 @@ const Game = ({onViewChange}) => {
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
     setPaused(!isPaused);
+    
   };
 
   const handleFinish = () => {
@@ -85,6 +87,7 @@ const Game = ({onViewChange}) => {
     setGameInitialized(true);
     setPaused(true);
   }
+ 
 
   // Actualiza el juego creado 
   const fetchGameInfo = async () => {
@@ -96,9 +99,10 @@ const Game = ({onViewChange}) => {
         if (response.ok) {
           const data = await response.json();
           const gameData = Object.values(data)[0];
+          const pause = Object.values(data)[1];
           setBoardState(gameData.board.board);
           setBoardSize(gameData.board.rows);
-          
+          console.log(pause); 
           if (gameData.winner !== null) {
             setFetchGameData(false);
             setWinner(gameData.winner);

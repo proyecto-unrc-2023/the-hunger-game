@@ -432,7 +432,15 @@ class GameLogic:
                     self.neutral_heuristic(neutral)
             return self
 
-
+    def tributes_lives(self):
+        lives = []        
+        for district in self.districts:
+            for tribute in district.tributes:
+                count +=1
+            lives.add(count)
+        
+        return lives
+    
 class GameLogicSchema(Schema):
     from game.logic.district import DistrictSchema
     from game.logic.board import BoardSchema
@@ -443,3 +451,4 @@ class GameLogicSchema(Schema):
     districts = fields.Nested(DistrictSchema, many=True)
     neutrals = fields.Nested(TributeSchema, many=True)
     winner = fields.Integer(allow_none=True)  # Permitir que el atributo winner sea None
+    lives = fields.List(fields.Integer)
