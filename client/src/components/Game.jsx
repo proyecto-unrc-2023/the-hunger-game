@@ -51,13 +51,15 @@ const Game = ({onViewChange}) => {
   //Estado para obtener el id del juego actual, se obtiene de un contexto
   const { gameID } = useGame();
 
+  //Estado para obtener la apariencia del distrito ganador
+  const { setWinnerCharacter }= useGame();
+
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
     setPaused(!isPaused);
   };
 
   const handleFinish = () => {
-    //debe devolver el ganador
     onViewChange("finish");
   }
 
@@ -97,11 +99,12 @@ const Game = ({onViewChange}) => {
           const data = await response.json();
           const gameData = Object.values(data)[0];
           setBoardState(gameData.board.board);
-          setBoardSize(gameData.board.rows);
           
           if (gameData.winner !== null) {
-            setFetchGameData(false);
             setWinner(gameData.winner);
+            console.log(gameData.winner);
+            setWinnerCharacter(gameData.winner);
+            setFetchGameData(false);
           }
         }
       }
@@ -122,7 +125,11 @@ const Game = ({onViewChange}) => {
       if (!isPaused) {
         fetchGameInfo();
       }
-    }, 500);
+    }, 200);
+
+    // if (fetchGameData === false) {
+    //   onViewChange("finish")
+    // }
 
     // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
