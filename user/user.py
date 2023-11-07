@@ -23,19 +23,25 @@ class User(db.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'password': self.password
+            'password': self.password,
+            'character': self.character
         }
-    
-    def add_user(self): #parametros username, password
-        new_user = User(username="ejemplo", password="contraseña_de_ejemplo")
+        
+    # Method to add an user to the db
+    def add_user(self, name, password):
+        new_user = User(username=name, password=password)
         db.session.add(new_user)
         db.session.commit()
+    
+    # Method to select a character for an user    
+    def select_character(self, num_pj):
+        self.character=num_pj
+        db.session.commit()
+        
+        
 
 class UserSchema(Schema):
     id = fields.Integer()
     username = fields.Str()
     password = fields.Str()
     character = fields.Str()
-
-
-
