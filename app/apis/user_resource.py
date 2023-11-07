@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from app import db 
 from user.user import User, UserSchema
-from flask import jsonify
+from flask import jsonify, request
 from sqlalchemy import inspect
 
 class Structure(Resource):
@@ -17,10 +17,24 @@ class Structure(Resource):
 
             return jsonify(table_info)
         
-class User(Resource):
-    def get(self):
+class Register(Resource):
+    def post(self):
+        data = request.get_json()
         user = User()
-        schema = UserSchema()
+        user.add_user(name=data['name'], password=data['password'])
+        
+class UserGet(Resource):
+    def post(self):
+        data = request.get_json()
+        user = User.query.filter_by(username=data['name']).first()
+        
+        return user.json()
+        
+class SelectPj(Resource):
+    def post(self):
+        data = request.get_json()
+        user = User.query.filter_by(username=data['name']).first()
+        user.select_character(num_pj=data['pj'])
 """
 tener flask corriendo:
 

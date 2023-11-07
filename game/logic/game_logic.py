@@ -430,7 +430,8 @@ class GameLogic:
             if self.neutrals:
                 for neutral in self.neutrals:
                     self.neutral_heuristic(neutral)
-            return self
+        self.winner_district()
+        return self
 
 
 class GameLogicSchema(Schema):
