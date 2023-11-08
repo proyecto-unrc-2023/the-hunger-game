@@ -1,27 +1,26 @@
 import React from 'react';
 import './Footer.css';
+import './Common.css';
 
 export default function Footer() {
     return (
         <footer className='footer'>
-            <div className='text-center p-3 center-content'>
+            <div className='bottom-footer'>
                 <section className="game-title">
                     <div className="top">Would you like to join?</div>
                     <div className="bottom" aria-hidden="true">Would you like to join?</div>
                 </section>
-                <div className="signup">
-                    <div className="button-container">
-                        <button className="cssbuttons-io-button">
-                            Register!
-                            <div className="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                    <path fill="none" d="M0 0h24v24H0z"></path>
-                                    <path fill="currentColor" d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"></path>
-                                </svg>
-                            </div>
-                        </button>
+            </div>
+            <div className="container-login-button">
+                <button className="login-button">
+                    Register!
+                    <div className="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path fill="currentColor" d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"></path>
+                        </svg>
                     </div>
-                </div>
+                </button>
             </div>
         </footer>
     );
