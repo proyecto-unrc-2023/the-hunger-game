@@ -133,9 +133,15 @@ export default function Menu({ onViewChange }) {
 
   // Al darle click al boton de start simulation
   const handleStartGame = () => {
-    if (isReady && selectedCharacter != null) {
-      sendDataToServer();
-      onViewChange('game');
+    if (!isReady) {
+        // Las estadísticas no se han distribuido
+        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
+      } else if (selectedCharacter == null) {
+        // No se ha seleccionado un personaje
+        alert("Debes seleccionar un personaje antes de comenzar el juego.");
+      } else {
+        sendDataToServer();
+        onViewChange('game');
     }
   };
 
@@ -226,8 +232,8 @@ export default function Menu({ onViewChange }) {
               key={key}
               attribute={`${attribute}:`}
               stats={bar}
-              onIncrement={() => incrementStat(key, increases, consumes)}
               onDecrement={() => decrementStat(key, increases, consumes)}
+              onIncrement={() => incrementStat(key, increases, consumes)}
               value={menu ? menu[key] : 0}
             />
           ))}
