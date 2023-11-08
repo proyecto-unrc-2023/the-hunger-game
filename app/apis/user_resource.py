@@ -22,7 +22,8 @@ class Register(Resource):
         data = request.get_json()
         user = User()
         user.add_user(name=data['name'], password=data['password'])
-        
+
+
 class UserGet(Resource):
     def post(self):
         data = request.get_json()
@@ -35,8 +36,11 @@ class SelectPj(Resource):
         data = request.get_json()
         user = User.query.filter_by(username=data['name']).first()
         user.select_character(num_pj=data['pj'])
+
+
 """
 tener flask corriendo:
+python app.py
 
 consola python (open the data base):
 import app
