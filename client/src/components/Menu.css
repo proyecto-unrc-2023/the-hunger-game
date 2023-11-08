@@ -1,7 +1,7 @@
-
-
 .choose-character-container {
   display: flex;
+  height: 75px;
+  padding-top: 10px;
 }
 
 .grid::-webkit-scrollbar {
@@ -11,9 +11,8 @@
 .card{
   display: flex;
   width: 50px;
-  height: auto;
+  height: 50px;
   cursor: pointer;
-  
 }
 .card img{
   width: 0px;
@@ -23,16 +22,18 @@
   transition: .5s ease;
 }
 .card img:hover{
-  transform: scale(1.1);
+  transform: scale(2);
   z-index: 1;
 }
 
 .card.selected img{
   opacity: 1;
   filter: contrast(120%);
-  transform: scale(1.1);
+  transform: scale(2);
   z-index: 1;
-}.stat {
+}
+
+.stat {
   width: 20px;
   height: 40px;
   margin: 2px;
@@ -91,12 +92,13 @@
   padding: 20px; 
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0.418); 
-  width: 40%; 
-  max-width: 600px; 
+  width: auto;
+  height: 100vh;
   margin: 0 auto;
   position: relative; 
   backdrop-filter: blur(10px);
 }
+
 
 .incrementable-bar-atribute {
   color: white;
@@ -128,7 +130,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
 
 .init-simulation-button , .init-simulation-button.is-ready{
@@ -153,8 +154,6 @@
   box-shadow: inset 0px 0px 25px #e00404;
 }
 
-
-
 .menu-container {
   overflow: hidden;
   display: flex;
@@ -174,3 +173,10 @@
   width: 100%; 
 }
 
+
+@media screen and (max-width: 1368px) {
+  .stat {
+    height: 25px;
+    width: 15px;
+  }
+}

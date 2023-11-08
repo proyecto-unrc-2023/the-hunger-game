@@ -1,20 +1,92 @@
 .winner-screen {
     display: flex;
-    justify-content:space-between;
+    flex-direction: column;  
     align-items: center;
     align-content: center;
     text-align: center;
-    height: 706px;
 }
 
-.button-restart-game {
-    padding: 30px;
-    margin: auto;
-    margin-right: 30px;
+.winner-container img {
+    height: 60vh;
 }
 
-.button-save-game {
+.winner-img {
+    height: 500px;
+}
+
+.winner-card {
+    width: 500px;
+    height: 100px;
+    background: #07182E;
+    position: relative;
+    display: flex;
+    place-content: center;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 20px;
+    margin: 30px;
     padding: 30px;
-    margin: auto;
-    margin-left: 30px;
+}
+  
+.winner-card h2 {
+    z-index: 1;
+    color: white;
+    font-size: 2em;
+}
+  
+.winner-card::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
+    height: 60%;
+    animation: rotBGimg 8s linear infinite;
+    transition: all 0.2s linear;
+}
+  
+@keyframes rotBGimg {
+    from {
+      transform: rotate(0deg);
+    }
+  
+    to {
+      transform: rotate(360deg);
+    }
+}
+  
+.winner-card::after {
+    content: '';
+    position: absolute;
+    background: #07182E;
+    ;
+    inset: 5px;
+    border-radius: 15px;
+}  
+
+
+.button-restart-game, .button-save-game{
+    width: 10em;
+    position: relative;
+    height: 3.5em;
+    outline: none;
+    background-color: transparent;
+    color: rgb(255, 244, 244);
+    transition: 1s;
+    border-radius: 0.3em;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 30px;
+}
+  
+.button-restart-game, .button-save-game {
+    background-color: #00000071;
+    border: 3px ridge hsla(0, 0%, 0%, 0.637);
+}
+  
+.button-restart-game:hover{
+    box-shadow: inset 0px 0px 25px red;
+}
+
+.button-save-game:hover {
+    box-shadow: inset 0px 0px 25px blue;
 }

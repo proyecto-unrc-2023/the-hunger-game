@@ -11,7 +11,7 @@ const InitGame = ({ onViewChange }) => {
     <div className="init-render">
       <Header /> 
       <div className="video">      
-        <video width="auto" height="360" autoPlay muted loop playsInline>
+        <video className='video-init' autoPlay muted loop playsInline>
           <source src="/video.mp4" type="video/mp4"/>
         </video>
       </div> 
