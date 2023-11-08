@@ -74,7 +74,7 @@ const Game = ({onViewChange}) => {
 
     if (response.ok) {
       const data = await response.json();
-      const gameData = Object.values(data)[0];
+      const gameData = data[gameID];
       if (gameData && gameData.board) {
         setBoardState(gameData.board.board);
         setBoardSize(gameData.board.rows); 
@@ -88,7 +88,7 @@ const Game = ({onViewChange}) => {
     setPaused(true);
   }
  
-
+  
   // Actualiza el juego creado 
   const fetchGameInfo = async () => {
     try {
@@ -98,11 +98,12 @@ const Game = ({onViewChange}) => {
         });
         if (response.ok) {
           const data = await response.json();
-          const gameData = Object.values(data)[0];
-          const pause = Object.values(data)[1];
+          const gameData = data[gameID];
+          const pause = data['pause'];
           setBoardState(gameData.board.board);
           setBoardSize(gameData.board.rows);
-          console.log(pause); 
+          console.log(pause);
+
           if (gameData.winner !== null) {
             setFetchGameData(false);
             setWinner(gameData.winner);

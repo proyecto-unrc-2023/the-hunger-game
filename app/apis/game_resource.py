@@ -33,40 +33,19 @@ class Game(Resource):
             return {game_id: game_schema.dump(current_game)}
         else:
             return {'error': 'Game not found'}, 404
-
+          
     # Returns the current state of simulation game.    
     def get(self, game_id):
         game_id = int(game_id)
-
-        if games[game_id] not in games:
+        if game_id < len(games):
+            current_game = games[game_id]
+            controller = GameController()
+            next_iteration = controller.get_one_iteration(current_game)
+            live_district = controller.pause_method(current_game)
+            
+            response = {game_id: next_iteration,
+                        'pause': live_district}
+            
+            return response
+        else:
             return {"error": "Game not found"}, 404
-        
-        current_game = games[game_id]
-        controller = GameController()
-        
-        # Return current state of game 
-        next_iteration = controller.get_one_iteration(current_game)
-
-        result_schema = GameLogicSchema()
-        result = result_schema.dump(next_iteration)
-        live_district = current_game.pause_method()
-
-        
-        response = {game_id: result,
-                    is_paused: live_district }
-
-        return response
-    
-class Pause(Resource):
-    def get(self, game_id):
-        game_id = int(game_id)
-        
-        if games[game_id] not in games:
-            return {"error": "Game not found"}, 404
-        
-        current_game = games[game_id]
-        controller = GameController()
-
-        
-
-        return jsonify(result)

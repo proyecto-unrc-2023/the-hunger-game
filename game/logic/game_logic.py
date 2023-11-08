@@ -435,9 +435,10 @@ class GameLogic:
     def tributes_lives(self):
         lives = []        
         for district in self.districts:
+            count = 0
             for tribute in district.tributes:
                 count +=1
-            lives.add(count)
+            lives.append(count)
         
         return lives
     
