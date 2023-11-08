@@ -6,7 +6,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), unique=False, nullable=False)
-    character = db.Column(db.String)
+    character = db.Column(db.String(50), unique=False, nullable=True)
     
     
     # Constructor of User, values can take None or specified value.
@@ -29,9 +29,12 @@ class User(db.Model):
         
     # Method to add an user to the db
     def add_user(self, name, password):
-        new_user = User(username=name, password=password)
-        db.session.add(new_user)
-        db.session.commit()
+        if name is None or password is None:
+            raise ValueError('Name or password is None')
+        else:
+            new_user = User(username=name, password=password)
+            db.session.add(new_user)
+            db.session.commit()
     
     # Method to select a character for an user    
     def select_character(self, num_pj):

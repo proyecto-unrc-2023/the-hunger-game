@@ -20,8 +20,16 @@ class Structure(Resource):
 class Register(Resource):
     def post(self):
         data = request.get_json()
-        user = User()
-        user.add_user(name=data['name'], password=data['password'])
+        name = data.get('name')  # Obtén el nombre de usuario desde los datos
+        password = data.get('password')  # Obtén la contraseña desde los datos
+        
+        if name is None or password is None or name == '' or password == '':
+            return {'message': 'Nombre de usuario y contraseña son obligatorios'}, 400
+        else:
+            user = User()
+            user.add_user(name, password)
+            return {'message': 'Usuario registrado con éxito'}, 200
+
 
 
 class UserGet(Resource):
