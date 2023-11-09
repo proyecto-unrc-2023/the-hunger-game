@@ -70,6 +70,15 @@ class Potion(Item):
         pass
 
 
+    @staticmethod
+    def get_potion_by_name(str):
+        if str.__eq__('pf'):
+            return PotionLife()
+        elif str.__eq__('pl'):
+            return PotionForce()
+        elif str.__eq__('po'):
+            return PotionPoison()
+
 class PotionForce(Potion):
     # Potion force is pf.
     def __str__(self):
@@ -159,6 +168,24 @@ class Weapon(Item):
 
     def create_weapon(self, num_weapon):
         pass
+
+    @staticmethod
+    def get_weapon_by_name(str):
+        if str.__eq__('sw'):
+            return Sword()
+        elif str.__eq__('sp'):
+            return Spear()
+        elif str.__eq__('wo'):
+            return Bow()
+
+    def get_weapon_range(self):
+        if self.__str__().__eq__('sw'):
+            return 1
+        elif self.__str__().__eq__('sp'):
+            return 1 + RANGE_SPEAR
+        elif self.__str__().__eq__('wo'):
+            return 1 + RANGE_BOW
+
 
 
 class Sword(Weapon):

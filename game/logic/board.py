@@ -104,6 +104,10 @@ class Board:
 
     # Places a tribute at a specific position on the board.
     def put_tribute(self, row, column, tribute):
+        if tribute.pos is None:
+            tribute.past_pos = (row, column)
+        else:
+            tribute.past_pos = tribute.pos
         tribute.pos = (row, column)
         self.board[row][column].put_tribute(tribute)
 

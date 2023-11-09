@@ -109,14 +109,10 @@ class Tribute:
 
     # Moves a tribute to a randomly selected free adjacent position.
     def move_to_random(self, board):
+        past_pos_tribute = self.past_pos
         board.remove_tribute(self)
         pos = board.random_choice(self)
-        board.put_tribute(pos[0], pos[1], self)
-
-    def move_to_diff_pos_random(self, board, x, y):
-        board.remove_tribute(self)
-        pos = board.random_choice(self)
-        while pos == (x, y):
+        while pos == past_pos_tribute:
             pos = board.random_choice(self)
         board.put_tribute(pos[0], pos[1], self)
 
