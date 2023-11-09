@@ -166,7 +166,7 @@ class GameLogic:
         ) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
             tribute.attack_to(tribute2, self.board)
         else:
-            pos = tribute.move_closer_to(x, y, self.board)
+            pos = tribute.return_clossest(x, y, self.board)
             tribute.move_to(pos[0], pos[1], self.board)
 
     def attack_in_range_1(self, tribute, tribute2, x, y):

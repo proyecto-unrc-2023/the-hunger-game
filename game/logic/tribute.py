@@ -132,7 +132,7 @@ class Tribute:
         board.put_tribute(x, y, self)
 
     # Returns the closest position to coordinates (x, y) that a tribute can move to.
-    def move_closer_to(self, x, y, board):
+    def return_clossest(self, x, y, board):
         def calculate_distance(position):
             return ((position[0] - x) ** 2 + (position[1] - y) ** 2) ** 0.5
 
@@ -233,7 +233,7 @@ class Tribute:
     # Method to move the tribute one cell closer to the position
     def step_to(self, board, pos):
         (x, y) = pos
-        pos = self.move_closer_to(x, y, board)
+        pos = self.return_clossest(x, y, board)
         self.move_to(pos[0], pos[1], board)
 
 
