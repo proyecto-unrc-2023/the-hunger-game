@@ -11,9 +11,9 @@ const InitGame = ({ onViewChange }) => {
     <div className="init-render">
       <Header /> 
       <div className="video">      
-        {/*<video className='video-init' autoPlay muted loop playsInline>
+        <video className='video-init' autoPlay muted loop playsInline>
           <source src="/video.mp4" type="video/mp4"/>
-        </video>*/}
+        </video>
       </div> 
       <button className='button-play-game' onClick={handlePlayGame}>PLAY GAME</button>
       <Footer onViewChange={onViewChange}/> 
