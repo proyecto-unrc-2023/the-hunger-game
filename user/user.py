@@ -38,11 +38,10 @@ class User(db.Model):
     
     # Method to select a character for an user    
     def select_character(self, num_pj):
-        self.character=num_pj
+        self.character = num_pj
         db.session.commit()
         
         
-
 class UserSchema(Schema):
     id = fields.Integer()
     username = fields.Str()
