@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GameProvider } from './components/GameContext'
+import Characters from './components/Characters';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <GameProvider>
+      <Characters />
       <App />
     </GameProvider>
   </React.StrictMode>

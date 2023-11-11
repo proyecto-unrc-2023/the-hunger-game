@@ -109,14 +109,10 @@ class Tribute:
 
     # Moves a tribute to a randomly selected free adjacent position.
     def move_to_random(self, board):
+        past_pos_tribute = self.past_pos
         board.remove_tribute(self)
         pos = board.random_choice(self)
-        board.put_tribute(pos[0], pos[1], self)
-
-    def move_to_diff_pos_random(self, board, x, y):
-        board.remove_tribute(self)
-        pos = board.random_choice(self)
-        while pos == (x, y):
+        while pos == past_pos_tribute:
             pos = board.random_choice(self)
         board.put_tribute(pos[0], pos[1], self)
 
@@ -136,7 +132,7 @@ class Tribute:
         board.put_tribute(x, y, self)
 
     # Returns the closest position to coordinates (x, y) that a tribute can move to.
-    def move_closer_to(self, x, y, board):
+    def return_clossest(self, x, y, board):
         def calculate_distance(position):
             return ((position[0] - x) ** 2 + (position[1] - y) ** 2) ** 0.5
 
@@ -237,7 +233,7 @@ class Tribute:
     # Method to move the tribute one cell closer to the position
     def step_to(self, board, pos):
         (x, y) = pos
-        pos = self.move_closer_to(x, y, board)
+        pos = self.return_clossest(x, y, board)
         self.move_to(pos[0], pos[1], board)
 
 

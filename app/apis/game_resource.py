@@ -16,12 +16,11 @@ class ConfigDistrict(Resource):
     
     def post(self):
         data = request.get_json()  # Obtengo los datos enviados por el cliente
-        print(data)
         g_controller = GameController()
         first_game = g_controller.get_game(data) # Creo un juego con los datos obtenidos desde el front
         games.append(first_game)
         game_id = len(games) - 1
-        return jsonify({'game_id': game_id})    
+        return {'game_id': game_id}    
 
 class Game(Resource):
 
@@ -34,13 +33,14 @@ class Game(Resource):
         else:
             return {'error': 'Game not found'}, 404
           
-    # Returns the current state of simulation game.    
     def get(self, game_id):
         game_id = int(game_id)
         if game_id < len(games):
             current_game = games[game_id]
-            controller = GameController()
+            controller = GameController() 
             next_iteration = controller.get_one_iteration(current_game)
+            result_schema = GameLogicSchema()
+            result = result_schema.dump(next_iteration)
             live_district = controller.pause_method(current_game)
             
             response = {game_id: next_iteration,
@@ -49,3 +49,5 @@ class Game(Resource):
             return response
         else:
             return {"error": "Game not found"}, 404
+            
+           

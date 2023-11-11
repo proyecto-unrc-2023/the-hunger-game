@@ -1,3 +1,91 @@
+.image-container {
+  position: absolute;
+  top: 0;
+  width: 20%; 
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.image-container.left {
+  left: 0;
+}
+
+.image-container.right {
+  right: 0;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 0, 0, 0.5);
+  z-index: 3;
+  mix-blend-mode: color-dodge;
+}
+
+
+@font-face {
+  font-family: '8-bit';
+  src: url('../../public/fonts/8-bit.ttf') format('truetype'); /* Reemplaza con la ruta correcta y formato de archivo */
+}
+.ventana-emergente-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px); /* Aplicar un desenfoque al fondo */
+  z-index: 1; /* Asegurarse de que esté detrás de la ventana emergente */
+  font-family: '8-bit', sans-serif; /* Aplicar la fuente 8-bit */
+
+}
+
+.ventana-emergente {
+  width: 80%; /* Ajustar el ancho según tus necesidades */
+  max-width: 800px; /* Establecer un ancho máximo */
+  height: 60vh; /* Ajustar la altura según tus necesidades */
+  max-height: 600px; /* Establecer una altura máxima */
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  z-index: 2;
+}
+
+.ventana-emergente h2 {
+  color: #f7f5f5;
+  margin-bottom: 15px;
+  font-size: 40px;
+}
+
+.ventana-emergente p {
+  text-align: center;
+  margin: 8px 0;
+  font-size: 40px;
+}
+
+
+
+
+
+
+
+
+
 .button-section.left,
 .button-section.right {
   display: flex;

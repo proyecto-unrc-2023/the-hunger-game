@@ -15,7 +15,8 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = "sqlite:////tmp/foo.db"
+    JWT_SECRET_KEY = "clave_secreta"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///db_user.db"
 
 
 class TestingConfig(Config):

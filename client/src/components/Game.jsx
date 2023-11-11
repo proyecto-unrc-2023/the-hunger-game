@@ -8,7 +8,6 @@ import Board from "./Board.jsx";
 import { useGame } from "./GameContext";
 import './Game.css';
 
-
 const ControlsZoom = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls();
   return (
@@ -38,10 +37,13 @@ const Game = ({onViewChange}) => {
   const [boardState, setBoardState] = useState([]);
 
   //Estado de la simulación
-  const [isPaused, setPaused] = useState(true);
+  const [isPaused, setPaused] = useState(false);
   
   //Estado ganador
   const [winner, setWinner] = useState(null);
+
+  //Estado distritos
+  const [livetribute,setLiveTribute] = useState([])
   
   //Estado del juego
   const [gameInitialized, setGameInitialized] = useState(false);
@@ -52,14 +54,16 @@ const Game = ({onViewChange}) => {
   //Estado para obtener el id del juego actual, se obtiene de un contexto
   const { gameID } = useGame();
 
+  //Estado para obtener la apariencia del distrito ganador
+  const { setWinnerCharacter }= useGame();
+
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
-    setPaused(!isPaused);
-    
+    setPaused(!isPaused); 
   };
 
+
   const handleFinish = () => {
-    //debe devolver el ganador
     onViewChange("finish");
   }
 
@@ -100,13 +104,16 @@ const Game = ({onViewChange}) => {
           const data = await response.json();
           const gameData = data[gameID];
           const pause = data['pause'];
+          setLiveTribute(pause);
           setBoardState(gameData.board.board);
-          setBoardSize(gameData.board.rows);
           console.log(pause);
 
+          
           if (gameData.winner !== null) {
-            setFetchGameData(false);
             setWinner(gameData.winner);
+            console.log(gameData.winner);
+            setWinnerCharacter(gameData.winner);
+            setFetchGameData(false);
           }
         }
       }
@@ -127,7 +134,11 @@ const Game = ({onViewChange}) => {
       if (!isPaused) {
         fetchGameInfo();
       }
-    }, 500);
+    }, 200);
+
+    // if (fetchGameData === false) {
+    //   onViewChange("finish")
+    // }
 
     // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
@@ -137,7 +148,23 @@ const Game = ({onViewChange}) => {
   return (
     <main className="game">
       <div className="game-container">
-        
+      {isPaused && (
+                <div className="ventana-emergente-container">
+                    <div className="image-container left">
+                        <img src="/board-images/characters/Orc_Walking_1.png" alt="Izquierda" />
+                    </div>
+                    <div className="ventana-emergente" onClick={handlePause}>
+                        <div className="overlay"></div>
+                        <h2> ¡PAUSE! </h2>
+                        {livetribute.map((elemento, index) => (
+                            <p key={index}>District {index} : {elemento} lives </p>
+                        ))}
+                    </div>
+                    <div className="image-container right">
+                        <img src='/board-images/characters/Fallen_Angels_Walking_1.png' alt="Derecha" />
+                    </div>
+                </div>
+            )}
         <TransformWrapper minScale={0.5}>
           <div className="button-section left">
             <ControlsZoom />
@@ -149,11 +176,16 @@ const Game = ({onViewChange}) => {
               ) : (
                 <Board size={boardSize} boardState={boardState} />
               )}
+              
             </section>
           </TransformComponent>
         </TransformWrapper>
         <div className="button-section right">
-          <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
+        {isPaused ? (
+            <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
+          ) : (
+            <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
+          )}
         </div>
       </div>
     </main>

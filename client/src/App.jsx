@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import Header from './components/Header.jsx';
-import Footer from './components/Footer.jsx';
 import Menu from './components/Menu.jsx';
 import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
 import WinnerScreen from './components/WinnerScreen.jsx';
+import Register from './components/Register.jsx'
 import './App.css';
 
 const App = () => {
@@ -19,6 +18,7 @@ const App = () => {
     menu: Menu,
     game: Game,
     finish: WinnerScreen,
+    register: Register,
   };
 
   const CurrentViewComponent = views[currentView];

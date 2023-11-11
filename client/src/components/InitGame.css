@@ -39,10 +39,22 @@
 
 .init-render {
     overflow: hidden;
-    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     background: black;
+    height: 100vh;
 }
+
+.video-init {
+  width: auto;
+  height: 70vh;
+}
+
+@media screen and (max-width: 1368px) {
+  .video-init {
+    height: 55vh; /* Ajusta según tus necesidades */
+  }
+}
+

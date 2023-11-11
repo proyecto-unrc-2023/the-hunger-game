@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Menu.css";
+import "./Common.css";
 import { useGame } from "./GameContext";
 import { IncrementableBar, StatsBar } from "./IncrementableBar";
 
@@ -8,19 +9,10 @@ function InitGameButton({ isReady, onClick }) {
   return <button className={initSimulationButtonClass} onClick={onClick}>Start Simulation</button>;
 };
 
-const characters = {
-  0: '/board-images/characters/Minotaur_Walking_1.png',
-  1: '/board-images/characters/Fallen_Angels_Walking_1.png',
-  2: '/board-images/characters/Golem_Walking_1.png',
-  3: '/board-images/characters/Goblin_Walking_1.png',
-  4: '/board-images/characters/Orc_Walking_1.png',
-  5: '/board-images/characters/Reaper_Man_Walking_1.png',
-};
-
 function CharacterCard({ characterKey, image, isSelected, onSelect }) {
   return (
     <article
-      className={`card ${isSelected ? 'selected' : ''}`}
+    className={`card ${isSelected ? 'selected' : ''}`}
       onClick={() => onSelect(characterKey)}
       >
       <img src={image} className="image" alt={`Character ${characterKey}`} />
@@ -85,6 +77,17 @@ export default function Menu({ onViewChange }) {
   const { selectedCharacter, setSelectedCharacter } = useGame();
   // Seteo el id del juego con la respuesta del POST
   const { setGameID } = useGame();
+  // Busco los personajes ordenados para seleccionar el que quiero
+  const { charactersOrdered } = useGame();
+  
+  const Characters = {
+    0: charactersOrdered[0],
+    1: charactersOrdered[1],
+    2: charactersOrdered[2],
+    3: charactersOrdered[3],
+    4: charactersOrdered[4],
+    5: charactersOrdered[5],
+  };
 
   const incrementStat = (statKey, increases, consumes) => {
     const indexStat = stats[statKey].bar.findIndex(isConsumed => !isConsumed);
@@ -130,9 +133,15 @@ export default function Menu({ onViewChange }) {
 
   // Al darle click al boton de start simulation
   const handleStartGame = () => {
-    if (isReady && selectedCharacter != null) {
-      sendDataToServer();
-      onViewChange('game');
+    if (!isReady) {
+        // Las estadísticas no se han distribuido
+        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
+      } else if (selectedCharacter == null) {
+        // No se ha seleccionado un personaje
+        alert("Debes seleccionar un personaje antes de comenzar el juego.");
+      } else {
+        sendDataToServer();
+        onViewChange('game');
     }
   };
 
@@ -203,15 +212,15 @@ export default function Menu({ onViewChange }) {
       <div className="stats-settings-container">
         <div>
         <strong className="available-stats">
-             Your Stats <StatsBar stats={statsBar} />
+             Your Stats:<StatsBar stats={statsBar} />
           </strong> 
         </div>
         <div className="choose-character-container">
-        {Object.keys(characters).map((characterKey) => (
+        {Object.keys(Characters).map((characterKey) => (
           <CharacterCard
             key={characterKey}
             characterKey={characterKey}
-            image={characters[characterKey]}
+            image={Characters[characterKey]}
             isSelected={selectedCharacter === characterKey}
             onSelect={() =>setSelectedCharacter(characterKey)}
           />
@@ -223,8 +232,8 @@ export default function Menu({ onViewChange }) {
               key={key}
               attribute={`${attribute}:`}
               stats={bar}
-              onIncrement={() => incrementStat(key, increases, consumes)}
               onDecrement={() => decrementStat(key, increases, consumes)}
+              onIncrement={() => incrementStat(key, increases, consumes)}
               value={menu ? menu[key] : 0}
             />
           ))}
