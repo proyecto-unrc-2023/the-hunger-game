@@ -1,4 +1,6 @@
+// Register.js
 import React, { useState } from 'react';
+import './register.css';
 
 const Register = ({ onViewChange }) => {
   const [username, setUsername] = useState('');
@@ -7,11 +9,9 @@ const Register = ({ onViewChange }) => {
   const [passwordError, setPasswordError] = useState('');
 
   const handleRegister = async () => {
-    // Clear any previous validation errors
     setUsernameError('');
     setPasswordError('');
 
-    // Validate the input fields
     if (!username) {
       setUsernameError('Nombre de usuario es obligatorio');
       return;
@@ -48,31 +48,43 @@ const Register = ({ onViewChange }) => {
     }
   };
 
+  const handleGoToInitGame = () => {
+    onViewChange('init');
+  };
+
   return (
-    <div className="register">
-      <h2>Registrarse</h2>
-      <input
-        type="text"
-        placeholder="Nombre de usuario"
-        value={username}
-        onChange={(e) => {
-          setUsername(e.target.value);
-          setUsernameError(''); // Clear username error when user starts typing
-        }}
-      />
-      {usernameError && <div className="error">{usernameError}</div>}
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-          setPasswordError(''); // Clear password error when user starts typing
-        }}
-      />
-      {passwordError && <div className="error">{passwordError}</div>}
-      <button onClick={handleRegister}>Registrarse</button>
-    </div>
+    <div className="main-container"> {/* Nueva línea */}
+      <div className="register-container">
+        <div className="background"></div>
+        <div className="register">
+          <h2 className="custom-heading">Registrarse</h2>
+          <input
+            type="text"
+            placeholder="Nombre de usuario"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setUsernameError('');
+            }}
+          />
+          {usernameError && <div className="error">{usernameError}</div>}
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setPasswordError('');
+            }}
+          />
+          {passwordError && <div className="error">{passwordError}</div>}
+          <button onClick={handleRegister}>Registrarse</button>
+          <button className="custom-button" onClick={handleGoToInitGame}>
+            Volver al menu
+          </button>
+        </div>
+      </div>
+    </div> 
   );
 };
 
