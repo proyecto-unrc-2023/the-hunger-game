@@ -32,7 +32,7 @@ class Game(Resource):
             return {game_id: game_schema.dump(current_game)}
         else:
             return {'error': 'Game not found'}, 404
-
+          
     def get(self, game_id):
         game_id = int(game_id)
         if game_id < len(games):
@@ -41,6 +41,13 @@ class Game(Resource):
             next_iteration = controller.get_one_iteration(current_game)
             result_schema = GameLogicSchema()
             result = result_schema.dump(next_iteration)
-            return {game_id: result}
+            live_district = controller.pause_method(current_game)
+            
+            response = {game_id: next_iteration,
+                        'pause': live_district}
+            
+            return response
         else:
             return {"error": "Game not found"}, 404
+            
+           

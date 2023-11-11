@@ -27,12 +27,8 @@ class GameController:
         result = schema.dump(next_iteration)
         
         return result
-    
-     # Returns the number of the winner district.
-      def get_winner_district(self, actual_game):
-          winner = actual_game.winner_district()
-          schema = GameLogicSchema()
-          
-          result = schema.dump(winner) 
-           
-          return result
+      
+      def pause_method(self, actual_game):
+          lives = actual_game.tributes_lives()
+
+          return lives
