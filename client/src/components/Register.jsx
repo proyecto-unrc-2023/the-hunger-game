@@ -1,12 +1,13 @@
-// Register.js
 import React, { useState } from 'react';
-import './register.css';
+import './Register.css';
 
 const Register = ({ onViewChange }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
   const handleRegister = async () => {
     setUsernameError('');
@@ -19,6 +20,11 @@ const Register = ({ onViewChange }) => {
 
     if (!password) {
       setPasswordError('Contraseña es obligatoria');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError('Las contraseñas no coinciden');
       return;
     }
 
@@ -78,6 +84,17 @@ const Register = ({ onViewChange }) => {
             }}
           />
           {passwordError && <div className="error">{passwordError}</div>}
+          <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setConfirmPasswordError('');
+            }}
+          />
+          {confirmPasswordError && <div className="error">{confirmPasswordError}</div>}  
+          
           <button onClick={handleRegister}>Registrarse</button>
           <button className="custom-button" onClick={handleGoToInitGame}>
             Volver al menu
