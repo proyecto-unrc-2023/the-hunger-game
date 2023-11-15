@@ -52,7 +52,7 @@ const Game = ({onViewChange}) => {
   const [fetchGameData, setFetchGameData] = useState(true);
 
   //Estado para obtener el id del juego actual, se obtiene de un contexto
-  const { gameID } = useGame();
+  const { gameID, setGameID } = useGame();
 
   //Estado para obtener la apariencia del distrito ganador
   const { setWinnerCharacter }= useGame();
@@ -62,8 +62,8 @@ const Game = ({onViewChange}) => {
     setPaused(!isPaused); 
   };
 
-
   const handleFinish = () => {
+    setGameID(null);
     onViewChange("finish");
   }
 
@@ -96,7 +96,7 @@ const Game = ({onViewChange}) => {
   // Actualiza el juego creado 
   const fetchGameInfo = async () => {
     try {
-      if (fetchGameData && winner === null) {
+      if (fetchGameData && winner === null && gameInitialized) {
         const response = await fetch(`http://localhost:5000/game/${gameID}`, {
           method: 'GET',
         });
@@ -106,12 +106,10 @@ const Game = ({onViewChange}) => {
           const pause = data['pause'];
           setLiveTribute(pause);
           setBoardState(gameData.board.board);
-          console.log(pause);
-
           
           if (gameData.winner !== null) {
+            setGameID(null);
             setWinner(gameData.winner);
-            console.log(gameData.winner);
             setWinnerCharacter(gameData.winner);
             setFetchGameData(false);
           }
@@ -134,13 +132,12 @@ const Game = ({onViewChange}) => {
       if (!isPaused) {
         fetchGameInfo();
       }
-    }, 200);
+    }, 500);
 
     // if (fetchGameData === false) {
     //   onViewChange("finish")
     // }
 
-    // Limpiar el intervalo cuando el componente se desmonta o el juego se pausa
     return () => clearInterval(time);
   
   }, [gameID, isPaused, gameInitialized, winner]);
@@ -148,7 +145,7 @@ const Game = ({onViewChange}) => {
   return (
     <main className="game">
       <div className="game-container">
-      {isPaused && (
+      {livetribute.length !== 0 && isPaused && (
                 <div className="ventana-emergente-container">
                     <div className="image-container left">
                         <img src="/board-images/characters/Orc_Walking_1.png" alt="Izquierda" />
@@ -181,11 +178,7 @@ const Game = ({onViewChange}) => {
           </TransformComponent>
         </TransformWrapper>
         <div className="button-section right">
-        {isPaused ? (
             <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
-          ) : (
-            <ControlsAdvance onPause={handlePause} onFinish={handleFinish} />
-          )}
         </div>
       </div>
     </main>
