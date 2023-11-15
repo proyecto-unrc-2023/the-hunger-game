@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from app import db 
-from user.user import User
+from user.user import User, UserSchema
 from flask import jsonify, request
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
@@ -65,4 +65,17 @@ class SelectPj(Resource):
         data = request.get_json()
         user = User.query.filter_by(username=data['name']).first()
         user.select_character(num_pj=data['pj'])
+        
+
+class UserIdGet(Resource):
+    def post(self):
+        data = request.get_json()
+        user = User.query.filter_by(username=data['name']).first()
+        
+        if user:
+            result =user.get_id()
+            response = {'user_id': result}
+            return response, 200
+        else:
+            return {'error': 'Usuario no encontrado.'}, 404
         

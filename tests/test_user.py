@@ -26,3 +26,17 @@ def test_add_user_and_select_pj(app):
         selected_user = User.query.filter_by(username='Lucas').first()
         assert selected_user is not None
         assert int(selected_user.character) == 2
+        
+def test_get_user_id(app):
+    with app.app_context():
+        user = User()
+        user.add_user('Lucas', 'RayoDeSol')
+        user_1 = User.query.filter_by(username='Lucas').first()
+        assert user_1.get_id() == 1
+        user = User()
+        user.add_user('Maik', 'Casita')
+        user_2 = User.query.filter_by(username='Maik').first()
+        assert user_2.get_id() == 2
+
+        
+        
