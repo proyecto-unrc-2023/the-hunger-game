@@ -155,19 +155,20 @@ export default function Menu({ onViewChange }) {
   }, [statsBar, selectedCharacter]);
   
   // Hago un fetch para obtener configuraciones iniciales
+  const getMenu = async() => {
+    const data = await fetch("http://localhost:5000/game/district"); 
+    const result = await data.json();
+    // Asegurarse de que las barras se inicialicen vacías
+    setMenu(result);
+  }
+  
   useEffect(() => {
-    const getMenu = async() => {
-      const data = await fetch("http://localhost:5000/game/district"); 
-      const result = await data.json();
-      // Asegurarse de que las barras se inicialicen vacías
-      const updatedStats = {};
-      Object.entries(bars).forEach(([key, { attribute, increases, consumes }]) => {
-        const filledBar = Array(bars[key].bar.length).fill(false);
-        updatedStats[key] = { attribute, bar: filledBar, increases, consumes };
-      });
-      setMenu(result);
-      setStats(updatedStats);
-    }
+    const updatedStats = {};
+    Object.entries(bars).forEach(([key, { attribute, increases, consumes }]) => {
+      const filledBar = Array(bars[key].bar.length).fill(false);
+      updatedStats[key] = { attribute, bar: filledBar, increases, consumes };
+    });
+    setStats(updatedStats);
     getMenu();
   }, []);
 
