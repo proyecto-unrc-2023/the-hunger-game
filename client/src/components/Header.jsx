@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import './Header.css';
 
-const Header = () => {
-
+const Header = ({ onViewChange }) => {
+  
   const handleLogoClick = () => {
     // Redirige a la página de inicio (recarga la página)
     window.location.href = '/';
@@ -21,6 +21,10 @@ const Header = () => {
     const newVolume = parseFloat(event.target.value);
     audioRef.current.volume = newVolume;
     setVolume(newVolume);
+  };
+
+  const handleLoginClick = () => {
+    onViewChange("login");
   };
 
   return (
@@ -50,13 +54,13 @@ const Header = () => {
         )}
       </div>
       <div className='top-header'>
-      <section className="game-title">
-        <div className="top">The Hunger Games</div>
-        <div className="bottom" aria-hidden="true">The Hunger Games</div>
-      </section>
+        <section className="game-title">
+          <div className="top">The Hunger Games</div>
+          <div className="bottom" aria-hidden="true">The Hunger Games</div>
+        </section>
       </div>
       <div className='container-login-button'>
-        <button className="login-button">
+        <button className="login-button" onClick={() => handleLoginClick()}>
           Login
           <div className="icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">

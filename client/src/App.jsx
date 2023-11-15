@@ -4,6 +4,7 @@ import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
 import WinnerScreen from './components/WinnerScreen.jsx';
 import Register from './components/Register.jsx'
+import Login from './components/Login.jsx';
 import './App.css';
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
     game: Game,
     finish: WinnerScreen,
     register: Register,
+    login: Login,
   };
 
   const CurrentViewComponent = views[currentView];
