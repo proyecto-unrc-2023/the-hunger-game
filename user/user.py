@@ -41,6 +41,10 @@ class User(db.Model):
         self.character = num_pj
         db.session.commit()
         
+    # Method to get the ID of a User   
+    def get_id(self):
+        return self.id
+         
         
 class UserSchema(Schema):
     id = fields.Integer()
