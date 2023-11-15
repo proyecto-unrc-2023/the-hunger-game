@@ -248,3 +248,5 @@ export default function Menu({ onViewChange }) {
     </div>
   );
 }
+
+export { Menu };
