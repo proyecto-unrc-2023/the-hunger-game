@@ -400,15 +400,44 @@ class GameLogic:
                     self.winner = self.districts[i].number_district
         return self.winner
 
-    # Set stats of own district. Front use this method
-    def set_parameters(
-            self, number_district, life, force, alliance, cant_tributes, cowardice
-    ):
-        my_district = District()
-        my_district.set_config(
-            life, force, alliance, number_district, cant_tributes, cowardice
-        )
-        self.districts.insert(0, my_district)
+    # Set stats of own district. Front use this method.
+    def set_parameters(self, life, force, alliance, cant_tributes, cowardice):
+        try: 
+            #check if any param is not an int
+            life = int(life)
+            force = int(force)
+            alliance = int(alliance)
+            cant_tributes = int(cant_tributes)
+            cowardice = int(cowardice)
+        
+            #Check if any value is out of valid range.
+            if not (50 <= life <= 100):
+                raise ValueError("Invalid input life.")
+            if not (5 <= force <= 25):
+                raise ValueError("Invalid input force.")
+            if not (3 <= alliance <= 10):
+                raise ValueError("Invalid input alliance.")
+            if not (4 <= cant_tributes <= 6):
+                raise ValueError("Invalid input cant_tributes.")
+            if not (0 <= cowardice <= 5):
+                raise ValueError("Invalid input cowardice.")
+        
+            # calculate points based on default value stat and received values
+            life_points = (life - 50) // 5
+            force_points = (force - 5) // 2
+            alliance_points = alliance - 3
+            tributes_points = (cant_tributes - 4) * 4
+            cowardice_points = cowardice
+            # check if total points is equal to 10
+            total_points = life_points + force_points + alliance_points + tributes_points + cowardice_points
+            if total_points > 10:
+                raise ValueError("Invalid input in stats.")
+        
+            district = District()
+            district.set_config(life, force, alliance, DISTRICT_DEFAULT, cant_tributes, cowardice)
+            self.districts.insert(0, district)
+        except ValueError as event:
+            raise ValueError(str(event))
 
     # Distribute items on board. Front use this method
     def distribute_items(self):
