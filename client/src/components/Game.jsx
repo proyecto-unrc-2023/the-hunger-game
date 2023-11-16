@@ -57,6 +57,37 @@ const Game = ({onViewChange}) => {
   //Estado para obtener la apariencia del distrito ganador
   const { setWinnerCharacter }= useGame();
 
+  const [speed, setSpeed] = useState(1);
+
+  const handleSpeedChange = (event) => {
+    const newSpeed = parseFloat(event.target.value);
+    setSpeed(newSpeed);
+  };
+
+  const SpeedSlider = ({ speed, handleSpeedChange }) => {
+    return (
+      <div className="speed-slider">
+      <div htmlFor="speed">Speed: {speed}</div>
+      <input
+        type="range"
+        id="speed"
+        name="speed"
+        min="0.5"
+        max="5"
+        step="0.1"
+        value={speed}
+        onChange={handleSpeedChange}
+        style={{
+          width: '80%', // Modifica el ancho del control deslizante
+          margin: '0 auto', // Centra el control deslizante horizontalmente
+          padding: '5px', // Añade un espacio alrededor del control deslizante
+        cursor: 'pointer', // 
+        }}
+      />
+    </div>
+    );
+  };
+
   // Pone pausa o reanuda la simulación
   const handlePause = () => {
     setPaused(!isPaused); 
@@ -120,27 +151,29 @@ const Game = ({onViewChange}) => {
     }
   };
  
-  // Crea un juego si es necesario y se encarga de actualizarlo cada cierto intervalo
+  // Crea un juego si  es necesario y se encarga de actualizarlo cada cierto intervalo
   useEffect(() => {
-    if (gameID !== null){
-      if (!gameInitialized) {
-        initialBoard();
-      }
+    let timeInterval;
+
+    const updateTimeInterval = () => {
+      clearInterval(timeInterval);
+      timeInterval = setInterval(() => {
+        if (!isPaused) {
+          fetchGameInfo();
+        }
+      }, 1000 / speed);
+    };
+
+    if (gameID !== null && !gameInitialized) {
+      initialBoard();
     }
-    
-    const time = setInterval(() => {
-      if (!isPaused) {
-        fetchGameInfo();
-      }
-    }, 500);
 
-    // if (fetchGameData === false) {
-    //   onViewChange("finish")
-    // }
+    updateTimeInterval(); // Establecer el intervalo inicial
 
-    return () => clearInterval(time);
-  
-  }, [gameID, isPaused, gameInitialized, winner]);
+    return () => {
+      clearInterval(timeInterval);
+    };
+  }, [gameID, isPaused, gameInitialized, winner, speed]);
 
   return (
     <main className="game">
@@ -164,6 +197,8 @@ const Game = ({onViewChange}) => {
             )}
         <TransformWrapper minScale={0.5}>
           <div className="button-section left">
+            <SpeedSlider speed={speed} handleSpeedChange={handleSpeedChange} />
+
             <ControlsZoom />
           </div>
           <TransformComponent>
