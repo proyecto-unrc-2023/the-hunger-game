@@ -703,9 +703,9 @@ def test_set_parameters_invalid_inputs_catch_except():
     with pytest.raises(ValueError):
         game.set_parameters(50, 5, '', 4, 0)
     with pytest.raises(ValueError):
-        game.set_parameters(50, 5, 3, "invalidCanTributes", 0)
+        game.set_parameters(50, 5, 3, "invalidTributes", 0)
     with pytest.raises(ValueError):
-        game.set_parameters(50, 5, 3, 4, 'invalidCowardice')
+        game.set_parameters(50, 5, 3, 4, 'a')
     
 
 def test_set_parameters_invalid_inputs_out_of_range():
@@ -725,13 +725,15 @@ def test_set_parameters_invalid_inputs_out_of_range():
 def test_set_parameters_invalid_inputs_points():
     game = GameLogic()
     with pytest.raises(ValueError):
-        game.set_parameters(100, 25, 10, 6, 0)
+        game.set_parameters(100, 25, 10, 6, 5)
     with pytest.raises(ValueError):
-        game.set_parameters(100, 7, 3, 4, 0)
+        game.set_parameters(50, 10, 4, 5, 2)
     with pytest.raises(ValueError):
-        game.set_parameters(50, 25, 10, 4, 0)
+        game.set_parameters(100, 6, 3, 4, 0)
     with pytest.raises(ValueError):
-        game.set_parameters(50, 5, 3, 6, 3)
+        game.set_parameters(59, 8, 3, 6, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(90, 8, 3, 4, 0)
 
 
 def test_set_parameters_valid_inputs():
