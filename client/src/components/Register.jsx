@@ -8,10 +8,12 @@ const Register = ({ onViewChange }) => {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [registerError, setRegisterError] = useState('');
 
   const handleRegister = async () => {
     setUsernameError('');
     setPasswordError('');
+    setRegisterError('');
 
     if (!username) {
       setUsernameError('Nombre de usuario es obligatorio');
@@ -43,14 +45,12 @@ const Register = ({ onViewChange }) => {
       });
 
       if (response.ok) {
-        console.log('Usuario registrado con éxito');
         onViewChange('init');
       } else {
-        console.log('Fallo al registrar al Usuario');
-        console.error('Error al registrar usuario');
+        setRegisterError('Nombre de usuario no disponible');
       }
     } catch (error) {
-      console.error('Error en la solicitud de registro', error);
+      setRegisterError('Error al registrarse, intente nuevamente más tarde');
     }
   };
 
@@ -94,7 +94,7 @@ const Register = ({ onViewChange }) => {
             }}
           />
           {confirmPasswordError && <div className="error">{confirmPasswordError}</div>}  
-          
+          {registerError && <div clasName="error">{registerError}</div>}
           <button onClick={handleRegister}>Registrarse</button>
           <button className="custom-button" onClick={handleGoToInitGame}>
             Volver al menu

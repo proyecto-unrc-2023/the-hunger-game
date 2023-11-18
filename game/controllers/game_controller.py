@@ -1,13 +1,14 @@
-from flask import jsonify
 from game.logic.game_logic import GameLogic, GameLogicSchema, GameMode
-from game.logic.district import DISTRICT_DEFAULT
 
 class GameController:
       # Set up a game.  
       def get_game(self, data):
         game = GameLogic()
         game.new_game(15, 15)
-        game.set_parameters(DISTRICT_DEFAULT, data['life'], data['force'], data['alliance'], data['cant_tributes'], data['cowardice'])
+        try:
+            game.set_parameters(data['life'], data['force'], data['alliance'], data['cant_tributes'], data['cowardice'])
+        except ValueError as event:
+            return str(event)
         game.configure_random_districts()
         game.distribute_district_tributes()
         game.distribute_neutral_tributes(10)

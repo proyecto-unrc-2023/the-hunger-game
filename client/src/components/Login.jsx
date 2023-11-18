@@ -41,10 +41,10 @@ const Login = ({ onViewChange }) => {
       if (response.ok) {
         onViewChange('menu');
       } else {
-        setLoginError('Nombre de usuario o contraseña incorrectos.');
+        setLoginError('Nombre de usuario o contraseña incorrectos');
       }
     } catch(error) {
-      setLoginError('Error al iniciar sesión, intente nuevamente más tarde.');
+      setLoginError('Error al iniciar sesión, intente nuevamente más tarde');
     }
   };
 
@@ -81,7 +81,7 @@ const Login = ({ onViewChange }) => {
                 }}
               />
               {passwordError && <div className="error">{passwordError}</div>}
-              {loginError && <div clasName="error-msg">{loginError}</div>} {/* show error messages */}
+              {loginError && <div clasName="error">{loginError}</div>} {/* show error messages */}
               <button onClick={handleLogin}>Iniciar sesión</button>
               <button className="custom-button" onClick={handleGoToInitGame}>
                 Volver al inicio
