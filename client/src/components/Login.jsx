@@ -42,7 +42,7 @@ const Login = ({ onViewChange, onLogin }) => {
       if (response.ok) {
         setIsLoggedIn(true);
         onLogin(true);
-        onViewChange('menu');
+        onViewChange('init');
       } else {
         setLoginError('Nombre de usuario o contraseña incorrectos');
       }

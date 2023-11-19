@@ -17,9 +17,6 @@ const App = () => {
 
   const handleLogin = (status) => {
     setIsLoggedIn(status);
-    if (status) {
-      setCurrentView('menu'); // Cambiar vista después del inicio de sesión
-    }
   };
 
   const views = {
