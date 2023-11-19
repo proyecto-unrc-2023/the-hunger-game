@@ -3,31 +3,39 @@ import Menu from './components/Menu.jsx';
 import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
 import WinnerScreen from './components/WinnerScreen.jsx';
-import Register from './components/Register.jsx'
+import Register from './components/Register.jsx';
 import Login from './components/Login.jsx';
 import './App.css';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('init');
- 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const handleViewChange = (view) => {
     setCurrentView(view);
   };
 
+  const handleLogin = (status) => {
+    setIsLoggedIn(status);
+    if (status) {
+      setCurrentView('menu'); // Cambiar vista después del inicio de sesión
+    }
+  };
+
   const views = {
-    init: InitGame,
-    menu: Menu,
-    game: Game,
-    finish: WinnerScreen,
-    register: Register,
-    login: Login,
+    init: () => <InitGame onViewChange={handleViewChange} isLoggedIn={isLoggedIn} />,
+    menu: () => <Menu onViewChange={handleViewChange} />,
+    game: () => <Game onViewChange={handleViewChange} />,
+    finish: () => <WinnerScreen onViewChange={handleViewChange} />,
+    register: () => <Register onViewChange={handleViewChange} />,
+    login: () => <Login onLogin={handleLogin} onViewChange={handleViewChange} />,
   };
 
   const CurrentViewComponent = views[currentView];
 
   return (
     <div className='app'>
-      <CurrentViewComponent onViewChange={handleViewChange} />
+      <CurrentViewComponent />
     </div>
   );
 };
