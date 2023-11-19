@@ -1,10 +1,10 @@
 from flask_restful import Resource
 from app import db 
 from user.user import User
-from flask import jsonify, request
+from flask import jsonify, make_response,request
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity, unset_jwt_cookies, jwt_required
 
 
 class Structure(Resource):
@@ -27,7 +27,7 @@ class Register(Resource):
         password = data.get('password')  # Obtén la contraseña desde los datos
         
         if name is None or password is None or name == '' or password == '':
-            return {'message': 'Nombre de usuario y contraseña son obligatorios.'}, 400
+            return {'message': 'Nombre de usuario o contraseña obligatorios.'}, 400
         else:
             user = User()
             try:
@@ -45,10 +45,12 @@ class Login(Resource):
 
         if user:
             #si el usuario existe entonces se inicia sesion
+            user.logged_in = True
+            db.session.commit() #actualiza el valor en la columna logged_in
             access_token = create_access_token(identity=user.id) #se crea un token unico de acceso
             return {'message': 'Inicio de sesión exitoso.','access_token': access_token}, 200
         else:
-            return {'error': 'Nombre de usuario o constraseña inválidos.'}, 400
+            return {'error': 'Nombre de usuario o constraseña incorrectos.'}, 400
 
 class UserGet(Resource):
     def post(self):
@@ -77,4 +79,18 @@ class UserIdGet(Resource):
             return response, 200
         else:
             return {'error': 'Usuario no encontrado.'}, 404
-        
+
+class Logout(Resource):
+    @jwt_required() #asegura que solo users autenticados puedan cerrar sesion
+    def post(self):
+        user_id = get_jwt_identity() #recupera el ID del usuario a traves del token
+        user = User.query.get(user_id)
+
+        if user and user.logged_in:
+            response = make_response() #crea una respuesta vacia
+            unset_jwt_cookies(response) #elimina cookies del token de acceso
+            user.logged_in = False
+            db.session.commit()
+            return {'message': 'Cierre de sesión exitoso.'}, 200
+        else:
+            return {'error': 'No hay un usuario logueado.'}, 404

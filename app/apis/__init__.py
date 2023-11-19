@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from app.apis.user_resource import Structure, Register, SelectPj, UserGet, Login, UserIdGet
+from app.apis.user_resource import Structure, Register, SelectPj, UserGet, Login, UserIdGet, Logout
 from app.apis.game_resource import ConfigDistrict, Game
 
 # Create a blueprint
@@ -17,4 +17,4 @@ api.add_resource(Login, '/login')
 api.add_resource(UserGet, '/get_user')
 api.add_resource(SelectPj, '/select')
 api.add_resource(UserIdGet, '/get_id')
-
+api.add_resource(Logout, '/logout')
