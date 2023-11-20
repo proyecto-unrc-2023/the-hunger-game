@@ -3,7 +3,9 @@ import Menu from './components/Menu.jsx';
 import Game from './components/Game.jsx';
 import InitGame from './components/InitGame.jsx';
 import WinnerScreen from './components/WinnerScreen.jsx';
-import Register from './components/Register.jsx';
+import Register from './components/Register.jsx'
+import Rules from './components/Rules.jsx'
+import About from './components/About.jsx'
 import Login from './components/Login.jsx';
 import './App.css';
 
@@ -26,6 +28,8 @@ const App = () => {
     finish: () => <WinnerScreen onViewChange={handleViewChange} />,
     register: () => <Register onViewChange={handleViewChange} />,
     login: () => <Login onLogin={handleLogin} onViewChange={handleViewChange} />,
+    rules: () => <Rules onViewChange={handleViewChange} />,
+    about: () => <About onViewChange={handleViewChange} />,
   };
 
   const CurrentViewComponent = views[currentView];

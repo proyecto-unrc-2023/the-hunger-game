@@ -7,6 +7,14 @@ const InitGame = ({ onViewChange, isLoggedIn }) => {
     onViewChange("menu"); // Llamando a la función proporcionada desde App
   };
 
+  const handleViewRules = () => {
+    onViewChange("rules");
+  };
+
+  const handleViewAbout = () => {
+    onViewChange("about");
+  };
+
   return (
     <div className="init-render">
       <Header onViewChange={onViewChange} /> 
@@ -15,6 +23,7 @@ const InitGame = ({ onViewChange, isLoggedIn }) => {
           <source src="/video.mp4" type="video/mp4"/>
         </video>
       </div> 
+      <button className='button-play-game' onClick={handleViewRules}>GAME RULES</button>
       <button
         className={`button-play-game ${isLoggedIn ? '' : 'disabled'}`}
         onClick={handlePlayGame}
@@ -22,6 +31,7 @@ const InitGame = ({ onViewChange, isLoggedIn }) => {
       >
         PLAY GAME
       </button>
+      <button className='button-play-game' onClick={handleViewAbout}>ABOUT GAME</button>
       <Footer onViewChange={onViewChange} /> 
     </div>
   );
