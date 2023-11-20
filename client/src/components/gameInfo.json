@@ -1,0 +1,18 @@
+
+{
+    "title": "About the Game",
+    "content": [
+      "The Hunger Game is a simulation game based on The Game of Life, themed around the movie 'The Hunger Games.'",
+      "The game consists of different teams, named 'districts' (a total of 6 teams), where each team is made up of 4 members known as tributes.",
+      "Within the game, players can encounter various items such as potions (life, force, and poison), which can alter an individual's life or strength.",
+      "There are also weapons with different ranges (bow, spear, and sword) that modify a tribute's strength and range.",
+      "Additionally, there is a group of individuals belonging to a neutral faction. These members can ally or fight with different teams based on their acceptance or rejection of the alliance with the district.",
+      "The game is centered around configuring your 'district' to achieve victory. Each choice can impact the course of the game, with the possibility of giving specific characteristics to your team, such as:",
+      "1. More life",
+      "2. More strength",
+      "3. More alliance capacity",
+      "4. Cowardice",
+      "5. Additional tributes"
+    ]
+  }
+  

@@ -1,0 +1,12 @@
+{
+    "title": "Rules of the game",
+    "content": [
+      "At the beginning of the game, the user (district 0) is given 10 district configuration points, which he can distribute as he wishes on each field. All fields consume 1 configuration point except for the tribute field, which for each tribute added it costs 4 configuration points.",
+      "Each point invested in life gives you 5 more life.",
+      "Each point invested in strength gives you 2 more strength.",
+      "Each point invested in alliance gives you one more alliance point.",
+      "Each point invested in Cowardice gives you one more point of cowardice.",
+      "Each point invested in tributes gives you one more tribute.",
+      "The game ends when at least one member of any district survives."
+    ]
+  }
