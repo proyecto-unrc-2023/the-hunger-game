@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import "./Login.css";
 
-const Login = ({ onViewChange }) => {
+const Login = ({ onViewChange, onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loginError, setLoginError] = useState(''); // errors handling
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
      
   const handleLogin = async () => {
 
@@ -39,7 +40,9 @@ const Login = ({ onViewChange }) => {
       });
 
       if (response.ok) {
-        onViewChange('menu');
+        setIsLoggedIn(true);
+        onLogin(true);
+        onViewChange('init');
       } else {
         setLoginError('Nombre de usuario o contraseña incorrectos');
       }
