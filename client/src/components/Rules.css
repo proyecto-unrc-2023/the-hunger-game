@@ -13,8 +13,7 @@
 
 .rules-container {
     max-width: 600px;
-    margin-left: 350px;
-    margin-top: 50px;
+    margin: 0 auto;
     position: relative;
     padding: 20px;
     background-color: #f9f9f9;

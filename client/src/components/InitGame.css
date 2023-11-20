@@ -37,6 +37,10 @@
     transform: translateX(15em);
   }
 
+  .button-play-game:disabled {
+    filter: grayscale(100%);
+  }
+
 .init-render {
     overflow: hidden;
     flex-direction: column;
