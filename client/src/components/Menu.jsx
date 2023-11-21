@@ -135,14 +135,14 @@ export default function Menu({ onViewChange }) {
   // Al darle click al boton de start simulation
   const handleStartGame = () => {
     if (!isReady) {
-        // Las estadísticas no se han distribuido
-        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
-      } else if (selectedCharacter == null) {
-        // No se ha seleccionado un personaje
+      if (selectedCharacter == null) {
         alert("Debes seleccionar un personaje antes de comenzar el juego.");
       } else {
-        sendDataToServer();
-        onViewChange('game');
+        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
+      }
+    } else {
+      sendDataToServer();
+      onViewChange('game');
     }
   };
 
