@@ -1,4 +1,5 @@
 import React from 'react';
+import "./Logout.css";
 
 const Logout = ({ isLoggedIn, setIsLoggedIn, onViewChange }) => {
   const handleLogout = async () => {
@@ -31,8 +32,8 @@ const Logout = ({ isLoggedIn, setIsLoggedIn, onViewChange }) => {
   };
 
   return (
-    <button onClick={handleLogout} disabled={!isLoggedIn}>
-      Cerrar sesión
+    <button className='logout' onClick={handleLogout} disabled={!isLoggedIn}>
+      LOGOUT
     </button>
   );
 };
