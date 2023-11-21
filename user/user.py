@@ -45,6 +45,10 @@ class User(db.Model):
     # Method to get the ID of a User   
     def get_id(self):
         return self.id
+    
+    # Verify if current user is authenticated
+    def is_authenticated(self):
+        return self.logged_in
          
         
 class UserSchema(Schema):

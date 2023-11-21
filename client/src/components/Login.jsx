@@ -14,6 +14,11 @@ const Login = ({ onViewChange, onLogin }) => {
     setUsernameError('');
     setPasswordError('');
     setLoginError('');
+    
+    if (isLoggedIn) {
+      setLoginError('Ya hay un usuario autenticado. Cierre sesión antes de iniciar una nueva.');
+      return;
+    }
 
     if(!username) {
       setUsernameError('Nombre de usuario es obligatorio');
