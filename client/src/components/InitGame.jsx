@@ -2,7 +2,9 @@ import React from 'react';
 import "./InitGame.css";
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
-const InitGame = ({ onViewChange, isLoggedIn }) => {
+import Logout from './Logout.jsx';
+
+const InitGame = ({ onViewChange, isLoggedIn, setIsLoggedIn}) => {
   const handlePlayGame = () => {
     onViewChange("menu"); // Llamando a la función proporcionada desde App
   };
@@ -32,6 +34,7 @@ const InitGame = ({ onViewChange, isLoggedIn }) => {
         PLAY GAME
       </button>
       <button className='button-play-game' onClick={handleViewAbout}>ABOUT GAME</button>
+      {isLoggedIn && <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} onViewChange={onViewChange}/>}
       <Footer onViewChange={onViewChange} /> 
     </div>
   );

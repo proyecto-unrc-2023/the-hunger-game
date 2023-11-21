@@ -40,6 +40,10 @@ const Login = ({ onViewChange, onLogin }) => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+        const accessToken = responseData.access_token; // se recupera el token de acceso
+        localStorage.setItem('access_token', accessToken);
+
         setIsLoggedIn(true);
         onLogin(true);
         onViewChange('init');

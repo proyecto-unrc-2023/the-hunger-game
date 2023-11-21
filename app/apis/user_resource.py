@@ -8,17 +8,17 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, unset_jwt_
 
 
 class Structure(Resource):
-        def get(self):
-            inspector = inspect(db.engine)
-            tables = inspector.get_table_names()
-            table_info = {}
+    def get(self):
+        inspector = inspect(db.engine)
+        tables = inspector.get_table_names()
+        table_info = {}
 
-            for table in tables:
-                columns = inspector.get_columns(table)
-                column_names = [column['name'] for column in columns]
-                table_info[table] = column_names
+        for table in tables:
+            columns = inspector.get_columns(table)
+            column_names = [column['name'] for column in columns]
+            table_info[table] = column_names
 
-            return jsonify(table_info)
+        return jsonify(table_info)
         
 class Register(Resource):
     def post(self):
