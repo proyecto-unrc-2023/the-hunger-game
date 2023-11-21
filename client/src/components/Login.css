@@ -46,28 +46,12 @@
   }
 }
 
-/*
-.login-container .login-container {
-background-color: #f0f0f0;
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-*/
-
 .login-container .custom-heading {
   color: #333;
   font-family: 'HungerGames', Arial, sans-serif;
   -webkit-text-stroke: 1px black; 
   animation: fireAnimation 2s infinite;
 }
-
-/*
-@font-face {
-  font-family: 'HungerGames';
-  src: url('../../public/HungerGames.ttf') format('truetype');
-}
-*/
 
 @keyframes fireAnimation {
   0% {

@@ -4,7 +4,7 @@ from game.logic.cell import State
 from game.logic.game_logic import GameLogic, GameMode
 from game.logic.item import Bow, Potion, PotionForce, PotionLife, PotionPoison, Spear, Sword, Weapon
 from game.logic.tribute import Tribute
-from game.logic.district import District
+from game.logic.district import District, DISTRICT_DEFAULT
 from main import init_simulation
 
 
@@ -693,3 +693,57 @@ def test_one_iteration_front_with_winner_district():
     #update winner
     game.winner_district() 
     assert game.winner == 1
+
+def test_set_parameters_invalid_inputs_catch_except():
+    game = GameLogic()
+    with pytest.raises(ValueError):
+        game.set_parameters("invalidLife", 5, 3, 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 'invalidForce', 3, 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 5, '', 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 5, 3, "invalidTributes", 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 5, 3, 4, 'a')
+    
+
+def test_set_parameters_invalid_inputs_out_of_range():
+    game = GameLogic()
+    with pytest.raises(ValueError):
+        game.set_parameters(1000, 5, 3, 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, -1, 3, 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 5, 0, 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 5, 3, 10, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 5, 3, 4, 20)
+
+
+def test_set_parameters_invalid_inputs_points():
+    game = GameLogic()
+    with pytest.raises(ValueError):
+        game.set_parameters(100, 25, 10, 6, 5)
+    with pytest.raises(ValueError):
+        game.set_parameters(50, 10, 4, 5, 2)
+    with pytest.raises(ValueError):
+        game.set_parameters(100, 6, 3, 4, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(59, 8, 3, 6, 0)
+    with pytest.raises(ValueError):
+        game.set_parameters(90, 8, 3, 4, 0)
+
+
+def test_set_parameters_valid_inputs():
+    game = GameLogic()
+    game.set_parameters(50, 25, 3, 4, 0)
+    own_district = game.districts[0]
+    for i in range (own_district.cant_tributes):
+        tribute = own_district.tributes[i]
+        assert tribute.life == 50
+        assert tribute.force == 25
+        assert tribute.alliance == 3
+        assert tribute.cowardice == 0
+        assert tribute.district == DISTRICT_DEFAULT

@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import "./Login.css";
 
-const Login = ({ onViewChange }) => {
+const Login = ({ onViewChange, onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loginError, setLoginError] = useState(''); // errors handling
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
      
   const handleLogin = async () => {
 
     setUsernameError('');
     setPasswordError('');
     setLoginError('');
+    
+    if (isLoggedIn) {
+      setLoginError('Ya hay un usuario autenticado. Cierre sesión antes de iniciar una nueva.');
+      return;
+    }
 
     if(!username) {
       setUsernameError('Nombre de usuario es obligatorio');
@@ -39,12 +45,18 @@ const Login = ({ onViewChange }) => {
       });
 
       if (response.ok) {
-        onViewChange('menu');
+        const responseData = await response.json();
+        const accessToken = responseData.access_token; // se recupera el token de acceso
+        localStorage.setItem('access_token', accessToken);
+
+        setIsLoggedIn(true);
+        onLogin(true);
+        onViewChange('init');
       } else {
-        setLoginError('Nombre de usuario o contraseña incorrectos.');
+        setLoginError('Nombre de usuario o contraseña incorrectos');
       }
     } catch(error) {
-      setLoginError('Error al iniciar sesión, intente nuevamente más tarde.');
+      setLoginError('Error al iniciar sesión, intente nuevamente más tarde');
     }
   };
 
@@ -81,7 +93,7 @@ const Login = ({ onViewChange }) => {
                 }}
               />
               {passwordError && <div className="error">{passwordError}</div>}
-              {loginError && <div clasName="error-msg">{loginError}</div>} {/* show error messages */}
+              {loginError && <div clasName="error">{loginError}</div>} {/* show error messages */}
               <button onClick={handleLogin}>Iniciar sesión</button>
               <button className="custom-button" onClick={handleGoToInitGame}>
                 Volver al inicio
