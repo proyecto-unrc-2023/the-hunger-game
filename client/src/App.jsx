@@ -22,7 +22,7 @@ const App = () => {
   };
 
   const views = {
-    init: () => <InitGame onViewChange={handleViewChange} isLoggedIn={isLoggedIn} />,
+    init: () => <InitGame onViewChange={handleViewChange} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />,
     menu: () => <Menu onViewChange={handleViewChange} />,
     game: () => <Game onViewChange={handleViewChange} />,
     finish: () => <WinnerScreen onViewChange={handleViewChange} />,

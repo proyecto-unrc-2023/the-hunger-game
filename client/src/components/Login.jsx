@@ -14,6 +14,11 @@ const Login = ({ onViewChange, onLogin }) => {
     setUsernameError('');
     setPasswordError('');
     setLoginError('');
+    
+    if (isLoggedIn) {
+      setLoginError('Ya hay un usuario autenticado. Cierre sesión antes de iniciar una nueva.');
+      return;
+    }
 
     if(!username) {
       setUsernameError('Nombre de usuario es obligatorio');
@@ -40,6 +45,10 @@ const Login = ({ onViewChange, onLogin }) => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+        const accessToken = responseData.access_token; // se recupera el token de acceso
+        localStorage.setItem('access_token', accessToken);
+
         setIsLoggedIn(true);
         onLogin(true);
         onViewChange('init');

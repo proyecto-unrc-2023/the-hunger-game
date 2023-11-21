@@ -7,7 +7,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), unique=False, nullable=False)
     character = db.Column(db.String(50), unique=False, nullable=True)
-    
+    logged_in = db.Column(db.Boolean, default=False, nullable=False)
     
     # Constructor of User, values can take None or specified value.
     def __init__(self, username=None, password=None):
@@ -24,7 +24,8 @@ class User(db.Model):
             'id': self.id,
             'username': self.username,
             'password': self.password,
-            'character': self.character
+            'character': self.character,
+            'logged_in': self.logged_in
         }
         
     # Method to add an user to the db
@@ -44,6 +45,10 @@ class User(db.Model):
     # Method to get the ID of a User   
     def get_id(self):
         return self.id
+    
+    # Verify if current user is authenticated
+    def is_authenticated(self):
+        return self.logged_in
          
         
 class UserSchema(Schema):
@@ -51,3 +56,4 @@ class UserSchema(Schema):
     username = fields.Str()
     password = fields.Str()
     character = fields.Str()
+    logged_in = fields.Boolean()
