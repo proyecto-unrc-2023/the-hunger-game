@@ -72,9 +72,9 @@
 }
 
 .pointer {
-  width: 10px;
+  width: 15px;
   height: auto;
   position: absolute;
-  top: 10%;
-  left: 40%;
+  top: 0%;
+  left: 35%;
 }

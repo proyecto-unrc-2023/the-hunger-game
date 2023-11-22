@@ -4,17 +4,16 @@ import { Menu } from "../components/Menu.jsx";
 
 // Mock de un contexto necesario para renderizar el menu
 jest.mock("../components/GameContext.jsx", () => ({
-  __esModule: true,
   useGame: () => ({
     selectedCharacter: 0,
     charactersOrdered: [
-      "/board-images/characters/Minotaur_Walking_1.png",
-      "/board-images/characters/Fallen_Angels_Walking_1.png",
-      "/board-images/characters/Golem_Walking_1.png",
-      "/board-images/characters/Goblin_Walking_1.png",
-      "/board-images/characters/Orc_Walking_1.png",
-      "/board-images/characters/Reaper_Man_Walking_1.png",
-      "/board-images/characters/Fallen_Angels_Walking_2.png",
+      "/board-images/characters/CH1.png",
+      "/board-images/characters/CH2.png",
+      "/board-images/characters/CH3.png",
+      "/board-images/characters/CH4.png",
+      "/board-images/characters/CH5.png",
+      "/board-images/characters/CH6.png",
+      "/board-images/characters/N.png",
     ],
   }),
 }));
@@ -24,7 +23,7 @@ global.fetch = jest.fn(); // Para hacer el fetch usamos funciones proporcionadas
 describe("Menu component", () => {
 
   beforeEach(() => {
-    // CREO que simula una solicitud 
+    // Simula una solicitud 
     fetch.mockResolvedValue({
       json: async () => ({
         alliance: 3,

@@ -168,6 +168,10 @@ const Game = ({onViewChange}) => {
       initialBoard();
     }
 
+    if (!fetchGameData) {
+      handleFinish();
+    }
+
     updateTimeInterval(); // Establecer el intervalo inicial
 
     return () => {
@@ -180,18 +184,12 @@ const Game = ({onViewChange}) => {
       <div className="game-container">
       {livetribute.length !== 0 && isPaused && (
                 <div className="ventana-emergente-container">
-                    <div className="image-container left">
-                        <img src="/board-images/characters/Orc_Walking_1.png" alt="Izquierda" />
-                    </div>
                     <div className="ventana-emergente" onClick={handlePause}>
                         <div className="overlay"></div>
                         <h2> ¡PAUSE! </h2>
                         {livetribute.map((elemento, index) => (
                             <p key={index}>District {index} : {elemento} lives </p>
                         ))}
-                    </div>
-                    <div className="image-container right">
-                        <img src='/board-images/characters/Fallen_Angels_Walking_1.png' alt="Derecha" />
                     </div>
                 </div>
             )}
