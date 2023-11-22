@@ -17,7 +17,7 @@ function DecrementButton({ onClick }) {
 }
 
 function Stat({ isConsumed }) {
-    const statClassName = isConsumed ? "stat is-consumed" : "stat";
+    const statClassName = isConsumed ? "is-consumed" : "stat";
     return <div className={statClassName}></div>;
 }
 
@@ -57,4 +57,4 @@ function IncrementableBar({
         </div>
     );
 }
-export { IncrementableBar, StatsBar };
+export { IncrementableBar, StatsBar, Stat };

@@ -6,7 +6,7 @@ const Cell = ({state}) => {
   const { characters } = useGame();
   const { neutralCharacter} = useGame();
   // characters ahora contendrá las imágenes actualizadas para todos los tributos
-  const Pointer = "/board-images/characters/pointer.png";
+  const Pointer = "/board-images/characters/pointer2.png";
   const GrassImage = "/board-images/grass3.png";
   const BorderRImage = "/board-images/border-r.png";
   const BorderLImage = "/board-images/border-l.png";

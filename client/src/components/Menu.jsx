@@ -3,6 +3,7 @@ import "./Menu.css";
 import "./Common.css";
 import { useGame } from "./GameContext";
 import { IncrementableBar, StatsBar } from "./IncrementableBar";
+import { act } from 'react-dom/test-utils';
 
 function InitGameButton({ isReady, onClick }) {
   const initSimulationButtonClass = isReady ? 'init-simulation-button is-ready' : 'init-simulation-button';
@@ -72,7 +73,7 @@ export default function Menu({ onViewChange }) {
   // Estado para regular el inicio de la simulacion
   const [isReady, setIsReady] = useState(!(statsBar.includes(true)));
   // Estado para llevar las configuracion inicial, parcial y final del distrito
-  const [menu, setMenu] = useState(null);
+  const [menu, setMenu] = useState({});
   // Estado para llevar el personaje seleccionado
   const { selectedCharacter, setSelectedCharacter } = useGame();
   // Seteo el id del juego con la respuesta del POST
@@ -134,14 +135,14 @@ export default function Menu({ onViewChange }) {
   // Al darle click al boton de start simulation
   const handleStartGame = () => {
     if (!isReady) {
-        // Las estadísticas no se han distribuido
-        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
-      } else if (selectedCharacter == null) {
-        // No se ha seleccionado un personaje
+      if (selectedCharacter == null) {
         alert("Debes seleccionar un personaje antes de comenzar el juego.");
       } else {
-        sendDataToServer();
-        onViewChange('game');
+        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
+      }
+    } else {
+      sendDataToServer();
+      onViewChange('game');
     }
   };
 
@@ -155,12 +156,16 @@ export default function Menu({ onViewChange }) {
   }, [statsBar, selectedCharacter]);
   
   // Hago un fetch para obtener configuraciones iniciales
-  const getMenu = async() => {
-    const data = await fetch("http://localhost:5000/game/district"); 
-    const result = await data.json();
-    // Asegurarse de que las barras se inicialicen vacías
-    setMenu(result);
-  }
+  const getMenu = async () => {
+    try {
+      const data = await fetch("http://localhost:5000/game/district");
+      const result = await data.json();
+      return result;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
   
   useEffect(() => {
     const updatedStats = {};
@@ -169,7 +174,19 @@ export default function Menu({ onViewChange }) {
       updatedStats[key] = { attribute, bar: filledBar, increases, consumes };
     });
     setStats(updatedStats);
-    getMenu();
+
+    const fetchData = async () => {
+      try {
+        const result = await getMenu();
+        act(() => {
+          setMenu(result); // act asegura que setMenu esté sincronizado y finalizado antes de que la prueba continúe ejecutándose
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+    fetchData();
   }, []);
 
   // Envio al back las stats configuradas por el usuario
@@ -248,3 +265,5 @@ export default function Menu({ onViewChange }) {
     </div>
   );
 }
+
+export { Menu };

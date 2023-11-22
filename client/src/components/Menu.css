@@ -45,7 +45,13 @@
   overflow: hidden;
 }
 
-.stat.is-consumed {
+.is-consumed {
+  width: 20px;
+  height: 40px;
+  margin: 2px;
+  border: 1px solid #0000004f;
+  border-radius: 5px; /* Añade bordes redondeados */
+  overflow: hidden;
   background-color: hsl(14, 100%, 45%);
 }
 
