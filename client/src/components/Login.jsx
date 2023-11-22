@@ -70,10 +70,10 @@ const Login = ({ onViewChange, onLogin }) => {
       <div className="login-container">
         <div className="background"></div>
           <div className="login">
-            <h2 className="custom-heading">Iniciar sesión</h2>
+            <h2 className="custom-heading">Login</h2>
               <input
                 type="text"
-                placeholder="Nombre de usuario"
+                placeholder="Username"
                 value={username}
                 onChange={(e) => {
                 setUsername(e.target.value);
@@ -84,7 +84,7 @@ const Login = ({ onViewChange, onLogin }) => {
               {usernameError && <div className="error">{usernameError}</div>}
               <input
                 type="password"
-                placeholder="Contraseña"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => {
                 setPassword(e.target.value);
@@ -94,9 +94,9 @@ const Login = ({ onViewChange, onLogin }) => {
               />
               {passwordError && <div className="error">{passwordError}</div>}
               {loginError && <div clasName="error">{loginError}</div>} {/* show error messages */}
-              <button onClick={handleLogin}>Iniciar sesión</button>
+              <button onClick={handleLogin}>Login</button>
               <button className="custom-button" onClick={handleGoToInitGame}>
-                Volver al inicio
+                Back to menu
               </button>
           </div>
       </div>
