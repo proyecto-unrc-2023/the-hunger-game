@@ -59,7 +59,7 @@ function BackButton({ onClick }) {
   const backButtonClass = "init-simulation-button is-ready"; // Utiliza la misma clase de estilo que el botón "Start Simulation"
   return (
     <button className={backButtonClass} onClick={onClick}>
-      Volver
+      Back
     </button>
   );
 }
@@ -136,9 +136,9 @@ export default function Menu({ onViewChange }) {
   const handleStartGame = () => {
     if (!isReady) {
       if (selectedCharacter == null) {
-        alert("Debes seleccionar un personaje antes de comenzar el juego.");
+        alert("You must select a character before starting the game.");
       } else {
-        alert("Debes distribuir todas las estadísticas antes de comenzar el juego.");
+        alert("You must distribute all statistics before starting the game.");
       }
     } else {
       sendDataToServer();

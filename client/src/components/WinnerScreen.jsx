@@ -15,7 +15,7 @@ const WinnerScreen = ({ onViewChange }) => {
     return (
       <div className="winner-screen">
         <div className="winner-container">
-          <div className='winner-card'><h2>HA GANADO EL DISTRITO {winnerCharacter}</h2></div>
+          <div className='winner-card'><h2>DISTRICT {winnerCharacter} WON</h2></div>
           <img className = "winner-img" src={characters[winnerCharacter]} ></img>
         </div>
         <div className="restart-save-container">

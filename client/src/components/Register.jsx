@@ -63,10 +63,10 @@ const Register = ({ onViewChange }) => {
       <div className="register-container">
         <div className="background"></div>
         <div className="register">
-          <h2 className="custom-heading">Registrarse</h2>
+          <h2 className="custom-heading">Register</h2>
           <input
             type="text"
-            placeholder="Nombre de usuario"
+            placeholder="User name"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value);
@@ -76,7 +76,7 @@ const Register = ({ onViewChange }) => {
           {usernameError && <div className="error">{usernameError}</div>}
           <input
             type="password"
-            placeholder="Contraseña"
+            placeholder="Password"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -86,7 +86,7 @@ const Register = ({ onViewChange }) => {
           {passwordError && <div className="error">{passwordError}</div>}
           <input
             type="password"
-            placeholder="Confirmar contraseña"
+            placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => {
               setConfirmPassword(e.target.value);
@@ -95,9 +95,9 @@ const Register = ({ onViewChange }) => {
           />
           {confirmPasswordError && <div className="error">{confirmPasswordError}</div>}  
           {registerError && <div clasName="error">{registerError}</div>}
-          <button onClick={handleRegister}>Registrarse</button>
+          <button onClick={handleRegister}>Register</button>
           <button className="custom-button" onClick={handleGoToInitGame}>
-            Volver al menu
+            Back to menu
           </button>
         </div>
       </div>
