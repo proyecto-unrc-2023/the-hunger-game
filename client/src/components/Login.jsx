@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
 import "./Login.css";
 
-const Login = ({ onViewChange, onLogin }) => {
+const Login = ({ onViewChange, onLogin, isLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [loginError, setLoginError] = useState(''); // errors handling
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [loginError, setLoginError] = useState('');
+  //const [isLoggedIn, setIsLoggedIn] = useState(false); 
      
   const handleLogin = async () => {
 
     setUsernameError('');
     setPasswordError('');
     setLoginError('');
-    
-    if (isLoggedIn) {
-      setLoginError('Ya hay un usuario autenticado. Cierre sesión antes de iniciar una nueva.');
-      return;
-    }
 
     if(!username) {
       setUsernameError('Nombre de usuario es obligatorio');
@@ -27,6 +22,11 @@ const Login = ({ onViewChange, onLogin }) => {
 
     if (!password) {
       setPasswordError('Contraseña es obligatoria');
+      return;
+    }
+
+    if (isLoggedIn) {
+      setLoginError('No puedes iniciar otra sesión, desloguea primero.');
       return;
     }
 
@@ -49,7 +49,7 @@ const Login = ({ onViewChange, onLogin }) => {
         const accessToken = responseData.access_token; // se recupera el token de acceso
         localStorage.setItem('access_token', accessToken);
 
-        setIsLoggedIn(true);
+        //setIsLoggedIn(true);
         onLogin(true);
         onViewChange('init');
       } else {
@@ -60,7 +60,6 @@ const Login = ({ onViewChange, onLogin }) => {
     }
   };
 
-  // Redirect to init
   const handleGoToInitGame = () => {
     onViewChange('init');
   };
@@ -93,7 +92,7 @@ const Login = ({ onViewChange, onLogin }) => {
                 }}
               />
               {passwordError && <div className="error">{passwordError}</div>}
-              {loginError && <div clasName="error">{loginError}</div>} {/* show error messages */}
+              {loginError && <div clasName="error">{loginError}</div>}
               <button onClick={handleLogin}>Login</button>
               <button className="custom-button" onClick={handleGoToInitGame}>
                 Back to menu

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Register.css';
 
-const Register = ({ onViewChange }) => {
+const Register = ({ onViewChange, isLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,6 +27,11 @@ const Register = ({ onViewChange }) => {
 
     if (password !== confirmPassword) {
       setConfirmPasswordError('Las contraseñas no coinciden');
+      return;
+    }
+
+    if (isLoggedIn) {
+      setRegisterError('No puedes registrarte, desloguea primero.');
       return;
     }
 
@@ -59,7 +64,7 @@ const Register = ({ onViewChange }) => {
   };
 
   return (
-    <div className="main-container"> {/* Nueva línea */}
+    <div className="main-container">
       <div className="register-container">
         <div className="background"></div>
         <div className="register">

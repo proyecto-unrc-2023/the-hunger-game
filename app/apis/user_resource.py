@@ -23,7 +23,7 @@ class Structure(Resource):
         
 class Register(Resource):
     def post(self):
-        global is_user_authenticated #variable global
+        global is_user_authenticated
 
         data = request.get_json()
         name = data.get('name')
@@ -40,7 +40,6 @@ class Register(Resource):
                 user.add_user(name, password)
                 return {'message': 'Usuario registrado con éxito.'}, 200
             except IntegrityError as integrity_error:
-                #si el username ya existe se captura la excepcion de integridad
                 db.session.rollback() #se revierte la transaccion
                 return {'error': 'El nombre de usuario ya esta en uso.'}, 400
 
@@ -55,14 +54,20 @@ class Login(Resource):
             if is_user_authenticated:
                 return {'error': 'No puedes iniciar una sesión mientras estés logueado.'}, 400
             
-            user.logged_in = True
-            db.session.commit() #actualiza el valor en la columna logged_in
             is_user_authenticated = True
             access_token = create_access_token(identity=user.id) #se crea un token unico de acceso
             return {'message': 'Inicio de sesión exitoso.','access_token': access_token}, 200
         else:
-            return {'error': 'Nombre de usuario o constraseña incorrectos.'}, 400
+            return {'error': 'Nombre de usuario o constraseña incorrectos.'}, 401
 
+    @jwt_required()
+    def get(self):
+        try:
+            user_id = get_jwt_identity()
+            return {'message': 'Token de acceso válido', 'user_id': user_id}, 200
+        except Exception as event:
+            return {'error': 'Token de acceso no valido'}, 401
+        
 class UserGet(Resource):
     def post(self):
         data = request.get_json()
@@ -95,14 +100,13 @@ class Logout(Resource):
     @jwt_required() #asegura que solo users autenticados puedan cerrar sesion
     def post(self):
         global is_user_authenticated
+
         user_id = get_jwt_identity() #recupera el ID del usuario a traves del token
         user = User.query.get(user_id)
 
-        if user and is_user_authenticated:
+        if user: 
             response = make_response() #crea una respuesta vacia
-            unset_jwt_cookies(response) #elimina cookies del token de acceso
-            user.logged_in = False
-            db.session.commit()
+            unset_jwt_cookies(response) #elimina cookies del token de acces
             is_user_authenticated = False
             return {'message': 'Cierre de sesión exitoso.'}, 200
         else:
