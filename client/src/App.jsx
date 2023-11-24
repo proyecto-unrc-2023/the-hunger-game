@@ -49,7 +49,7 @@ const App = () => {
   }, []);
   
   const views = {
-    init: () => <InitGame onViewChange={handleViewChange} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />,
+    init: () => <InitGame onViewChange={handleViewChange} isLoggedIn={isLoggedIn} onLogout={handleLogin} />,
     menu: () => <Menu onViewChange={handleViewChange} />,
     game: () => <Game onViewChange={handleViewChange} />,
     finish: () => <WinnerScreen onViewChange={handleViewChange} />,

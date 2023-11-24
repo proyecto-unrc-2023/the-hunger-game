@@ -6,8 +6,7 @@ const Login = ({ onViewChange, onLogin, isLoggedIn }) => {
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [loginError, setLoginError] = useState('');
-  //const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [loginError, setLoginError] = useState(''); 
      
   const handleLogin = async () => {
 
@@ -49,7 +48,6 @@ const Login = ({ onViewChange, onLogin, isLoggedIn }) => {
         const accessToken = responseData.access_token; // se recupera el token de acceso
         localStorage.setItem('access_token', accessToken);
 
-        //setIsLoggedIn(true);
         onLogin(true);
         onViewChange('init');
       } else {

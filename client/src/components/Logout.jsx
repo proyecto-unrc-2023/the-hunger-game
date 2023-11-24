@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Logout.css";
 
-const Logout = ({ isLoggedIn, setIsLoggedIn, onViewChange }) => {
+const Logout = ({ isLoggedIn, onLogout, onViewChange }) => {
   
   const handleLogout = async () => {
     try {
@@ -22,7 +22,7 @@ const Logout = ({ isLoggedIn, setIsLoggedIn, onViewChange }) => {
 
       if (response.ok) {
         localStorage.removeItem('access_token');
-        setIsLoggedIn(false);
+        onLogout(false);
         onViewChange('init');
       } else {
         console.error('Error al cerrar sesión:', response.status);
