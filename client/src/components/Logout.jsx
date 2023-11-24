@@ -1,12 +1,13 @@
 import React from 'react';
 import "./Logout.css";
 
-const Logout = ({ isLoggedIn, setIsLoggedIn, onViewChange }) => {
+const Logout = ({ isLoggedIn, onLogout, onViewChange }) => {
+  
   const handleLogout = async () => {
     try {
       const accessToken = localStorage.getItem('access_token');
       
-      if (!accessToken) { // manejo de error si no hay un token de acceso
+      if (!accessToken) {
         console.error('Token de acceso no encontrado al cerrar sesión.')
         return;
       }
@@ -20,8 +21,8 @@ const Logout = ({ isLoggedIn, setIsLoggedIn, onViewChange }) => {
       });
 
       if (response.ok) {
-        localStorage.removeItem('access_token'); // borra el token al cerrar la sesion
-        setIsLoggedIn(false);
+        localStorage.removeItem('access_token');
+        onLogout(false);
         onViewChange('init');
       } else {
         console.error('Error al cerrar sesión:', response.status);

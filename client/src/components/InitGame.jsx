@@ -4,7 +4,7 @@ import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import Logout from './Logout.jsx';
 
-const InitGame = ({ onViewChange, isLoggedIn, setIsLoggedIn}) => {
+const InitGame = ({ onViewChange, isLoggedIn, onLogout}) => {
   const handlePlayGame = () => {
     onViewChange("menu"); // Llamando a la función proporcionada desde App
   };
@@ -34,7 +34,7 @@ const InitGame = ({ onViewChange, isLoggedIn, setIsLoggedIn}) => {
         PLAY GAME
       </button>
       <button className='button-play-game' onClick={handleViewAbout}>ABOUT GAME</button>
-      {isLoggedIn && <Logout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} onViewChange={onViewChange}/>}
+      {isLoggedIn && <Logout isLoggedIn={isLoggedIn} onLogout={onLogout} onViewChange={onViewChange}/>}
       <Footer onViewChange={onViewChange} /> 
     </div>
   );
