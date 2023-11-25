@@ -16,22 +16,22 @@ const Register = ({ onViewChange, isLoggedIn }) => {
     setRegisterError('');
 
     if (!username) {
-      setUsernameError('Nombre de usuario es obligatorio');
+      setUsernameError('Username is required');
       return;
     }
 
     if (!password) {
-      setPasswordError('Contraseña es obligatoria');
+      setPasswordError('Password is required');
       return;
     }
 
     if (password !== confirmPassword) {
-      setConfirmPasswordError('Las contraseñas no coinciden');
+      setConfirmPasswordError('Passwords do not match');
       return;
     }
 
     if (isLoggedIn) {
-      setRegisterError('No puedes registrarte, desloguea primero.');
+      setRegisterError('You can not register, you must logout first');
       return;
     }
 
@@ -52,10 +52,10 @@ const Register = ({ onViewChange, isLoggedIn }) => {
       if (response.ok) {
         onViewChange('init');
       } else {
-        setRegisterError('Nombre de usuario no disponible');
+        setRegisterError('Username taken');
       }
     } catch (error) {
-      setRegisterError('Error al registrarse, intente nuevamente más tarde');
+      setRegisterError('Error registering, please try again more later');
     }
   };
 
@@ -71,7 +71,7 @@ const Register = ({ onViewChange, isLoggedIn }) => {
           <h2 className="custom-heading">Register</h2>
           <input
             type="text"
-            placeholder="User name"
+            placeholder="Username"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value);

@@ -12,6 +12,7 @@
   display: flex;
   width: 75px;
   height: 100px;
+  cursor: pointer;
 }
 .card img{
   width: 0px;
