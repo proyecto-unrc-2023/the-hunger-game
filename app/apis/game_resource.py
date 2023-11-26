@@ -1,18 +1,28 @@
 from flask import request
 from flask_restful import Resource
+from flask_jwt_extended import get_jwt_identity, jwt_required, JWTManager
 
 from game.controllers.district_controller import DistrictController
 from game.controllers.game_controller import GameController
 from game.logic.game_logic import GameLogicSchema
 
-games = []
+games = {}
+
+jwt = JWTManager()
+
+# Configuración del middleware para extraer y verificar el token antes de llegar a las rutas
+@jwt.token_in_request
+def custom_jwt_handler():
+    token = request.headers.get('Authorization')
+    return token
 
 class ConfigDistrict(Resource):
     
     def get(self):
         d_controller = DistrictController()
         return d_controller.get_new_district()
-    
+
+    @jwt_required()
     def post(self):
         data = request.get_json()  #Obtain data sends by front.
         g_controller = GameController()
@@ -21,8 +31,8 @@ class ConfigDistrict(Resource):
         if isinstance(new_game, str):
             return {"error": new_game}, 400
         
-        games.append(new_game)
-        game_id = len(games) - 1
+        game_id = get_jwt_identity()
+        games[game_id] = new_game
         return {'game_id': game_id}    
 
 class Game(Resource):
