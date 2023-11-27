@@ -107,7 +107,7 @@ class Logout(Resource):
 
         if user: 
             response = make_response() #crea una respuesta vacia
-            unset_jwt_cookies(response) #elimina cookies del token de acces
+            unset_jwt_cookies(response) #elimina cookies del token de acceso
             is_user_authenticated = False
             return {'message': 'Cierre de sesión exitoso.'}, 200
         else:
