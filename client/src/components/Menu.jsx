@@ -234,8 +234,8 @@ export default function Menu({ onViewChange }) {
     <div className="menu-container">
       <div className="stats-settings-container">
         <div>
-        <strong className="available-stats">
-             Your Stats:<StatsBar stats={statsBar} />
+          <strong className="available-stats">
+             Your stats:<StatsBar stats={statsBar} />
           </strong> 
         </div>
         <div className="choose-character-container">

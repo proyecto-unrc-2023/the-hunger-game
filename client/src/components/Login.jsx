@@ -15,17 +15,17 @@ const Login = ({ onViewChange, onLogin, isLoggedIn }) => {
     setLoginError('');
 
     if(!username) {
-      setUsernameError('Nombre de usuario es obligatorio');
+      setUsernameError('Username is required');
       return;
     }
 
     if (!password) {
-      setPasswordError('Contraseña es obligatoria');
+      setPasswordError('Password is required');
       return;
     }
 
     if (isLoggedIn) {
-      setLoginError('No puedes iniciar otra sesión, desloguea primero.');
+      setLoginError('You can not login, you must logout first');
       return;
     }
 
@@ -51,10 +51,10 @@ const Login = ({ onViewChange, onLogin, isLoggedIn }) => {
         onLogin(true);
         onViewChange('init');
       } else {
-        setLoginError('Nombre de usuario o contraseña incorrectos');
+        setLoginError('Invalid username or password');
       }
     } catch(error) {
-      setLoginError('Error al iniciar sesión, intente nuevamente más tarde');
+      setLoginError('Error logging in, please try again more later');
     }
   };
 
