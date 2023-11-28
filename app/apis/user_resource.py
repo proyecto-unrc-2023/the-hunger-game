@@ -5,6 +5,7 @@ from flask import jsonify, make_response, request
 from sqlalchemy import inspect
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, get_jwt_identity, unset_jwt_cookies, jwt_required
+from datetime import timedelta
 
 is_user_authenticated = False
 
@@ -55,7 +56,7 @@ class Login(Resource):
                 return {'error': 'No puedes iniciar una sesión mientras estés logueado.'}, 400
             
             is_user_authenticated = True
-            access_token = create_access_token(identity=user.id) #se crea un token unico de acceso
+            access_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=5)) #se crea un token unico de acceso
             return {'message': 'Inicio de sesión exitoso.','access_token': access_token}, 200
         else:
             return {'error': 'Nombre de usuario o constraseña incorrectos.'}, 401
@@ -106,7 +107,7 @@ class Logout(Resource):
 
         if user: 
             response = make_response() #crea una respuesta vacia
-            unset_jwt_cookies(response) #elimina cookies del token de acces
+            unset_jwt_cookies(response) #elimina cookies del token de acceso
             is_user_authenticated = False
             return {'message': 'Cierre de sesión exitoso.'}, 200
         else:

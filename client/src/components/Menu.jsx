@@ -194,25 +194,30 @@ export default function Menu({ onViewChange }) {
     const dataToSend = {
       ...menu,
     };
+
+    const storedToken = localStorage.getItem('access_token');
+      
+    if (storedToken) {
+      try {
+        const response = await fetch("http://localhost:5000/game/district", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${storedToken}`
+          },
+          body: JSON.stringify(dataToSend),
+        });
   
-    try {
-      const response = await fetch("http://localhost:5000/game/district", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        const gameIdFromResponse = data.game_id;
-        setGameID(gameIdFromResponse); // Establecer el game_id en el contexto
-      } else {
-        console.error("Post request failed");
+        if (response.ok) {
+          const data = await response.json();
+          const gameIdFromResponse = data.game_id;
+          setGameID(gameIdFromResponse); // Establecer el game_id en el contexto
+        } else {
+          console.error("Post request failed");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred:", error);
     }
   };
 
