@@ -69,7 +69,6 @@ class Potion(Item):
     def create_potion(self, num_potion):
         pass
 
-
     @staticmethod
     def get_potion_by_name(str):
         if str.__eq__('pf'):
@@ -78,6 +77,7 @@ class Potion(Item):
             return PotionForce()
         elif str.__eq__('po'):
             return PotionPoison()
+
 
 class PotionForce(Potion):
     # Potion force is pf.
@@ -112,7 +112,7 @@ class PotionLife(Potion):
     # Apply effect of potion life to tribute.
     def apply_effect(self, tribute):
         if tribute.life == tribute.max_life or (
-            tribute.life + POTION_LIFE > tribute.max_life
+                tribute.life + POTION_LIFE > tribute.max_life
         ):
             tribute.life = tribute.max_life
         if tribute.life + POTION_LIFE <= tribute.max_life:
@@ -185,7 +185,6 @@ class Weapon(Item):
             return 1 + RANGE_SPEAR
         elif self.__str__().__eq__('wo'):
             return 1 + RANGE_BOW
-
 
 
 class Sword(Weapon):
@@ -272,4 +271,3 @@ class ItemSchema(Schema):
     name = fields.Function(lambda obj: obj.__str__())
     mode = fields.Str()
     effect = fields.Integer()
-    # name = fields.Function(self.__str__())

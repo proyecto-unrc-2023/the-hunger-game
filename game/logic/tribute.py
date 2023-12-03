@@ -44,10 +44,12 @@ class Tribute:
         else:
             raise ValueError(f'Invalid tribute string: {tribute_str}')
 
+    # Method to know if a tribute is alive or dead
     def is_alive(self):
         if self.life > 0:
             return True
 
+    # Method to know if a tribute is alive or dead
     def is_dead(self):
         if self.life <= 0:
             return True
@@ -71,12 +73,14 @@ class Tribute:
 
         return True
 
-    def attack_to(self, tribute, board):
+    # Method to attack a tribute
+    def attack_to(self, tribute):
         if tribute.district != self.district:
             tribute.life -= self.force
         else:
             raise ValueError(f"Not possible attack, same district")
 
+    # Method to set stats for a tribute
     def set_config_parameters(self, life, force, alliance, district, cowardice):
         self.life = life
         self.force = force
@@ -84,10 +88,7 @@ class Tribute:
         self.district = district
         self.cowardice = cowardice
 
-    # First proposal of the alliance system
-    # The neutral tribute alliance is fictitious, it does not take said value
-    # after the decision.
-    # True if the alliance is successful, false otherwise
+    # Method to decide an alliance between a tribute
     def alliance_to(self, tribute):
         if tribute.district is not None:
             raise ValueError("The tribute is not Neutral")
@@ -97,6 +98,7 @@ class Tribute:
             tribute.enemy = self
             return False
 
+    # Calculates the alliance value based on the value of alliance of tribute and one simulated value for neutral.
     @staticmethod
     def generates_alliance_value(tribute_alliance, neutral_tribute):
         neutral_tribute_alliance = neutral_tribute
@@ -139,7 +141,7 @@ class Tribute:
         possible_moves = board.get_free_adjacents_positions(self.pos[0], self.pos[1])
         possible_moves.sort(key=calculate_distance)
         if not possible_moves:
-            raise ValueError(f'No FREE positions, ignorar este error hasta que pueda solucionarlo')
+            raise ValueError(f'No FREE positions')
 
         return possible_moves[0]
 
@@ -198,8 +200,8 @@ class Tribute:
         for x in x_escape:
             for y in y_escape:
                 if (x, y) in neighbors:
-                    if (x, y) != (self.pos):
-                        return (x, y)
+                    if (x, y) != self.pos:
+                        return x, y
 
         return neighbors[0]
 

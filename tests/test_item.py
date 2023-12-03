@@ -69,7 +69,7 @@ def test_apply_effect_potion_force_life_poison():
 
     t2.life = 3
     poison.apply_effect(t2)
-    assert t2.is_dead() == True
+    assert t2.is_dead() is True
 
 
 # testing create_potion
@@ -96,7 +96,7 @@ def test_apply_effect_weapon_sword_spear_bow():
     sword = Sword()
     sword.apply_effect(t0)
     assert t0.force == FORCE_DEFAULT + SWORD_EFFECT
-    assert t0.weapon == True
+    assert t0.weapon is True
     with pytest.raises(ValueError):
         sword.apply_effect(t0)
 
@@ -105,7 +105,7 @@ def test_apply_effect_weapon_sword_spear_bow():
     spear.apply_effect(t1)
     assert t1.range == 2
     assert t1.force == FORCE_DEFAULT + SPEAR_EFFECT
-    assert t1.weapon == True
+    assert t1.weapon is True
     with pytest.raises(ValueError):
         spear.apply_effect(t1)
 
@@ -119,7 +119,7 @@ def test_apply_effect_weapon_sword_spear_bow():
     bow.apply_effect(t2)
     assert t1.range == 3
     assert t2.force == FORCE_DEFAULT + BOW_EFFECT
-    assert t2.weapon == True
+    assert t2.weapon is True
     with pytest.raises(ValueError):
         bow.apply_effect(t2)
 

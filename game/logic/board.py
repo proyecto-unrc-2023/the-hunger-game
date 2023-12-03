@@ -47,13 +47,13 @@ class Board:
             raise ValueError(f"Invalid number of columns: {n_cols}")
 
         new_board = Board(n_rows, n_cols)
-        districts, neutrals, order = [], [], [0, 1, 2, 3, 4, 5] 
+        districts, neutrals, order = [], [], [0, 1, 2, 3, 4, 5]
         for i in range(6):
             district = District()
             district.number_district = i
             districts.append(district)
-        
-        char_to_class = { #Dicctionary that mapping chars to class
+
+        char_to_class = {  # Dicctionary that mapping chars to class
             "w": Weapon, "sp": Spear, "sw": Sword, "wo": Bow,
             "po": PotionPoison, "pl": PotionLife, "pf": PotionForce
         }
@@ -86,8 +86,8 @@ class Board:
                 elif char == "  ":
                     pass
                 elif char in char_to_class:
-                    item_class = char_to_class[char] #recovered class of item
-                    item = item_class() #create instance of class item
+                    item_class = char_to_class[char]  # recovered class of item
+                    item = item_class()  # create instance of class item
                     new_board.get_element(row, col).put_item(item)
                     item.pos = (row, col)
                 elif char != "":

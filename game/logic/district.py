@@ -6,6 +6,7 @@ from marshmallow import Schema, fields
 TRIBUTES_DEFAULT = 4
 DISTRICT_DEFAULT = 0
 
+
 class District:
 
     # Constructor of District class where initializes all attributes
@@ -13,8 +14,7 @@ class District:
         self.number_district = None
         self.cant_tributes = 0
         self.tributes = []
-        self.chars = ['t','a','b','c','d','e','f','g','h','i','j','k','l','m']
-
+        self.chars = ['t', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']
 
     # Return number_district attribute
     def get_number_district(self):
@@ -68,11 +68,11 @@ class District:
     # Method to assign a name for the tributes of the district
     def asign_name_tribute(self, tribute):
         tribute.name = self.chars.pop(0) + str(self.number_district)
-        
+
 
 class DistrictSchema(Schema):
     from game.logic.tribute import TributeSchema
-    
+
     number_district = fields.Integer()
     cant_tributes = fields.Integer()
     tributes = fields.Nested(TributeSchema(), many=True)
