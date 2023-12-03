@@ -17,7 +17,7 @@ class User(db.Model):
     def __repr__(self):
         return "<User %r>" % self.username
     
-    # Return dicctionary of columns
+    # Return dictionary of columns
     def json(self):
         return {
             'id': self.id,
@@ -26,7 +26,7 @@ class User(db.Model):
             'character': self.character
         }
         
-    # Method to add an user to the db
+    # Method to add a user to the db
     def add_user(self, name, password):
         if name is None or password is None:
             raise ValueError('Name or password is None')
@@ -35,7 +35,7 @@ class User(db.Model):
             db.session.add(new_user)
             db.session.commit()
     
-    # Method to select a character for an user    
+    # Method to select a character for a user
     def select_character(self, num_pj):
         self.character = num_pj
         db.session.commit()

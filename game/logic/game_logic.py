@@ -107,6 +107,7 @@ class GameLogic:
 
         return occupied_cells[0]
 
+    # Returns the distance between a cell and a tribute.
     def calculate_distance(self, cell, tribute):
         distance = (
                            (cell.get_pos()[0] - tribute.pos[0]) ** 2
@@ -123,6 +124,7 @@ class GameLogic:
 
         return distance
 
+    # Returns the occupied cells in the vision of the tribute.
     @staticmethod
     def calculate_occupied_cells(vision_cells, tribute):
         occupied_cells = [
@@ -139,7 +141,7 @@ class GameLogic:
                 cell
                 for cell in occupied_cells
                 if cell.state == State.ITEM and cell.get_item().is_weapon() is False
-                or cell.state == State.TRIBUTE
+                   or cell.state == State.TRIBUTE
             ]
 
         return occupied_cells
@@ -150,7 +152,7 @@ class GameLogic:
         x = tribute2.pos[0]
         y = tribute2.pos[1]
         if tribute.range == 3:
-            tribute.attack_to(tribute2, self.board)
+            tribute.attack_to(tribute2)
         elif tribute.range == 2:
             self.attack_in_range_2(tribute, tribute2, x, y)
         else:
@@ -159,25 +161,27 @@ class GameLogic:
             self.remove_tribute(tribute2)
             tribute.enemy = None
 
+    # Method to attack in range 2
     def attack_in_range_2(self, tribute, tribute2, x, y):
         if (x, y) in tribute.get_neighbors_2_distance(self.board) or (
-            x,
-            y,
+                x,
+                y,
         ) in self.board.get_adjacent_positions(tribute.pos[0], tribute.pos[1]):
-            tribute.attack_to(tribute2, self.board)
+            tribute.attack_to(tribute2)
         else:
             pos = tribute.return_clossest(x, y, self.board)
             tribute.move_to(pos[0], pos[1], self.board)
 
+    # Method to attack in range 1
     def attack_in_range_1(self, tribute, tribute2, x, y):
         if (x, y) in self.board.get_adjacent_positions(
                 tribute.pos[0], tribute.pos[1]
         ):
-            tribute.attack_to(tribute2, self.board)
+            tribute.attack_to(tribute2)
         else:
             pos = (x, y)
             tribute.step_to(self.board, pos)
-            
+
     # Method to use after the alliance is True
     # "Tribute" is the neutral tribute who accept the alliance
     def alliance_neutral(self, tribute, district):
@@ -187,6 +191,7 @@ class GameLogic:
         district.cant_tributes = district.cant_tributes + 1
         self.neutrals.remove(tribute)
 
+    # Method to execute the heuristic of the neutral
     def neutral_heuristic(self, neutral):
         if not (neutral.enemy is None) and neutral.enemy.is_alive():
             if neutral.district == neutral.enemy.district:
@@ -253,8 +258,8 @@ class GameLogic:
                             self.get_away(tribute, cell.get_tribute())
                         else:
                             self.try_attack(tribute, cell.pos)
-
-
+    
+    # Method to execute the heuristic of the game
     def heuristic_of_game(self):
         self.order_attack()
         if self.mode != GameMode.SIMULATION:
@@ -268,6 +273,7 @@ class GameLogic:
             print(line)
             print(self.to_string())
 
+    # Method to execute one iteration of an game.
     def one_iteration(self):
         for district in self.districts:
             for tribute in district.tributes:
@@ -291,6 +297,7 @@ class GameLogic:
             pos = self.board.random_pos()
             self.put_neutral(pos[0], pos[1])
 
+    # Method to convert a behave table to string
     @staticmethod
     def table_to_string(behave_table):
         rows = []
@@ -299,12 +306,14 @@ class GameLogic:
             rows.append(row_str)
         return "\n".join(rows)
 
+    # Method to define the order of attack of the tributes
     def order_attack(self):
         for i in range(len(self.districts)):
             self.order.append(i)
 
         return self.order
 
+    # Method to execute all iteration for an game.
     def all_iteration(self):
         for i in range(len(self.districts)):
             num_district = self.order[i]
@@ -316,7 +325,6 @@ class GameLogic:
     # This method is a copy of init_simulation, avoiding the part of
     # configuring the district, assigns all default values and does NOT
     # start the simulation
-    # IS ONLY FOR TEST, DON'T USE IN OTHER CONTEXT
     def prepare_the_game(self, rows, columns):
         self.new_game(rows, columns)
         district = District()
@@ -335,7 +343,8 @@ class GameLogic:
         self.distribute_items()
         self.distribute_district_tributes()
         self.distribute_neutral_tributes(10)
-
+    
+    # Method for a tribute to escape for another
     def get_away(self, tribute, enemy):
         pos = tribute.calculate_flee(enemy, self.board)
         if pos is not False:
@@ -402,30 +411,31 @@ class GameLogic:
 
     # Set stats of own district. Front use this method.
     def set_parameters(self, life, force, alliance, cant_tributes, cowardice):
-        try: 
-            #check if any stat is not an int
+        try:
+            # check if any stat is not an int
             life = int(life)
             force = int(force)
             alliance = int(alliance)
             cant_tributes = int(cant_tributes)
             cowardice = int(cowardice)
-        
-            #Check if any stat is out of valid range
+
+            # Check if any stat is out of valid range
             self.validate_range(life, force, alliance, cant_tributes, cowardice)
-            
-            #check if life is multiple of 5 and force is odd 
+
+            # check if life is multiple of 5 and force is odd
             self.validate_life_and_force(life, force)
-            
-            #calculate points based on default value stat and received values
+
+            # calculate points based on default value stat and received values
             self.calculate_points(life, force, alliance, cant_tributes, cowardice)
-        
+
             district = District()
             district.set_config(life, force, alliance, DISTRICT_DEFAULT, cant_tributes, cowardice)
             self.districts.insert(0, district)
-        
+
         except ValueError as event:
             raise ValueError(str(event))
-
+        
+    # Check if any stat is out of valid range
     def validate_range(self, life, force, alliance, cant_tributes, cowardice):
         if not (50 <= life <= 100):
             raise ValueError("Invalid input life.")
@@ -438,21 +448,23 @@ class GameLogic:
         if not (0 <= cowardice <= 5):
             raise ValueError("Invalid input cowardice.")
 
+    # check if life is multiple of 5 and force is odd
     def validate_life_and_force(self, life, force):
         if (life - 50) % 5 != 0:
             raise ValueError("Invalid input in stats.")
-            
+
         if (force % 2) != 1:
             raise ValueError("Invalid input in stats.")
-    
+        
+    # Calculate points based on default value stat and received values
     def calculate_points(self, life, force, alliance, cant_tributes, cowardice):
         life_points = (life - 50) // 5
         force_points = (force - 5) // 2
         alliance_points = alliance - 3
         tributes_points = (cant_tributes - 4) * 4
         cowardice_points = cowardice
-        
-        #check if total points is equal to 10
+
+        # check if total points is equal to 10
         total_points = life_points + force_points + alliance_points + tributes_points + cowardice_points
         if total_points != 10:
             raise ValueError(f"Invalid input, distribute exactly 10 points. Points can't be {total_points}")
@@ -479,17 +491,19 @@ class GameLogic:
                     self.neutral_heuristic(neutral)
             self.winner_district()
             return self
-
+          
+    # Calculates the number of lives for each district's tributes.
     def tributes_lives(self):
-        lives = []        
+        lives = []
         for district in self.districts:
             count = 0
             for tribute in district.tributes:
                 count += 1
             lives.append(count)
-        
+
         return lives
-    
+
+
 class GameLogicSchema(Schema):
     from game.logic.district import DistrictSchema
     from game.logic.board import BoardSchema

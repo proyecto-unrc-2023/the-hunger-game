@@ -5,6 +5,7 @@ from game.logic.tribute import Tribute
 from game.logic.item import Weapon
 from game.logic.cell import State
 
+
 # Negative test
 def test_create_tribute_error():
     with pytest.raises(ValueError):
@@ -35,6 +36,7 @@ def test_set_config_parameters_tribute():
     assert tribute.district == 5
     assert tribute.cowardice == 3
 
+
 def test_attack_to():
     board = Board(3, 3)
     t1 = Tribute()
@@ -50,9 +52,10 @@ def test_attack_to():
     board.put_tribute(0, 0, t1)
     board.put_tribute(1, 0, t2)
     before_life = t2.life
-    t1.attack_to(t2, board)
+    t1.attack_to(t2)
 
     assert t2.life == (before_life - t1.force)
+
 
 def test_of_alliance_to():
     tribute1 = Tribute()
@@ -65,7 +68,7 @@ def test_of_alliance_to():
     n1 = Tribute()
     tribute1.alliance_to(n1)
     assert n1.enemy == tribute1
-    
+
 
 def test_generates_alliance_value():
     tribute1 = Tribute()
@@ -75,6 +78,7 @@ def test_generates_alliance_value():
     tribute1.alliance = 10
     neutral_value = 1
     assert (tribute1.generates_alliance_value(tribute1.alliance, neutral_value)) is False
+
 
 def test_move_to_random():
     board = Board(3, 3)
@@ -104,9 +108,9 @@ def test_move_to():
     assert board.get_element(x, y).get_state() == State.TRIBUTE
     assert tribute.pos == new_pos
     tribute2 = Tribute()
-    board.put_tribute(1,1, tribute2)
-    board.put_item(2,2, Weapon())
-    tribute2.move_to(2,2, board)
+    board.put_tribute(1, 1, tribute2)
+    board.put_item(2, 2, Weapon())
+    tribute2.move_to(2, 2, board)
 
 
 def test_move_closer_to():
@@ -115,17 +119,18 @@ def test_move_closer_to():
     board.put_tribute(1, 1, tribute)
     (x, y) = tribute.return_clossest(1, 2, board)
     tribute.move_to(x, y, board)
-    assert tribute.pos == (1,2)
+    assert tribute.pos == (1, 2)
     (x, y) = tribute.return_clossest(4, 4, board)
     tribute.move_to(x, y, board)
     (x, y) = tribute.return_clossest(4, 4, board)
     tribute.move_to(x, y, board)
     (x, y) = tribute.return_clossest(4, 4, board)
     tribute.move_to(x, y, board)
-    assert tribute.pos == (4,4)
+    assert tribute.pos == (4, 4)
+
 
 def test_tribute_vision_pos():
-    board = Board(7,7)
+    board = Board(7, 7)
     t1 = Tribute()
     t1.pos = (3, 3)
 
@@ -144,12 +149,13 @@ def test_tribute_vision_pos():
 
 
 def test_tribute_vision_pos_with_tribute_in_border():
-    board = Board(7,7)
+    board = Board(7, 7)
     t1 = Tribute()
     t1.pos = (0, 0)
 
     visible_positions = t1.tribute_vision_pos(board)
     assert len(visible_positions) == 15
+
 
 def test_neighbors():
     board = Board(5, 5)
@@ -157,14 +163,14 @@ def test_neighbors():
     board.put_tribute(2, 2, t1)
     neighbors = t1.get_neighbors_2_distance_free(board)
     assert len(neighbors) == 16
-    t2 = Tribute()   
+    t2 = Tribute()
     board.put_tribute(2, 4, t2)
     neighbors = t1.get_neighbors_2_distance_free(board)
     assert len(neighbors) == 15
-    
-    
+
+
 def test_calculate_flee():
-    board = Board(5,5)
+    board = Board(5, 5)
     t0 = Tribute()
     t0.set_config_parameters(50, 5, 3, 0, 0)
     board.put_tribute(0, 0, t0)
@@ -172,9 +178,9 @@ def test_calculate_flee():
     t1.set_config_parameters(50, 5, 3, 1, 0)
     board.put_tribute(2, 2, t1)
     pos = t1.calculate_flee(t0, board)
-    assert pos == (4,4)
+    assert pos == (4, 4)
     t2 = Tribute()
     t2.set_config_parameters(50, 5, 3, 1, 0)
     board.put_tribute(4, 4, t2)
     pos = t1.calculate_flee(t2, board)
-    assert pos == (0,1)
+    assert pos == (0, 1)

@@ -20,18 +20,22 @@ class Cell:
         self.tribute = None
         self.pos = None
 
+    # Return the position of the cell
     def get_pos(self):
         return self.pos
 
+    # Get the state of the cell
     def get_state(self):
         return self.state
 
+    # Get item of a cell
     def get_item(self):
         if self.item is None:
             raise ValueError(f"No item in this position")
 
         return self.item
-
+    
+    # Get tribute of a cell
     def get_tribute(self):
         if self.tribute is None:
             raise ValueError(f"No attributes in this position")
@@ -49,6 +53,7 @@ class Cell:
     def __eq__(self, other):
         return isinstance(other, Cell)
 
+    # Method to put a tribute in a cell
     def put_tribute(self, tribute):
         if self.state == TRIBUTE:
             raise ValueError(f"Trying to place one Tribute on top of another.")
@@ -56,6 +61,7 @@ class Cell:
         self.state = TRIBUTE
         self.tribute = tribute
 
+    # Method to remove a tribute in a cell
     def remove_tribute(self):
         if self.get_state() == ITEM or self.get_state() == FREE:
             raise ValueError(f"Trying to remove one Item or the cell is FREE.")
@@ -64,6 +70,7 @@ class Cell:
         self.state = FREE
         self.tribute = None
 
+    # Method to put a item in a cell
     def put_item(self, item):
         if self.state != FREE:
             raise ValueError(
@@ -73,6 +80,7 @@ class Cell:
         self.state = ITEM
         self.item = item
 
+    # Method to remove a item in a cell
     def remove_item(self):
         if self.item is None:
             raise ValueError(f"Trying to remove a Item where there isn't one.")
@@ -83,7 +91,4 @@ class Cell:
 
 
 class CellSchema(Schema):
-    from game.logic.item import ItemSchema
-    from game.logic.tribute import TributeSchema
-
     state = fields.Str()

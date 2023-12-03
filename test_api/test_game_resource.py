@@ -25,6 +25,7 @@ invalid_inputs = [
     (50, 5, 3, 3, 0, 400),  # Invalid cant_tributes
     (50, 5, 3, 4, -1, 400),  # Invalid cowardice
     (99.5, 5.5, 3, 4, 0, 400),  # Invalid sum of points
+    (97.5, 6.5, 3, 4, 0, 400), # Invalid floats
 ]
 
 @pytest.mark.parametrize(
@@ -76,7 +77,16 @@ def test_game_put(client):
 
     response = client.put(f'/game/{1}')
     assert response.status_code == 200
-    
+    response2 = client.post('/game/district', json={
+      "life":100,
+      "force":5,
+      "alliance":3,
+      "cant_tributes":4,
+      "cowardice":0
+    },
+    headers={'Authorization': f'Bearer {2}'}) 
+    assert response2.status_code == 422
+
 
 def test_game_get(client):
     access_token = create_access_token(identity=1)
